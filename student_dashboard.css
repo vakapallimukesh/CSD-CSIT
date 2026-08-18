@@ -1,0 +1,342 @@
+/* Student Dashboard - High-Clarity Bright 4K Background Theme */
+
+body {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(248, 250, 252, 0.12) 50%, rgba(255, 255, 255, 0.22) 100%), url('assets/img/student_bg.jpg') center/cover fixed no-repeat !important;
+    min-height: 100vh;
+    font-family: 'Poppins', sans-serif;
+    color: #1e293b !important;
+    position: relative;
+}
+
+#lightRaysCanvas {
+    display: none !important;
+}
+
+.main-content {
+    position: relative;
+    z-index: 1;
+    padding: 1.5rem 0 3rem 0;
+}
+
+.navbar {
+    background-color: #ffffff !important;
+    box-shadow: 0 4px 20px rgba(53, 57, 42, 0.12) !important;
+}
+
+.page-header {
+    background: transparent;
+    padding: 2.5rem 0 1.5rem 0;
+    text-align: center;
+}
+
+.page-title {
+    font-size: 2.6rem;
+    font-weight: 800;
+    margin: 0;
+    background: linear-gradient(135deg, #ffffff 0%, #e8ece1 50%, #d4a359 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.page-subtitle {
+    font-size: 1.05rem;
+    margin-top: 0.5rem;
+    color: #e8ece1 !important;
+    font-weight: 600;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+}
+
+.back-nav {
+    margin-bottom: 1.5rem;
+}
+
+.back-btn {
+    background: rgba(255, 255, 255, 0.88) !important;
+    border: 1.5px solid rgba(130, 135, 118, 0.45) !important;
+    color: #35392a !important;
+    padding: 10px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    backdrop-filter: blur(12px) !important;
+    box-shadow: 0 4px 15px rgba(53, 57, 42, 0.15) !important;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: linear-gradient(135deg, #4c533e 0%, #35392a 100%) !important;
+    color: #ffffff !important;
+    border-color: transparent !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(53, 57, 42, 0.4) !important;
+}
+
+/* Elevated Glass Cards Matching student_bg.jpg Colors */
+.card-spotlight, .dashboard-card, .stat-item {
+    position: relative;
+    border-radius: 20px !important;
+    border: 1.5px solid rgba(130, 135, 118, 0.38) !important;
+    background: rgba(255, 255, 255, 0.88) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    overflow: hidden;
+    --mouse-x: 50%;
+    --mouse-y: 50%;
+    --spotlight-color: rgba(130, 135, 118, 0.22);
+    box-shadow: 0 10px 30px rgba(53, 57, 42, 0.14), 0 2px 8px rgba(0, 0, 0, 0.03) !important;
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease !important;
+    color: #1e293b !important;
+    height: 100%;
+}
+
+.card-spotlight::before,
+.dashboard-card::before,
+.stat-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), var(--spotlight-color), transparent 75%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.card-spotlight:hover::before,
+.dashboard-card:hover::before,
+.stat-item:hover::before {
+    opacity: 1;
+}
+
+.dashboard-card:hover, .stat-item:hover {
+    transform: translateY(-6px) scale(1.01) !important;
+    box-shadow: 0 20px 40px rgba(53, 57, 42, 0.25), 0 0 20px rgba(130, 135, 118, 0.18) !important;
+    border-color: #4c533e !important;
+}
+
+.card-header {
+    background: linear-gradient(135deg, #ffffff 0%, #f4f6f0 100%) !important;
+    border-bottom: 1.5px solid #e8ece1 !important;
+    padding: 18px 24px;
+    font-weight: 800;
+    color: #1a2014 !important;
+    font-size: 1.05rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-header i {
+    color: #4c533e !important;
+    font-size: 1rem;
+}
+
+.card-body {
+    padding: 24px;
+    color: #2c3e50 !important;
+}
+
+.profile-section {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.profile-picture-container {
+    position: relative;
+    display: inline-block;
+    margin-bottom: 1rem;
+}
+
+.profile-picture-container img,
+.profile-picture-container .profile-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #f1f5f9;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.profile-placeholder {
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #667eea;
+    font-size: 2.5rem;
+}
+
+.camera-btn {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.camera-btn:hover {
+    background: #5a67d8;
+    transform: scale(1.1);
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.info-value {
+    color: #1e293b !important;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.action-btn {
+    width: 100%;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #475569 !important;
+    padding: 10px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.action-btn:hover {
+    background: linear-gradient(135deg, #4c533e 0%, #35392a 100%) !important;
+    border-color: transparent !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(53, 57, 42, 0.3);
+}
+
+.stat-item {
+    text-align: center;
+    padding: 18px;
+    background: rgba(255, 255, 255, 0.88) !important;
+    border-radius: 12px;
+    border: 1px solid rgba(130, 135, 118, 0.35) !important;
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(53, 57, 42, 0.12);
+    border-color: #4c533e !important;
+}
+
+.stat-number {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #1a2014 !important;
+    margin-bottom: 4px;
+    line-height: 1.1;
+}
+
+.stat-label {
+    font-size: 11px;
+    color: #606252 !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.progress-bar-custom {
+    height: 8px;
+    background: #e8ece1 !important;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #4c533e 0%, #606252 50%, #828776 100%) !important;
+}
+
+.text-muted {
+    color: #64748b !important;
+}
+
+/* Modals */
+.modal-content {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #1e293b !important;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+}
+
+.modal-header {
+    border-bottom: 1px solid #f1f5f9 !important;
+    background: #fafbfc !important;
+}
+
+.modal-footer {
+    border-top: 1px solid #f1f5f9 !important;
+}
+
+.form-control, .form-select {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #1e293b !important;
+    border-radius: 10px !important;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #667eea !important;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15) !important;
+    color: #1e293b !important;
+}
+
+.table {
+    color: #1e293b !important;
+}
+
+.table th {
+    background: #fafbfc !important;
+    color: #475569 !important;
+    font-weight: 700;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+.table td {
+    background: transparent !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    color: #334155 !important;
+}
