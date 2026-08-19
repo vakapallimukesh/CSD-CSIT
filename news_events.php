@@ -296,40 +296,7 @@ body {
     </div>
 </div>
 
-<?php
-// Load dynamic Instagram stats with fallback defaults
-$stats_file = __DIR__ . '/config/instagram_stats.json';
-$followers_count = '784+';
-$posts_count = '452';
 
-if (file_exists($stats_file)) {
-    $stats_data = json_decode(@file_get_contents($stats_file), true);
-    if (isset($stats_data['srkrcsdcsit'])) {
-        $followers_count = number_format($stats_data['srkrcsdcsit']['followers']);
-        $posts_count = number_format($stats_data['srkrcsdcsit']['posts']);
-    }
-}
-?>
-
-<!-- Stats Highlight -->
-<section class="py-5">
-    <div class="container">
-        <div class="row g-4 justify-content-center">
-            <div class="col-6 col-md-4">
-                <div class="stat-card">
-                    <div class="stat-number" id="posts-count-display"><?php echo $posts_count; ?></div>
-                    <div class="stat-label">Instagram Posts</div>
-                </div>
-            </div>
-            <div class="col-6 col-md-4">
-                <div class="stat-card">
-                    <div class="stat-number" id="followers-count-display"><?php echo $followers_count; ?></div>
-                    <div class="stat-label">Student Followers</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
 <!-- SECTION 1: Events Organised by CSD & CSIT -->
 <section class="py-5" style="background: #ffffff; border-top: 1px solid #f3eae1; border-bottom: 1px solid #f3eae1;">
@@ -541,71 +508,6 @@ if (file_exists($stats_file)) {
         </div>
     </div>
 </section>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Inject subtle animation CSS
-    var style = document.createElement('style');
-    style.innerHTML = `
-        @keyframes countFlash {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.15); color: #be123c; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        .count-flash {
-            display: inline-block;
-            animation: countFlash 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-    `;
-    document.head.appendChild(style);
-
-    // Fetch dynamic live stats from our API
-    var apiPath = "api/get_instagram_stats.php";
-    var pathSegments = window.location.pathname.split('/');
-    pathSegments.pop(); // Remove current file name
-    var resolvedAPI = window.location.origin + pathSegments.join('/') + '/' + apiPath;
-
-    function updateStats() {
-        fetch(resolvedAPI + '?t=' + Date.now())
-            .then(function(response) { return response.json(); })
-            .then(function(data) {
-                if (data && data.formatted_posts && data.formatted_followers) {
-                    var postsEl = document.getElementById("posts-count-display");
-                    var followersEl = document.getElementById("followers-count-display");
-
-                    if (postsEl) {
-                        var currentPosts = postsEl.innerText.trim();
-                        var newPosts = data.formatted_posts;
-                        if (currentPosts !== newPosts) {
-                            postsEl.innerText = newPosts;
-                            postsEl.classList.add("count-flash");
-                            setTimeout(function() { postsEl.classList.remove("count-flash"); }, 800);
-                        }
-                    }
-
-                    if (followersEl) {
-                        var currentFollowers = followersEl.innerText.trim();
-                        var newFollowers = data.formatted_followers;
-                        if (currentFollowers !== newFollowers) {
-                            followersEl.innerText = newFollowers;
-                            followersEl.classList.add("count-flash");
-                            setTimeout(function() { followersEl.classList.remove("count-flash"); }, 800);
-                        }
-                    }
-                }
-            })
-            .catch(function(err) {
-                console.warn("Instagram dynamic stats sync error: ", err);
-            });
-    }
-
-    // Run immediately on page load
-    updateStats();
-
-    // Poll every 3 seconds for real-time updates
-    setInterval(updateStats, 3000);
-});
-</script>
 
 <?php include "footer.php"; ?>
 </body>
