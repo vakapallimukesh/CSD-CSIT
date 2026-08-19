@@ -509,10 +509,6 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                     <div class="stat-value">4 YEARS</div>
                     <div class="stat-label">ACADEMIC DURATION</div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">100%</div>
-                    <div class="stat-label">AICTE & NBA ACCREDITED</div>
-                </div>
             </div>
         </div>
     </div>
