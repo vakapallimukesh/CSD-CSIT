@@ -129,23 +129,56 @@ body {
 
     <main class="main-content container py-4">
         <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #1a0d06; margin: 0;">II B.Tech Academic Calendar (2026-2027)</h2>
+            <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #1a0d06; margin: 0;">Academic Calendar (2026–2027)</h2>
             <a href="academics.php" class="btn btn-warning px-4 py-2" style="border-radius: 14px; font-weight: 700; background: #d97706; border-color: #d97706; color: white;">
-                <i class="fas fa-graduation-cap me-2"></i>All Academics
+                <i class="fas fa-graduation-cap me-2"></i>All Academics Overview
             </a>
         </div>
 
-        <!-- 2026-2027 II B.Tech Detailed Schedule Card -->
-        <div style="background: #ffffff; border-radius: 24px; padding: 30px; border: 1px solid #f3eae1; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(180, 83, 9, 0.06);">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4 pb-3" style="border-bottom: 2px solid #f3eae1;">
-                <div>
-                    <h4 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #1a0d06; margin: 0;">
-                        <i class="fas fa-calendar-check text-warning me-2"></i>S.R.K.R. Engineering College (Autonomous): Bhimavaram
-                    </h4>
-                    <span style="color: #6f5f54; font-size: 0.95rem; font-weight: 700;">II B.Tech Academic Calendar for 2026–2027</span>
+        <!-- ACADEMIC CALENDAR DECK CARDS (CURRENT 2026-27 AT TOP) -->
+        <div class="row g-4 mb-5">
+            <!-- FEATURED DECK: Academic Calendar (2026–2027) -->
+            <div class="col-12">
+                <div style="background: linear-gradient(135deg, #ffffff 0%, #fffbf5 100%); border-radius: 20px; padding: 26px 30px; border: 2px solid #e6c280; box-shadow: 0 10px 30px rgba(180, 83, 9, 0.1); display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width: 58px; height: 58px; border-radius: 18px; background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; box-shadow: 0 6px 16px rgba(180, 83, 9, 0.25);">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div>
+                            <span style="background: #1a0d06; color: #f59e0b; font-size: 0.75rem; font-weight: 800; padding: 3px 12px; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 4px;">
+                                <i class="fas fa-star me-1"></i> Current Academic Year 2026–2027
+                            </span>
+                            <h4 style="font-family: 'Outfit', sans-serif; font-weight: 900; color: #1a0d06; margin: 0 0 2px 0; font-size: 1.4rem;">Academic Calendar (2026–2027)</h4>
+                            <span style="font-size: 0.9rem; color: #6f5f54; font-weight: 500;">Official II B.Tech (CSD & CSIT) semester schedules, mid-term dates, marks deadlines & holiday list</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="#detailed-2026-calendar" class="btn btn-outline-dark" style="border-radius: 14px; font-weight: 700; padding: 10px 20px; font-size: 0.88rem; border-color: #1a0d06;" onclick="document.getElementById('detailed-2026-calendar').scrollIntoView({behavior: 'smooth'}); return false;">
+                            <i class="fas fa-table me-1"></i> View Schedule
+                        </a>
+                        <a href="files/2_btech_ac.pdf" class="download-btn" target="_blank" style="padding: 10px 20px; font-size: 0.88rem;">
+                            <i class="fas fa-download me-1"></i> Download PDF
+                        </a>
+                    </div>
                 </div>
-                <span style="background: #1a0d06; color: #f59e0b; font-size: 0.85rem; font-weight: 700; padding: 6px 16px; border-radius: 50px;">
-                    <i class="fas fa-star me-1"></i> Academic Year 2026-27
+            </div>
+        </div>
+
+        <!-- 2026-2027 II B.Tech Detailed Schedule Deck Card -->
+        <div id="detailed-2026-calendar" style="background: #ffffff; border-radius: 24px; padding: 32px; border: 2px solid #e6c280; margin-bottom: 40px; box-shadow: 0 12px 35px rgba(180, 83, 9, 0.08);">
+            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4 pb-3" style="border-bottom: 2px solid #f3eae1;">
+                <div class="d-flex align-items-center gap-3">
+                    <div style="width: 56px; height: 56px; border-radius: 18px; background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; box-shadow: 0 6px 16px rgba(180, 83, 9, 0.25);">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div>
+                        <span style="color: #b45309; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;">Official Schedule Deck</span>
+                        <h3 style="font-family: 'Outfit', sans-serif; font-weight: 900; color: #1a0d06; margin: 2px 0 0 0; font-size: 1.6rem;">Academic Calendar (2026–2027)</h3>
+                        <span style="color: #6f5f54; font-size: 0.92rem; font-weight: 600;">S.R.K.R. Engineering College (Autonomous): Bhimavaram — II B.Tech (CSD & CSIT)</span>
+                    </div>
+                </div>
+                <span style="background: #1a0d06; color: #f59e0b; font-size: 0.85rem; font-weight: 700; padding: 8px 18px; border-radius: 50px; border: 1px solid rgba(245, 158, 11, 0.3);">
+                    <i class="fas fa-star me-1"></i> Academic Year 2026-2027
                 </span>
             </div>
 
