@@ -568,7 +568,7 @@ document.addEventListener("DOMContentLoaded", function() {
     fetch(resolvedAPI + '?t=' + Date.now())
         .then(function(response) { return response.json(); })
         .then(function(data) {
-            if (data && data.success) {
+            if (data && data.formatted_posts && data.formatted_followers) {
                 var postsEl = document.getElementById("posts-count-display");
                 var followersEl = document.getElementById("followers-count-display");
 
