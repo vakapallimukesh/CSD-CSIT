@@ -309,22 +309,6 @@ if (file_exists($stats_file)) {
         $posts_count = number_format($stats_data['srkrcsdcsit']['posts']);
     }
 }
-
-// Background sync trigger: if cache is older than 15 minutes, trigger a background sync
-if (!file_exists($stats_file) || (time() - filemtime($stats_file) > 900)) {
-    $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
-    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-    $dir = dirname($_SERVER['REQUEST_URI'] ?? '');
-    $dir = rtrim($dir, '/');
-    $sync_url = "{$protocol}://{$host}{$dir}/api/instagram/sync.php?username=srkrcsdcsit";
-    
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_URL, $sync_url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_TIMEOUT, 1);
-    curl_exec($ch);
-    curl_close($ch);
-}
 ?>
 
 <!-- Stats Highlight -->
@@ -581,7 +565,7 @@ document.addEventListener("DOMContentLoaded", function() {
     pathSegments.pop(); // Remove current file name
     var resolvedAPI = window.location.origin + pathSegments.join('/') + '/' + apiPath;
 
-    fetch(resolvedAPI)
+    fetch(resolvedAPI + '?t=' + Date.now())
         .then(function(response) { return response.json(); })
         .then(function(data) {
             if (data && data.success) {
