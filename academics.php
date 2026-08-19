@@ -954,7 +954,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                             <a href="#detailed-2026-calendar" class="btn btn-outline-dark" style="border-radius: 14px; font-weight: 700; padding: 10px 20px; font-size: 0.88rem; border-color: #1a0d06;" onclick="document.getElementById('detailed-2026-calendar').scrollIntoView({behavior: 'smooth'}); return false;">
                                 <i class="fas fa-table me-1"></i> View Schedule
                             </a>
-                            <a href="files/II_III_B.Tech_Academic_Calendar_2025-26.pdf" class="pdf-link" target="_blank" style="padding: 10px 20px; font-size: 0.88rem;">
+                            <a href="files/II_BTech_Academic_Calendar_2026-27.pdf" class="pdf-link" target="_blank" style="padding: 10px 20px; font-size: 0.88rem;">
                                 <i class="fas fa-download me-1"></i> Download PDF
                             </a>
                         </div>
@@ -973,7 +973,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                 <span style="font-size: 0.88rem; color: #6f5f54;">Official schedule for 3rd and 4th year CSD &amp; CSIT</span>
                             </div>
                         </div>
-                        <a href="files/II_III_B.Tech_Academic_Calendar_2025-26.pdf" class="pdf-link" target="_blank">
+                        <a href="files/II_BTech_Academic_Calendar_2026-27.pdf" class="pdf-link" target="_blank">
                             <i class="fas fa-download"></i> Download PDF
                         </a>
                     </div>
@@ -1015,7 +1015,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                         <span style="background: #1a0d06; color: #f59e0b; font-size: 0.85rem; font-weight: 700; padding: 8px 18px; border-radius: 50px; border: 1px solid rgba(245, 158, 11, 0.3);">
                             <i class="fas fa-star me-1"></i> Academic Year 2026-2027
                         </span>
-                        <a href="files/II_III_B.Tech_Academic_Calendar_2025-26.pdf" class="pdf-link" target="_blank" style="padding: 8px 18px; font-size: 0.88rem;">
+                        <a href="files/II_BTech_Academic_Calendar_2026-27.pdf" class="pdf-link" target="_blank" style="padding: 8px 18px; font-size: 0.88rem;">
                             <i class="fas fa-download me-1"></i> Download PDF
                         </a>
                     </div>
@@ -1270,7 +1270,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                 <span style="font-size: 0.88rem; color: #6f5f54;">Official II B.Tech schedule &amp; holiday list</span>
                             </div>
                         </div>
-                        <a href="files/II_III_B.Tech_Academic_Calendar_2025-26.pdf" class="pdf-link" target="_blank">
+                        <a href="files/II_BTech_Academic_Calendar_2026-27.pdf" class="pdf-link" target="_blank">
                             <i class="fas fa-download"></i> Download PDF
                         </a>
                     </div>
