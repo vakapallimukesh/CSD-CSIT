@@ -42,6 +42,43 @@ function write_sync_log($message) {
 }
 
 // ============================================================
+//  STATS CACHING
+// ============================================================
+
+function parse_shorthand_count($val) {
+    $val = strtolower(trim($val));
+    if (strpos($val, 'k') !== false) {
+        return (int)(floatval(str_replace('k', '', $val)) * 1000);
+    }
+    if (strpos($val, 'm') !== false) {
+        return (int)(floatval(str_replace('m', '', $val)) * 1000000);
+    }
+    return (int)$val;
+}
+
+function update_local_instagram_stats($username, $followers, $posts) {
+    $stats_file = __DIR__ . '/../../config/instagram_stats.json';
+    $stats_dir = dirname($stats_file);
+    if (!file_exists($stats_dir)) {
+        @mkdir($stats_dir, 0755, true);
+    }
+    
+    $data = [];
+    if (file_exists($stats_file)) {
+        $data = json_decode(@file_get_contents($stats_file), true) ?: [];
+    }
+    
+    $data[$username] = [
+        'followers' => (int)$followers,
+        'posts' => (int)$posts,
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
+    
+    @file_put_contents($stats_file, json_encode($data, JSON_PRETTY_PRINT));
+    write_sync_log("[STATS] Updated stats for @{$username}: {$followers} followers, {$posts} posts");
+}
+
+// ============================================================
 //  TABLE SETUP (runs once per request)
 // ============================================================
 
@@ -171,6 +208,16 @@ function fetch_via_graphql_api($username) {
         return [];
     }
 
+    // Save profile stats if available
+    $user_data = $data['data']['user'] ?? null;
+    if ($user_data) {
+        $followers = $user_data['edge_followed_by']['count'] ?? null;
+        $posts = $user_data['edge_owner_to_timeline_media']['count'] ?? null;
+        if ($followers !== null && $posts !== null) {
+            update_local_instagram_stats($username, $followers, $posts);
+        }
+    }
+
     $edges = $data['data']['user']['edge_owner_to_timeline_media']['edges'] ?? [];
     return parse_instagram_edges($edges, $username);
 }
@@ -202,6 +249,16 @@ function fetch_via_html_scrape($username) {
         return [];
     }
 
+    // Try to parse followers & posts count from description meta tag
+    if (preg_match('/<meta[^>]*property=["\']og:description["\'][^>]*content=["\'](.*?)["\']/i', $html, $desc_match)) {
+        $desc = $desc_match[1];
+        if (preg_match('/([0-9,KkMm.]+)\s*Followers,\s*([0-9,KkMm.]+)\s*Following,\s*([0-9,KkMm.]+)\s*Posts/i', $desc, $stats_match)) {
+            $followers = parse_shorthand_count(str_replace(',', '', $stats_match[1]));
+            $posts = parse_shorthand_count(str_replace(',', '', $stats_match[3]));
+            update_local_instagram_stats($username, $followers, $posts);
+        }
+    }
+
     $items = [];
 
     // Method 1: Try to extract JSON data from <script type="application/ld+json">
@@ -220,6 +277,13 @@ function fetch_via_html_scrape($username) {
         if ($shared_data) {
             $user_data = $shared_data['entry_data']['ProfilePage'][0]['graphql']['user'] ?? null;
             if ($user_data) {
+                // Parse and save profile stats
+                $followers = $user_data['edge_followed_by']['count'] ?? null;
+                $posts = $user_data['edge_owner_to_timeline_media']['count'] ?? null;
+                if ($followers !== null && $posts !== null) {
+                    update_local_instagram_stats($username, $followers, $posts);
+                }
+
                 $edges = $user_data['edge_owner_to_timeline_media']['edges'] ?? [];
                 $items = parse_instagram_edges($edges, $username);
                 write_sync_log("[FALLBACK] Extracted " . count($items) . " posts from _sharedData for @{$username}");
@@ -412,6 +476,85 @@ function fetch_latest_instagram_posts($username) {
 // ============================================================
 
 /**
+ * Specifically fetch and update followers and posts count.
+ */
+function sync_instagram_profile_stats($username) {
+    // 1. Try GraphQL profile endpoint
+    $graphql_url = "https://www.instagram.com/api/v1/users/web_profile_info/?username={$username}";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $graphql_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Accept: */*',
+        'X-IG-App-ID: 936619743392459',
+        'X-Requested-With: XMLHttpRequest',
+        'Sec-Fetch-Mode: cors',
+        'Sec-Fetch-Site: same-origin',
+        'Referer: https://www.instagram.com/' . $username . '/',
+    ]);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($http_code === 200 && !empty($response)) {
+        $data = json_decode($response, true);
+        $user_data = $data['data']['user'] ?? null;
+        if ($user_data) {
+            $followers = $user_data['edge_followed_by']['count'] ?? null;
+            $posts = $user_data['edge_owner_to_timeline_media']['count'] ?? null;
+            if ($followers !== null && $posts !== null) {
+                update_local_instagram_stats($username, $followers, $posts);
+                return true;
+            }
+        }
+    }
+
+    // 2. Try HTML scraping fallback
+    $profile_url = "https://www.instagram.com/{$username}/";
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $profile_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+    curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+    $html = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($http_code === 200 && !empty($html)) {
+        if (preg_match('/<meta[^>]*property=["\']og:description["\'][^>]*content=["\'](.*?)["\']/i', $html, $desc_match)) {
+            $desc = $desc_match[1];
+            if (preg_match('/([0-9,KkMm.]+)\s*Followers,\s*([0-9,KkMm.]+)\s*Following,\s*([0-9,KkMm.]+)\s*Posts/i', $desc, $stats_match)) {
+                $followers = parse_shorthand_count(str_replace(',', '', $stats_match[1]));
+                $posts = parse_shorthand_count(str_replace(',', '', $stats_match[3]));
+                update_local_instagram_stats($username, $followers, $posts);
+                return true;
+            }
+        }
+        
+        if (preg_match('/window\._sharedData\s*=\s*({.+?});\s*<\/script>/s', $html, $shared_match)) {
+            $shared_data = json_decode($shared_match[1], true);
+            if ($shared_data) {
+                $user_data = $shared_data['entry_data']['ProfilePage'][0]['graphql']['user'] ?? null;
+                if ($user_data) {
+                    $followers = $user_data['edge_followed_by']['count'] ?? null;
+                    $posts = $user_data['edge_owner_to_timeline_media']['count'] ?? null;
+                    if ($followers !== null && $posts !== null) {
+                        update_local_instagram_stats($username, $followers, $posts);
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+
+    return false;
+}
+
+/**
  * Sync a single Instagram account into the database.
  * 
  * NON-DESTRUCTIVE: If the API returns 0 items (e.g. temporary failure),
@@ -426,6 +569,9 @@ function sync_instagram_account($conn, $username) {
     ensure_instagram_table($conn);
 
     write_sync_log("Starting Instagram sync for @{$username}");
+
+    // Sync profile statistics first
+    sync_instagram_profile_stats($username);
 
     $items = fetch_latest_instagram_posts($username);
     $fetched_count = count($items);

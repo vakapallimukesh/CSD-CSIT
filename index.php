@@ -1580,7 +1580,7 @@ include "./head.php";
             <?php if ($isLocalHost): ?>
             <!-- LOCAL: Direct video file for development -->
             <video id="bgHeroVideo" class="hero-video-bg" autoplay muted loop playsinline preload="auto">
-                <source src="assets/videos/hero-background.mp4" type="video/mp4">
+                <source src="assets/videos/hero-background-loop.mp4" type="video/mp4">
             </video>
             <script>
             (function() {

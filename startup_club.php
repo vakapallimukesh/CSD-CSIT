@@ -206,7 +206,6 @@ body {
         <?php if ($isLocalHost): ?>
         <!-- LOCAL: Direct video file for development -->
         <video id="startupHeroVideo" autoplay loop muted playsinline class="hero-bg-video">
-            <source src="assets/videos/web.mp4" type="video/mp4">
             <source src="assets/videos/startup_meet.mp4" type="video/mp4">
         </video>
         <script>
