@@ -10,7 +10,7 @@ include_once __DIR__ . '/instagram/sync.php';
 
 $username = 'srkrcsdcsit';
 $stats_file = __DIR__ . '/../config/instagram_stats.json';
-$cache_ttl = 60; // Cache stats for 60 seconds to prevent Instagram rate-limiting / IP blocking
+$cache_ttl = 15; // Cache stats for 15 seconds to allow immediate updates while preventing rate-limits
 
 $needs_sync = true;
 if (file_exists($stats_file)) {

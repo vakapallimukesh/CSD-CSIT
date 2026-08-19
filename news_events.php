@@ -565,37 +565,45 @@ document.addEventListener("DOMContentLoaded", function() {
     pathSegments.pop(); // Remove current file name
     var resolvedAPI = window.location.origin + pathSegments.join('/') + '/' + apiPath;
 
-    fetch(resolvedAPI + '?t=' + Date.now())
-        .then(function(response) { return response.json(); })
-        .then(function(data) {
-            if (data && data.formatted_posts && data.formatted_followers) {
-                var postsEl = document.getElementById("posts-count-display");
-                var followersEl = document.getElementById("followers-count-display");
+    function updateStats() {
+        fetch(resolvedAPI + '?t=' + Date.now())
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                if (data && data.formatted_posts && data.formatted_followers) {
+                    var postsEl = document.getElementById("posts-count-display");
+                    var followersEl = document.getElementById("followers-count-display");
 
-                if (postsEl) {
-                    var currentPosts = postsEl.innerText.trim();
-                    var newPosts = data.formatted_posts;
-                    if (currentPosts !== newPosts) {
-                        postsEl.innerText = newPosts;
-                        postsEl.classList.add("count-flash");
-                        setTimeout(function() { postsEl.classList.remove("count-flash"); }, 800);
+                    if (postsEl) {
+                        var currentPosts = postsEl.innerText.trim();
+                        var newPosts = data.formatted_posts;
+                        if (currentPosts !== newPosts) {
+                            postsEl.innerText = newPosts;
+                            postsEl.classList.add("count-flash");
+                            setTimeout(function() { postsEl.classList.remove("count-flash"); }, 800);
+                        }
+                    }
+
+                    if (followersEl) {
+                        var currentFollowers = followersEl.innerText.trim();
+                        var newFollowers = data.formatted_followers;
+                        if (currentFollowers !== newFollowers) {
+                            followersEl.innerText = newFollowers;
+                            followersEl.classList.add("count-flash");
+                            setTimeout(function() { followersEl.classList.remove("count-flash"); }, 800);
+                        }
                     }
                 }
+            })
+            .catch(function(err) {
+                console.warn("Instagram dynamic stats sync error: ", err);
+            });
+    }
 
-                if (followersEl) {
-                    var currentFollowers = followersEl.innerText.trim();
-                    var newFollowers = data.formatted_followers;
-                    if (currentFollowers !== newFollowers) {
-                        followersEl.innerText = newFollowers;
-                        followersEl.classList.add("count-flash");
-                        setTimeout(function() { followersEl.classList.remove("count-flash"); }, 800);
-                    }
-                }
-            }
-        })
-        .catch(function(err) {
-            console.warn("Instagram dynamic stats sync error: ", err);
-        });
+    // Run immediately on page load
+    updateStats();
+
+    // Poll every 3 seconds for real-time updates
+    setInterval(updateStats, 3000);
 });
 </script>
 
