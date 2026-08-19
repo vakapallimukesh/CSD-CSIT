@@ -920,19 +920,318 @@ if (session_status() === PHP_SESSION_NONE) session_start();
         </div>
 
         <!-- ================= SECTION 3: ACADEMIC CALENDAR ================= -->
-        <div class="academic-full-section" data-category="calendar" data-keywords="academic calendar schedule 2025 2026 semester exam mid-terms instruction holidays pdf">
+        <div class="academic-full-section" data-category="calendar" data-keywords="academic calendar schedule 2026 2027 ii b.tech 2nd year semester exam mid-terms instruction holidays pdf working days">
             <div class="section-badge-group">
                 <span class="academic-badge"><i class="fas fa-calendar-alt"></i> Official Academic Schedule</span>
-                <span class="tag-badge"><i class="fas fa-clock"></i> Current Session 2025-26</span>
-                <span class="tag-badge"><i class="fas fa-file-pdf"></i> PDF Schedules Available</span>
+                <span class="tag-badge"><i class="fas fa-clock"></i> Academic Year 2026-2027</span>
+                <span class="tag-badge"><i class="fas fa-university"></i> S.R.K.R. Engineering College (Autonomous)</span>
             </div>
-            <h2 class="section-title">Academic Calendar (2025 – 2026)</h2>
-            <div class="section-subtitle">Instruction Schedules | Mid-Examination Dates | Practical Exams | Semester End Examinations</div>
+            <h2 class="section-title">Academic Calendar (2026 – 2027)</h2>
+            <div class="section-subtitle">II B.Tech Semester Schedules | Mid-Term Examinations | Marks Deadlines | List of Holidays & Working Days</div>
 
             <p style="color: #4a3b32; font-size: 1.02rem; line-height: 1.8; margin-bottom: 25px;">
-                Official academic calendar for all undergraduate CSD and CSIT batches detailing class commencement dates, mid-term examinations, preparation holidays, practical lab exams, and semester-end university examinations.
+                Official academic calendar for <strong>II B.Tech (CSD & CSIT)</strong> for the Academic Year 2026–2027 detailing semester commencement, instruction schedules, internal & end examinations, mark submission deadlines, and monthly holiday list.
             </p>
 
+            <!-- 2026-2027 II B.Tech Detailed Schedule Card -->
+            <div style="background: #fdfbf7; border-radius: 24px; padding: 30px; border: 1px solid #f3eae1; margin-bottom: 35px; box-shadow: 0 10px 30px rgba(180, 83, 9, 0.06);">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4 pb-3" style="border-bottom: 2px solid #f3eae1;">
+                    <div>
+                        <h4 style="font-family: var(--font-display); font-weight: 800; color: #1a0d06; margin: 0;">
+                            <i class="fas fa-calendar-check text-warning me-2"></i>II B.Tech Academic Calendar for 2026–2027
+                        </h4>
+                        <span style="color: #6f5f54; font-size: 0.9rem;">S.R.K.R. Engineering College (Autonomous): Bhimavaram</span>
+                    </div>
+                    <span style="background: #1a0d06; color: #f59e0b; font-size: 0.85rem; font-weight: 700; padding: 6px 16px; border-radius: 50px;">
+                        <i class="fas fa-star me-1"></i> II Year Schedule
+                    </span>
+                </div>
+
+                <!-- I SEMESTER & II SEMESTER TABLES SIDE-BY-SIDE OR STACKED -->
+                <div class="row g-4 mb-4">
+                    <!-- I SEMESTER -->
+                    <div class="col-lg-6">
+                        <div style="background: #ffffff; border-radius: 18px; padding: 20px; border: 1px solid #f3eae1; height: 100%;">
+                            <h5 style="font-family: var(--font-display); font-weight: 800; color: #d97706; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;">
+                                <span><i class="fas fa-bookmark me-2"></i>I SEMESTER</span>
+                                <span style="font-size: 0.82rem; background: #fffbeb; color: #b45309; padding: 4px 10px; border-radius: 8px; border: 1px solid #fde68a;">Starts: 20.07.2026</span>
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered align-middle" style="font-size: 0.88rem;">
+                                    <thead style="background: #1a0d06; color: #ffffff;">
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>Duration</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="fw-bold style-highlight" style="background: #fffbeb;">
+                                            <td>Commencement of Class Work</td>
+                                            <td colspan="3" class="text-center text-primary">20.07.2026</td>
+                                        </tr>
+                                        <tr>
+                                            <td>I Unit of Instructions</td>
+                                            <td>20.07.2026</td>
+                                            <td>12.09.2026</td>
+                                            <td>8 Weeks</td>
+                                        </tr>
+                                        <tr class="table-warning">
+                                            <td><strong>I Internal Examinations</strong></td>
+                                            <td>15.09.2026</td>
+                                            <td>17.09.2026</td>
+                                            <td>3 Days</td>
+                                        </tr>
+                                        <tr>
+                                            <td>II Unit of Instructions (Part 1)</td>
+                                            <td>18.09.2026</td>
+                                            <td>17.10.2026</td>
+                                            <td>4 ½ Weeks</td>
+                                        </tr>
+                                        <tr class="table-danger">
+                                            <td><strong>Dasara Holidays</strong></td>
+                                            <td><strong>19.10.2026</strong></td>
+                                            <td><strong>24.10.2026</strong></td>
+                                            <td><strong>1 Week</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>II Unit of Instructions (Part 2)</td>
+                                            <td>26.10.2026</td>
+                                            <td>18.11.2026</td>
+                                            <td>3 ½ Weeks</td>
+                                        </tr>
+                                        <tr class="table-warning">
+                                            <td><strong>II Internal Examinations</strong></td>
+                                            <td>19.11.2026</td>
+                                            <td>21.11.2026</td>
+                                            <td>3 Days</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Preparation & Practicals</td>
+                                            <td>23.11.2026</td>
+                                            <td>28.11.2026</td>
+                                            <td>1 Week</td>
+                                        </tr>
+                                        <tr class="table-success fw-bold">
+                                            <td>End Examinations</td>
+                                            <td>30.11.2026</td>
+                                            <td>12.12.2026</td>
+                                            <td>2 Weeks</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- II SEMESTER -->
+                    <div class="col-lg-6">
+                        <div style="background: #ffffff; border-radius: 18px; padding: 20px; border: 1px solid #f3eae1; height: 100%;">
+                            <h5 style="font-family: var(--font-display); font-weight: 800; color: #d97706; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;">
+                                <span><i class="fas fa-bookmark me-2"></i>II SEMESTER</span>
+                                <span style="font-size: 0.82rem; background: #fffbeb; color: #b45309; padding: 4px 10px; border-radius: 8px; border: 1px solid #fde68a;">Starts: 14.12.2026</span>
+                            </h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered align-middle" style="font-size: 0.88rem;">
+                                    <thead style="background: #1a0d06; color: #ffffff;">
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>From</th>
+                                            <th>To</th>
+                                            <th>Duration</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="fw-bold" style="background: #fffbeb;">
+                                            <td>Commencement of Class Work</td>
+                                            <td colspan="3" class="text-center text-primary">14.12.2026</td>
+                                        </tr>
+                                        <tr>
+                                            <td>I Unit of Instructions (Part 1)</td>
+                                            <td>14.12.2026</td>
+                                            <td>09.01.2027</td>
+                                            <td>4 Weeks</td>
+                                        </tr>
+                                        <tr class="table-danger">
+                                            <td><strong>Pongal Holidays</strong></td>
+                                            <td><strong>11.01.2027</strong></td>
+                                            <td><strong>16.01.2027</strong></td>
+                                            <td><strong>1 Week</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td>I Unit of Instructions (Part 2)</td>
+                                            <td>18.01.2027</td>
+                                            <td>13.02.2027</td>
+                                            <td>4 Weeks</td>
+                                        </tr>
+                                        <tr class="table-warning">
+                                            <td><strong>I Internal Examinations</strong></td>
+                                            <td>15.02.2027</td>
+                                            <td>17.02.2027</td>
+                                            <td>3 Days</td>
+                                        </tr>
+                                        <tr>
+                                            <td>II Unit of Instructions</td>
+                                            <td>18.02.2027</td>
+                                            <td>12.04.2027</td>
+                                            <td>8 Weeks</td>
+                                        </tr>
+                                        <tr class="table-warning">
+                                            <td><strong>II Internal Examinations</strong></td>
+                                            <td>13.04.2027</td>
+                                            <td>17.04.2027</td>
+                                            <td>3 Days</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Preparation & Practicals</td>
+                                            <td>19.04.2027</td>
+                                            <td>24.04.2027</td>
+                                            <td>1 Week</td>
+                                        </tr>
+                                        <tr class="table-success fw-bold">
+                                            <td>End Examinations</td>
+                                            <td>26.04.2027</td>
+                                            <td>08.05.2027</td>
+                                            <td>2 Weeks</td>
+                                        </tr>
+                                        <tr class="table-info">
+                                            <td><strong>Community Service Project (CSP)</strong></td>
+                                            <td>10.05.2027</td>
+                                            <td>03.07.2027</td>
+                                            <td>8 Weeks</td>
+                                        </tr>
+                                        <tr class="table-dark text-warning fw-bold">
+                                            <td>Commencement of III Year I Sem (2027-28)</td>
+                                            <td colspan="3" class="text-center">05.07.2027</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUBMISSION OF MID/INTERNAL MARKS DEADLINES -->
+                <div class="mb-4">
+                    <h5 style="font-family: var(--font-display); font-weight: 800; color: #1a0d06; margin-bottom: 15px;">
+                        <i class="fas fa-clock text-warning me-2"></i>Submission Deadlines for Mid & Internal Marks (II B.Tech)
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle text-center" style="font-size: 0.9rem;">
+                            <thead style="background: #2a150a; color: #ffffff;">
+                                <tr>
+                                    <th>Year</th>
+                                    <th>Semester</th>
+                                    <th>I Mid Marks Deadline</th>
+                                    <th>II Mid Marks Deadline</th>
+                                    <th>Internal Marks Deadline</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold" rowspan="2" style="vertical-align: middle; background: #fffbeb;">II Year B.Tech</td>
+                                    <td class="fw-bold">I Semester</td>
+                                    <td><span class="badge bg-warning text-dark px-3 py-2">21.09.2026</span></td>
+                                    <td><span class="badge bg-warning text-dark px-3 py-2">24.11.2026</span></td>
+                                    <td><span class="badge bg-success px-3 py-2">26.11.2026</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">II Semester</td>
+                                    <td><span class="badge bg-warning text-dark px-3 py-2">20.02.2027</span></td>
+                                    <td><span class="badge bg-warning text-dark px-3 py-2">20.04.2027</span></td>
+                                    <td><span class="badge bg-success px-3 py-2">22.04.2027</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- LIST OF HOLIDAYS & WORKING DAYS (2026 - 2027) -->
+                <div>
+                    <h5 style="font-family: var(--font-display); font-weight: 800; color: #1a0d06; margin-bottom: 15px;">
+                        <i class="fas fa-umbrella-beach text-warning me-2"></i>List of Holidays & Working Days (Academic Year 2026–2027)
+                    </h5>
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered align-middle" style="font-size: 0.88rem;">
+                            <thead style="background: #1a0d06; color: #ffffff;">
+                                <tr>
+                                    <th style="width: 15%;">Month</th>
+                                    <th style="width: 70%;">List of Holidays</th>
+                                    <th style="width: 15%; text-align: center;">Working Days</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fw-bold">July 2026</td>
+                                    <td>5, 12, 19 &amp; 26 Sundays.</td>
+                                    <td class="text-center fw-bold text-success">27</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">August 2026</td>
+                                    <td>2, 9, 16, 23 &amp; 30 Sundays, 15<sup>th</sup> Independence Day, 26<sup>th</sup> Milad Nabi.</td>
+                                    <td class="text-center fw-bold text-success">24</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">September 2026</td>
+                                    <td>6, 13, 20 &amp; 27 Sundays, 4<sup>th</sup> Janmashtami, 14<sup>th</sup> Ganesh Chaturthi.</td>
+                                    <td class="text-center fw-bold text-success">24</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">October 2026</td>
+                                    <td>4, 11, 18 &amp; 25 Sundays, 2<sup>nd</sup> Gandhi Jayanthi, 19<sup>th</sup> Durgashtami, 20<sup>th</sup> Maharnavami &amp; Vijayadasami.</td>
+                                    <td class="text-center fw-bold text-success">24</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">November 2026</td>
+                                    <td>1, 8, 15, 22 &amp; 29 Sundays, 8<sup>th</sup> Diwali.</td>
+                                    <td class="text-center fw-bold text-success">25</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">December 2026</td>
+                                    <td>6, 13, 20 &amp; 27 Sundays, 25<sup>th</sup> Christmas.</td>
+                                    <td class="text-center fw-bold text-success">26</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">January 2027</td>
+                                    <td>3, 10, 17, 24 &amp; 31 Sundays, 1<sup>st</sup> New Year Day, 14<sup>th</sup> Bhogi, 15<sup>th</sup> Makara Sankranti, 16<sup>th</sup> Kanuma, 26<sup>th</sup> Republic Day.</td>
+                                    <td class="text-center fw-bold text-success">21</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">February 2027</td>
+                                    <td>7, 14, 21 &amp; 28 Sundays.</td>
+                                    <td class="text-center fw-bold text-success">24</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">March 2027</td>
+                                    <td>7, 14, 21 &amp; 28 Sundays, 6<sup>th</sup> Maha Shivaratri, 10<sup>th</sup> Ramzan, 22<sup>nd</sup> Holi, 26<sup>th</sup> Good Friday.</td>
+                                    <td class="text-center fw-bold text-success">23</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">April 2027</td>
+                                    <td>4, 11, 18 &amp; 25 Sundays, 5<sup>th</sup> Jagajeevan Ram Jayanthi, 7<sup>th</sup> Ugadi, 14<sup>th</sup> Dr. B.R. Ambedkar Jayanthi, 15<sup>th</sup> Sriramanavami.</td>
+                                    <td class="text-center fw-bold text-success">22</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">May 2027</td>
+                                    <td>2, 9, 16, 23 &amp; 30 Sundays, 15<sup>th</sup> Bakrid.</td>
+                                    <td class="text-center fw-bold text-success">25</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-bold">June 2027</td>
+                                    <td>6, 13, 20 &amp; 27 Sundays, 16<sup>th</sup> Moharam.</td>
+                                    <td class="text-center fw-bold text-success">25</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PDF DOWNLOAD CARDS FOR CALENDARS -->
+            <h4 style="font-family: var(--font-display); font-weight: 800; color: #1a0d06; margin-bottom: 20px;">
+                <i class="fas fa-file-pdf text-warning me-2"></i>Academic Calendar Downloads
+            </h4>
             <div class="row g-4">
                 <div class="col-md-6">
                     <div style="background: #ffffff; border-radius: 20px; padding: 25px; border: 1px solid #f3eae1; box-shadow: 0 8px 24px rgba(180, 83, 9, 0.06); display: flex; align-items: center; justify-content: space-between; gap: 15px;">
@@ -941,8 +1240,8 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                 <i class="fas fa-file-pdf"></i>
                             </div>
                             <div>
-                                <h5 style="font-family: var(--font-display); font-weight: 800; color: #1a0d06; margin: 0 0 4px 0;">II & III B.Tech Academic Calendar 2025-26</h5>
-                                <span style="font-size: 0.88rem; color: #6f5f54;">Official schedule for 2nd and 3rd year CSD & CSIT</span>
+                                <h5 style="font-family: var(--font-display); font-weight: 800; color: #1a0d06; margin: 0 0 4px 0;">II B.Tech Academic Calendar 2026-27</h5>
+                                <span style="font-size: 0.88rem; color: #6f5f54;">Official schedule &amp; holiday list for 2nd year CSD &amp; CSIT</span>
                             </div>
                         </div>
                         <a href="files/II_III_B.Tech_Academic_Calendar_2025-26.pdf" class="pdf-link" target="_blank">
@@ -958,8 +1257,8 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                 <i class="fas fa-calendar-check"></i>
                             </div>
                             <div>
-                                <h5 style="font-family: var(--font-display); font-weight: 800; color: #1a0d06; margin: 0 0 4px 0;">I & IV B.Tech Academic Calendar 2025-26</h5>
-                                <span style="font-size: 0.88rem; color: #6f5f54;">Official schedule for 1st and 4th year CSD & CSIT</span>
+                                <h5 style="font-family: var(--font-display); font-weight: 800; color: #1a0d06; margin: 0 0 4px 0;">III &amp; IV B.Tech Academic Calendar 2025-26</h5>
+                                <span style="font-size: 0.88rem; color: #6f5f54;">Official schedule for 3rd and 4th year CSD &amp; CSIT</span>
                             </div>
                         </div>
                         <a href="files/II_III_B.Tech_Academic_Calendar_2025-26.pdf" class="pdf-link" target="_blank">
