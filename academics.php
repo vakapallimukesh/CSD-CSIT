@@ -1439,6 +1439,19 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                 filterSections();
             });
         }
+
+        // Auto-select filter if passed via URL parameter (e.g. academics.php?filter=calendar)
+        const urlParams = new URLSearchParams(window.location.search);
+        const filterParam = urlParams.get('filter') || (window.location.hash ? window.location.hash.replace('#', '') : null);
+        if (filterParam) {
+            const targetBtn = document.querySelector(`.filter-btn[data-filter="${filterParam}"]`);
+            if (targetBtn) {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                targetBtn.classList.add('active');
+                currentFilter = filterParam;
+                filterSections();
+            }
+        }
     });
     </script>
 </body>

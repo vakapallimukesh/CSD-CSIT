@@ -463,11 +463,18 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
                 
-                <!-- Academics Item (Single Link) -->
-                <li class="nav-item">
-                    <a class="nav-link <?= in_array($current_page, ['academics.php', 'btech-cse.php', 'btech-it.php', 'academic-calendar.php', 'syllabus.php']) ? 'active' : '' ?>" href="academics.php">
+                <!-- Academics Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle <?= in_array($current_page, ['academics.php', 'btech-cse.php', 'btech-it.php', 'academic-calendar.php', 'syllabus.php']) ? 'active' : '' ?>" href="academics.php" id="academicsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-graduation-cap"></i> Academics
                     </a>
+                    <ul class="dropdown-menu" aria-labelledby="academicsDropdown">
+                        <li><a class="dropdown-item <?= $current_page == 'academics.php' ? 'active' : '' ?>" href="academics.php"><i class="fas fa-university me-2"></i> Academics Overview</a></li>
+                        <li><a class="dropdown-item <?= $current_page == 'academic-calendar.php' ? 'active' : '' ?>" href="academic-calendar.php"><i class="fas fa-calendar-alt me-2"></i> Academic Calendar (2026–27)</a></li>
+                        <li><a class="dropdown-item <?= $current_page == 'syllabus.php' ? 'active' : '' ?>" href="syllabus.php"><i class="fas fa-clipboard-list me-2"></i> Syllabus &amp; Model Papers</a></li>
+                        <li><a class="dropdown-item <?= $current_page == 'btech-cse.php' ? 'active' : '' ?>" href="btech-cse.php"><i class="fas fa-laptop-code me-2"></i> B.Tech CSD</a></li>
+                        <li><a class="dropdown-item <?= $current_page == 'btech-it.php' ? 'active' : '' ?>" href="btech-it.php"><i class="fas fa-microchip me-2"></i> B.Tech CSIT</a></li>
+                    </ul>
                 </li>
 
                 <!-- Faculty Dropdown -->
