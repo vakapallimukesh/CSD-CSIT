@@ -156,7 +156,7 @@ body {
                         <a href="#detailed-2026-calendar" class="btn btn-outline-dark" style="border-radius: 14px; font-weight: 700; padding: 10px 20px; font-size: 0.88rem; border-color: #1a0d06;" onclick="document.getElementById('detailed-2026-calendar').scrollIntoView({behavior: 'smooth'}); return false;">
                             <i class="fas fa-table me-1"></i> View Schedule
                         </a>
-                        <a href="files/II_BTech_Academic_Calendar_2026-27.pdf" class="download-btn" target="_blank" style="padding: 10px 20px; font-size: 0.88rem;">
+                        <a href="files/2_btech_ac.pdf" class="download-btn" target="_blank" style="padding: 10px 20px; font-size: 0.88rem;">
                             <i class="fas fa-download me-1"></i> Download PDF
                         </a>
                     </div>
@@ -428,7 +428,7 @@ body {
                             <span style="font-size: 0.88rem; color: #6f5f54;">Official schedule for 2nd year students (2026-27)</span>
                         </div>
                     </div>
-                    <a href="files/II_BTech_Academic_Calendar_2026-27.pdf" class="download-btn" target="_blank">
+                    <a href="files/2_btech_ac.pdf" class="download-btn" target="_blank">
                         <i class="fas fa-download"></i> Download PDF
                     </a>
                 </div>
