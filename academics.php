@@ -1240,11 +1240,11 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                 <i class="fas fa-file-pdf"></i>
                             </div>
                             <div>
-                                <h5 style="font-family: var(--font-display); font-weight: 800; color: #1a0d06; margin: 0 0 4px 0;">II B.Tech Academic Calendar 2026-27</h5>
-                                <span style="font-size: 0.88rem; color: #6f5f54;">Official schedule &amp; holiday list for 2nd year CSD &amp; CSIT</span>
+                                <h5 style="font-family: var(--font-display); font-weight: 800; color: #1a0d06; margin: 0 0 4px 0;">2026-2027 Academic Calendar for 2nd Years</h5>
+                                <span style="font-size: 0.88rem; color: #6f5f54;">Official schedule &amp; holiday list for II B.Tech (2026-27)</span>
                             </div>
                         </div>
-                        <a href="files/II_III_B.Tech_Academic_Calendar_2025-26.pdf" class="pdf-link" target="_blank">
+                        <a href="files/II_B.Tech_Academic_Calendar_2026-27.pdf" class="pdf-link" target="_blank">
                             <i class="fas fa-download"></i> Download PDF
                         </a>
                     </div>
