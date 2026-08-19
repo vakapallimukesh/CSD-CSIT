@@ -594,7 +594,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                 </div>
                 <div class="stat-card">
                     <div class="stat-value">100%</div>
-                    <div class="stat-label">Ph.D & M.Tech Qualified</div>
+                    <div class="stat-label">M.Tech Qualified</div>
                 </div>
             </div>
         </div>
