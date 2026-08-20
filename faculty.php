@@ -451,6 +451,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
             border-radius: 50px;
             font-size: 0.86rem;
             font-weight: 700;
+            text-decoration: none !important;
             cursor: pointer !important;
             transition: all 0.25s ease;
             box-shadow: 0 6px 16px rgba(180, 83, 9, 0.28);
@@ -500,6 +501,76 @@ if (session_status() === PHP_SESSION_NONE) session_start();
             border-color: #004182;
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(10, 102, 194, 0.38);
+        }
+
+        /* Profile Icons Bar Below Photo */
+        .faculty-profile-icons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            margin-top: 4px;
+        }
+
+        .profile-icon-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            text-decoration: none !important;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+            border: 1.5px solid rgba(0, 0, 0, 0.08);
+            cursor: pointer !important;
+        }
+
+        .profile-icon-btn:hover {
+            transform: translateY(-3px) scale(1.08);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.18);
+        }
+
+        .icon-btn-linkedin {
+            background: #f0f7ff;
+            color: #0a66c2 !important;
+            border-color: #c7d2fe;
+        }
+        .icon-btn-linkedin:hover {
+            background: #0a66c2;
+            color: #ffffff !important;
+        }
+
+        .icon-btn-vidwan {
+            background: #f7fee7;
+            color: #65a30d !important;
+            border-color: #d9f99d;
+        }
+        .icon-btn-vidwan:hover {
+            background: #65a30d;
+            color: #ffffff !important;
+        }
+
+        .icon-btn-scholar {
+            background: #eff6ff;
+            color: #2563eb !important;
+            border-color: #bfdbfe;
+        }
+        .icon-btn-scholar:hover {
+            background: #2563eb;
+            color: #ffffff !important;
+        }
+
+        .icon-btn-scopus {
+            background: #fff7ed;
+            color: #ea580c !important;
+            border-color: #fed7aa;
+        }
+        .icon-btn-scopus:hover {
+            background: #ea580c;
+            color: #ffffff !important;
         }
 
         .dept-pill {
@@ -589,12 +660,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                     <div class="stat-label">Faculty Members</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">2</div>
-                    <div class="stat-label">Departments (CSD & CSIT)</div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Ph.D Doctorates</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">100%</div>
-                    <div class="stat-label">Ph.D & M.Tech Qualified</div>
+                    <div class="stat-value">18</div>
+                    <div class="stat-label">M.Tech Qualified</div>
                 </div>
             </div>
         </div>
@@ -605,10 +676,11 @@ if (session_status() === PHP_SESSION_NONE) session_start();
         <div class="controls-card">
             <div class="filter-buttons">
 
-                <button class="filter-btn active" onclick="filterDepartment('all', this)">All Faculty (19)</button>
+                <a href="esteemed-leaders.php" class="filter-btn text-decoration-none d-inline-flex align-items-center gap-1.5"><i class="fas fa-user-tie" style="color: #d97706;"></i> Esteemed Leaders</a>
+                <button class="filter-btn active" onclick="filterDepartment('all', this)">All Faculty (23)</button>
                 <button class="filter-btn" onclick="filterDepartment('hod', this)">Program Coordinators (2)</button>
                 <button class="filter-btn" onclick="filterDepartment('csd', this)">CSD Department (9)</button>
-                <button class="filter-btn" onclick="filterDepartment('csit', this)">CSIT Department (10)</button>
+                <button class="filter-btn" onclick="filterDepartment('csit', this)">CSIT Department (14)</button>
 
             </div>
             <div class="search-box">
@@ -657,7 +729,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="Dr. Suresh Babu Mudunuri" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csd/780.jpeg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/sureshmudunuri" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/dr-suresh-mudunuri-09089a35/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0000-0001-5680-9149" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?user=kAKHoWsAAAAJ&hl=en" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/pages/authors/35080913300" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -684,7 +761,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="A. Aswini Priyanka" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csd/1339.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/aswini-priyanka" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/aswini-areti-15548b43" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0000-0002-0393-2001" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?view_op=new_articles&hl=en&imq=Areti+Aswini+Priyanka#" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/authid/detail.uri?authorId=59237539500" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -711,7 +793,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="S. Mohan Krishna" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csd/1376.jpeg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/mohan-krishna-seerla" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/mohan-krishna-seerla" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0009-0001-9103-5668" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?user=9OrVl9kAAAAJ&hl=en&authuser=2" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -739,7 +826,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="P S V SURYA KUMAR" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csd/1382.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/psv-surya-kumar" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/psv-surya-kumar" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0009-0008-7978-1810" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?user=5Eq16fIAAAAJ&hl=en" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -766,7 +858,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="ANGARA SATYAM" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csd/1472.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/angara-satyam" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/satyam-angara-4a9bb275/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0009-0006-3995-4823" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?view_op=new_profile&hl=en" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/authid/detail.uri?authorId=59501265200" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -793,7 +890,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="Dr. K. Srinivasa Rao" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csd/1474.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/dr-k-srinivasa-rao" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/dr-k-srinivasa-rao" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0009-0005-7616-9114" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?hl=en&view_op=list_works&user=KaMkKTQAAAAJ" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -820,7 +922,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="K. Bhanu Rajesh Naidu" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csd/1479.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/bhanu-rajesh-naidu" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/bhanu-rajesh-naidu" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0009-0009-5157-3910" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?user=XBNBa1wAAAAJ&hl=en" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/authid/detail.uri?authorId=60421969700" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -847,7 +954,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="N. Aneela" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csd/1483.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/n-aneela" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/aneela-nadimpilli-57b57a222/?isSelfProfile=false" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0009-0007-7432-762X" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?view_op=list_works&hl=en&user=-xC0fBkAAAAJ" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/authid/detail.uri?authorId=60579518500" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -874,7 +986,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="M Sai Madhuri" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csd/1504.jpeg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/sai-madhuri" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/sai-madhuri" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://vidwan.inflibnet.ac.in/profile/715072" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="Vidwan Profile"><i class="fas fa-university"></i></a>
+                                <a href="https://scholar.google.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -917,7 +1034,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="DR NGK MURTHY" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csit/781.jpeg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/dr-ngk-murthy" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/nukala-gopala-krishna-murthy-5b262a62" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="http://www.orcid.org/0000-0001-6065-854X" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?user=nhXUgegAAAAJ&hl=en" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/authid/detail.uri?authorId=57203930887" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -944,7 +1066,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="N. NAVYA" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csit/1259.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/n-navya" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/feed/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0009-0003-7020-4762" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?hl=en&user=QRZhj4sAAAAJ" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/authid/detail.uri?authorId=105007914505" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -971,7 +1098,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="NETI PRAVEEN" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csit/1348.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/neti-praveen" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/neti-praveen-23b20841/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0009-0006-3366-1288" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?hl=en&authuser=1&user=NR5zAcQAAAAJ" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/authid/detail.uri?authorId=58137548200" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -998,7 +1130,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="K V SUNIL VARMA" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csit/1372.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/kv-sunil-varma" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/k-v-sunil-v-176a32318" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0009-0006-2427-7073" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?user=J9MVlHwAAAAJ&hl=en" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/authid/detail.uri?authorId=59127093100" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1025,7 +1162,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="P MOUNA" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csit/1398.jpeg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/p-mouna" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/p-mouna" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0009-0005-4836-3593" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?view_op=list_works&hl=en&authuser=4&user=OQrKZ4kAAAAJ" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/authid/detail.uri?authorId=59237614200" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1052,7 +1194,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="P MANOJ" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csit/1399.jpeg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/p-manoj-ai" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/pericherla-manoj-a0912b19/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://vidwan.inflibnet.ac.in/profile/715065" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="Vidwan Profile"><i class="fas fa-university"></i></a>
+                                <a href="https://scholar.google.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1079,7 +1226,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="ANUSURI KRISHNA VENI" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csit/1478.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/anusuri-krishna-veni" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/krishnaveni-anusuri-17a656306" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0009-0003-6129-0910" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?user=r5FpncMAAAAJ&hl=en" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/authid/detail.uri?authorId=58932473500" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1106,7 +1258,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="K V V Satya Trinadh Naidu" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csit/1480.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/kvv-satya-trinadh-naidu" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/kvv-satya-trinadh-naidu" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0000-0001-5151-5088" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?user=L0eGKJAAAAAJ&hl=en" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/authid/detail.uri?authorId=57864126200" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1133,7 +1290,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="D Parvathi" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csit/1503.jpeg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/d-parvathi" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/d-parvathi" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://vidwan.inflibnet.ac.in/profile/715070" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="Vidwan Profile"><i class="fas fa-university"></i></a>
+                                <a href="https://scholar.google.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1160,7 +1322,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="K Sri Vigyna" 
                                      onerror="this.onerror=null; this.src='https://www.srkrec.ac.in/assets/images/faculty/csit/1509.jpeg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/k-sri-vigyna" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/k-sri-vigyna" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://vidwan.inflibnet.ac.in/profile/715093" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="Vidwan Profile"><i class="fas fa-university"></i></a>
+                                <a href="https://scholar.google.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1187,7 +1354,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="Dr. Koppisetti Giridhar" 
                                      onerror="this.onerror=null; this.src='assets/faculty_official/csit_giridhar.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/giridhar-k-30335a213/" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/giridhar-k-30335a213/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://orcid.org/0000-0001-8369-9985" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="ORCID Profile"><i class="fas fa-id-badge"></i></a>
+                                <a href="https://scholar.google.com/citations?user=yOErVsgAAAAJ&hl=en&oi=ao" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/authid/detail.uri?authorId=57210207686" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1214,7 +1386,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="M. Srinu" 
                                      onerror="this.onerror=null; this.src='assets/faculty_official/csit_srinu.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/m-srinu" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/m-srinu" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://vidwan.inflibnet.ac.in/profile/715127" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="Vidwan Profile"><i class="fas fa-university"></i></a>
+                                <a href="https://scholar.google.com/citations?hl=en&user=X0MxDOYAAAAJ&view_op=list_works&sortby=pubdate" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1241,7 +1418,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="Mohan Surendra" 
                                      onerror="this.onerror=null; this.src='assets/faculty_official/csit_surendra.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/mohan-surendra" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/mohan-surendra" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://vidwan.inflibnet.ac.in/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="Vidwan Profile"><i class="fas fa-university"></i></a>
+                                <a href="https://scholar.google.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1268,7 +1450,12 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                                      alt="Dr. Sudhakar" 
                                      onerror="this.onerror=null; this.src='assets/faculty_official/csit_sudhakar.jpg';">
                             </div>
-                            <a href="https://www.linkedin.com/in/dr-sudhakar" target="_blank" rel="noopener noreferrer" class="linkedin-btn-right"><i class="fab fa-linkedin"></i> LinkedIn Profile</a>
+                            <div class="faculty-profile-icons">
+                                <a href="https://www.linkedin.com/in/dr-sudhakar" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-linkedin" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>
+                                <a href="https://vidwan.inflibnet.ac.in/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-vidwan" title="Vidwan Profile"><i class="fas fa-university"></i></a>
+                                <a href="https://scholar.google.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scholar" title="Google Scholar Profile"><i class="fas fa-graduation-cap"></i></a>
+                                <a href="https://www.scopus.com/" target="_blank" rel="noopener noreferrer" class="profile-icon-btn icon-btn-scopus" title="Scopus Author Profile"><i class="fas fa-book-open"></i></a>
+                            </div>
                         </div>
                     </div>
                 </div>

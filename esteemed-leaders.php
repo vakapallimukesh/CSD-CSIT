@@ -468,24 +468,96 @@ body {
     <div class="container">
 
         <?php 
-        // 3 Separate Rows (2 Leaders Per Row)
+        // 3 Structured Governing Body Rows
         $leader_rows = [
             'row1' => [
-                'title' => 'Executive & Institutional Leadership',
-                'badge' => 'Row 1 • 2 Leaders',
+                'title' => 'Executive & Governing Body Leadership',
+                'badge' => 'Executive Board',
                 'icon' => 'fas fa-crown',
                 'color' => '#d97706',
                 'leaders' => [
                     [
-                        'id' => 'secretary_nishant_varma',
+                        'id' => 's_prasada_raju',
                         'category' => 'row1',
+                        'badge' => 'President',
+                        'name' => 'Sri. S. Prasad Raju',
+                        'designation' => 'President',
+                        'role' => 'SRKREC Governing Body',
+                        'photo' => 'assets/images/leaders/s_prasada_raju.jpg',
+                        'bio' => 'Leading strategic institutional vision, governing principles, and overall campus development at SRKREC.',
+                        'full_statement' => 'Our vision is to build an environment where innovative technical education empowers students to solve complex real-world challenges.',
+                        'achievements' => [
+                            'President of SRKR Engineering College Governing Body',
+                            'Institutional Expansion & Academic Quality Leadership',
+                            'Promoting Research Excellence & Student Infrastructure'
+                        ]
+                    ],
+                    [
+                        'id' => 'p_krishnam_raju',
+                        'category' => 'row1',
+                        'badge' => 'Honorary Chairman',
+                        'name' => 'Sri. P. Krishnam Raju',
+                        'designation' => 'Honorary Chairman, Member Governing Body',
+                        'role' => 'SRKREC Governing Body',
+                        'photo' => 'assets/images/leaders/p_krishnam_raju.jpg',
+                        'bio' => 'Steering long-term strategic direction, ethics, and academic excellence across all college departments.',
+                        'full_statement' => 'Dedicated to maintaining the highest values of integrity, academic rigor, and holistic development for all engineering disciplines.',
+                        'achievements' => [
+                            'Honorary Chairman of SRKREC Governing Body',
+                            'Decades of Strategic Educational Leadership',
+                            'Pioneer in Regional Technical & Higher Education Growth'
+                        ]
+                    ],
+                    [
+                        'id' => 'g_rama_raju',
+                        'category' => 'row1',
+                        'badge' => 'Vice President-I',
+                        'name' => 'Sri. G. Rama Raju',
+                        'designation' => 'Vice President-I',
+                        'role' => 'SRKREC Governing Body',
+                        'photo' => 'assets/images/leaders/g_rama_raju.jpg',
+                        'bio' => 'Guiding campus growth, technological infrastructure, and institutional administrative strategies.',
+                        'full_statement' => 'We strive to continuously modernize our laboratories, research suites, and academic ecosystems for student success.',
+                        'achievements' => [
+                            'Vice President-I of Governing Body',
+                            'Infrastructure & Technology Modernization Leader',
+                            'Fostering Industry Connections & Campus Development'
+                        ]
+                    ],
+                    [
+                        'id' => 'sv_ranga_raju',
+                        'category' => 'row1',
+                        'badge' => 'Vice President-II',
+                        'name' => 'Sri. S. V. Ranga Raju',
+                        'designation' => 'Vice President-II',
+                        'role' => 'SRKREC Governing Body',
+                        'photo' => 'assets/images/leaders/sv_ranga_raju.jpg',
+                        'bio' => 'Supporting operational governance, student welfare initiatives, and educational advancement.',
+                        'full_statement' => 'Nurturing student potential through practical knowledge and strong ethical foundations is our primary mission.',
+                        'achievements' => [
+                            'Vice President-II of Governing Body',
+                            'Supported Student Welfare & Skill Enhancement Initiatives',
+                            'Advocated Quality Systems & Academic Standards'
+                        ]
+                    ]
+                ]
+            ],
+            'row2' => [
+                'title' => 'Executive & Campus Administration',
+                'badge' => 'Administration',
+                'icon' => 'fas fa-university',
+                'color' => '#b45309',
+                'leaders' => [
+                    [
+                        'id' => 'secretary_nishant_varma',
+                        'category' => 'row2',
                         'badge' => 'Secretary cum Correspondent',
                         'name' => 'Sri. S. R. K. Nishant Varma',
                         'designation' => 'Secretary cum Correspondent',
                         'role' => 'SRKREC Executive Association',
                         'photo' => 'assets/images/leaders/secretary_nishant_varma.jpg',
                         'bio' => 'Fostering institutional development, administrative excellence, and innovative student welfare programs at SRKREC.',
-                        'full_statement' => 'Our commitment is to provide students with state-of-the-art infrastructure, world-class technical education, and vibrant opportunities to excel in global careers. We continually invest in modern learning technologies and student mentorship.',
+                        'full_statement' => 'Our commitment is to provide students with state-of-the-art infrastructure, world-class technical education, and vibrant opportunities to excel in global careers.',
                         'achievements' => [
                             'Executive Leadership of SRKR Engineering College Association',
                             'Expanded Modern Campus Infrastructure & Tech Suites',
@@ -494,38 +566,30 @@ body {
                     ],
                     [
                         'id' => 'director_jagapathi_raju',
-                        'category' => 'row1',
+                        'category' => 'row2',
                         'badge' => 'Director',
                         'name' => 'DR. M. Jagapathi Raju',
                         'designation' => 'Director',
                         'role' => 'S.R.K.R. Engineering College',
                         'photo' => 'assets/images/leaders/director_jagapathi_raju.jpg',
-                        'bio' => 'Steering strategic institutional expansion, high-impact research endeavors, and global academic affiliations at SRKR Engineering College.',
-                        'full_statement' => 'As Director of SRKR Engineering College, my vision is to continuously elevate our academic standards, foster world-class research facilities, and establish global industry collaborations. We aim to empower our students with cutting-edge skills, innovation capabilities, and strong ethical grounding to lead the future of technology.',
+                        'bio' => 'Steering strategic institutional expansion, high-impact research endeavors, and global academic affiliations.',
+                        'full_statement' => 'My vision is to continuously elevate our academic standards, foster world-class research facilities, and establish global industry collaborations.',
                         'achievements' => [
                             'Over 35 Years of Academic & Administrative Leadership',
                             'Spearheaded Major Research & Infrastructure Initiatives',
                             'Fostered Global University & Corporate Partnerships'
                         ]
-                    ]
-                ]
-            ],
-            'row2' => [
-                'title' => 'Academic & Institutional Governance',
-                'badge' => 'Row 2 • 2 Leaders',
-                'icon' => 'fas fa-university',
-                'color' => '#b45309',
-                'leaders' => [
+                    ],
                     [
                         'id' => 'principal_murali_krishnam_raju',
                         'category' => 'row2',
                         'badge' => 'Principal',
                         'name' => 'Dr. K. V. Murali Krishnam Raju',
-                        'designation' => 'Principal',
+                        'designation' => 'Principal, Ex-Officio member',
                         'role' => 'S.R.K.R. Engineering College',
-                        'photo' => 'assets/images/leaders/principal_murali_krishnam_raju.png',
+                        'photo' => 'assets/images/leaders/principal_murali_krishnam_raju.jpg',
                         'bio' => 'Championing academic excellence, outcome-based education, accreditation quality, and holistic student development.',
-                        'full_statement' => 'Education is the foundation for personal growth and societal transformation. At SRKR Engineering College, we are dedicated to cultivating an environment of intellectual curiosity, rigorous academic discipline, and hands-on technical learning. Our programs prepare students to excel in competitive global arenas.',
+                        'full_statement' => 'We are dedicated to cultivating an environment of intellectual curiosity, rigorous academic discipline, and hands-on technical learning.',
                         'achievements' => [
                             'Driving NAAC \'A+\' Grade Quality & Accreditation Standards',
                             'Published Numerous International Research Papers',
@@ -533,29 +597,45 @@ body {
                         ]
                     ],
                     [
-                        'id' => 'gb_vijaya_narasimha_raju',
+                        'id' => 'cao_dileep_chakravarthy',
                         'category' => 'row2',
+                        'badge' => 'Chief Administrative Officer',
+                        'name' => 'Mr. Ch. Dileep Chakravarthy',
+                        'designation' => 'Chief Administrative Officer',
+                        'role' => 'Campus Administration',
+                        'photo' => 'assets/images/leaders/cao_dileep_chakravarthy.png',
+                        'bio' => 'Managing administrative operations, student infrastructure, campus governance, and institutional efficiency.',
+                        'full_statement' => 'We ensure state-of-the-art campus infrastructure, robust support services, and efficient resource allocation.',
+                        'achievements' => [
+                            'Overseeing 30+ Acre Campus Infrastructure & Modern Amenities',
+                            'Streamlined Student Support & Administrative Operations',
+                            'Fostered Campus Security, Wellness & Student Facilities'
+                        ]
+                    ]
+                ]
+            ],
+            'row3' => [
+                'title' => 'Governing Body Members & External Nominees',
+                'badge' => 'Governing Members & Nominees',
+                'icon' => 'fas fa-award',
+                'color' => '#0284c7',
+                'leaders' => [
+                    [
+                        'id' => 'gb_vijaya_narasimha_raju',
+                        'category' => 'row3',
                         'badge' => 'Member, Governing Body',
                         'name' => 'Dr. K. S. Vijaya Narasimha Raju',
                         'designation' => 'Member, Governing Body',
                         'role' => 'Governing Body Representative',
                         'photo' => 'assets/images/leaders/gb_vijaya_narasimha_raju.jpg',
                         'bio' => 'Guiding institutional policy, academic governance, quality assurance, and long-term strategic initiatives.',
-                        'full_statement' => 'Strong governance ensures academic rigor and continuous institutional innovation. As a member of the Governing Body, I am committed to supporting policies that promote research excellence, student empowerment, and world-class educational standards.',
+                        'full_statement' => 'Strong governance ensures academic rigor and continuous institutional innovation.',
                         'achievements' => [
                             'Governing Body Representative for Academic Quality Assurance',
                             'Guided Curriculum Innovations & Institutional Policies',
                             'Promoted Interdisciplinary Research & Faculty Development'
                         ]
-                    ]
-                ]
-            ],
-            'row3' => [
-                'title' => 'Governing Body & Operational Leadership',
-                'badge' => 'Row 3 • 2 Leaders',
-                'icon' => 'fas fa-briefcase',
-                'color' => '#0284c7',
-                'leaders' => [
+                    ],
                     [
                         'id' => 'gb_satya_pratik_varma',
                         'category' => 'row3',
@@ -565,7 +645,7 @@ body {
                         'role' => 'Governing Body Representative',
                         'photo' => 'assets/images/leaders/gb_satya_pratik_varma.jpg',
                         'bio' => 'Promoting technological innovation, student entrepreneurship, and campus infrastructure development.',
-                        'full_statement' => 'Empowering the next generation of engineers with modern facilities, startup incubation, and practical problem-solving skills is central to our vision. We support students in turning creative ideas into impactful real-world applications.',
+                        'full_statement' => 'Empowering the next generation of engineers with modern facilities and startup incubation is central to our vision.',
                         'achievements' => [
                             'Active Contributor to Governing Body Strategic Planning',
                             'Supported Startup Incubation & Tech Club Initiatives',
@@ -573,26 +653,58 @@ body {
                         ]
                     ],
                     [
-                        'id' => 'cao_dileep_chakravarthy',
+                        'id' => 'gvr_prasada_raju',
                         'category' => 'row3',
-                        'badge' => 'Chief Administrative Officer',
-                        'name' => 'Mr. Ch. Dileep Chakravarthy',
-                        'designation' => 'Chief Administrative Officer',
-                        'role' => 'Campus Administration',
-                        'photo' => 'assets/images/leaders/cao_dileep_chakravarthy.png',
-                        'bio' => 'Managing administrative operations, student infrastructure, campus governance, and institutional efficiency.',
-                        'full_statement' => 'Efficient administrative governance is vital for maintaining a modern, seamless learning environment. We ensure state-of-the-art campus infrastructure, robust support services, and efficient resource allocation to enable student success and institutional growth.',
+                        'badge' => 'JNTUK Nominee',
+                        'name' => 'Prof. G. V. R. Prasada Raju',
+                        'designation' => 'JNTUK Nominee',
+                        'role' => 'University Representative',
+                        'photo' => 'assets/images/leaders/gvr_prasada_raju.jpg',
+                        'bio' => 'Representing JNTUK on the Governing Body, driving curriculum standards and university compliance.',
+                        'full_statement' => 'Ensuring alignment with university academic regulations and promoting high academic research standards.',
                         'achievements' => [
-                            'Overseeing 30+ Acre Campus Infrastructure & Modern Amenities',
-                            'Streamlined Student Support & Administrative Operations',
-                            'Fostered Campus Security, Wellness & Student Activity Facilities'
+                            'JNTUK Nominee to SRKREC Governing Body',
+                            'Eminent Professor & Academic Administrator',
+                            'Guided University Curriculum Alignment & Standards'
+                        ]
+                    ],
+                    [
+                        'id' => 'kp_singh',
+                        'category' => 'row3',
+                        'badge' => 'UGC Nominee',
+                        'name' => 'Dr. K. P. Singh',
+                        'designation' => 'UGC Nominee',
+                        'role' => 'UGC Representative',
+                        'photo' => 'assets/images/leaders/kp_singh.jpg',
+                        'bio' => 'UGC Nominee on the Governing Body, supporting higher education quality and research grant policy.',
+                        'full_statement' => 'Fostering excellence in higher education, institutional autonomy, and university grant compliance.',
+                        'achievements' => [
+                            'UGC Nominee to Governing Body',
+                            'Advocated Research Grants & Autonomous Accreditation',
+                            'Promoted National Educational Policy Integration'
+                        ]
+                    ],
+                    [
+                        'id' => 'rjd_tech_education',
+                        'category' => 'row3',
+                        'badge' => 'AP Govt. Nominee',
+                        'name' => 'The Regional Joint Director of Tech. Education',
+                        'designation' => 'AP Govt. Nominee',
+                        'role' => 'State Govt. Representative',
+                        'photo' => 'assets/images/leaders/rjd_tech_education.jpg',
+                        'bio' => 'AP Government Representative on the Governing Body, ensuring state technical education compliance.',
+                        'full_statement' => 'Collaborating with technical institutions to promote government welfare schemes and quality technical education.',
+                        'achievements' => [
+                            'AP Government Technical Education Representative',
+                            'Guided Statutory Regulatory Compliance & Quality Checks',
+                            'Facilitated Government Student Scholarship & Welfare Schemes'
                         ]
                     ]
                 ]
             ]
         ];
 
-        // Flat Array of all 6 leaders for JS modal lookup
+        // Flat Array of all leaders for JS modal lookup
         $all_leaders_flat = [];
         foreach ($leader_rows as $row) {
             foreach ($row['leaders'] as $leader) {
@@ -601,9 +713,13 @@ body {
         }
         ?>
 
-        <!-- Render 3 Separate Rows (Each Row Contains Exactly 2 People) -->
+        <!-- Render Governing Body Sections -->
         <?php foreach ($leader_rows as $row_key => $row_data): ?>
-            <div class="leader-row-wrapper mb-4" data-row-category="<?php echo $row_key; ?>">
+            <div class="leader-row-wrapper mb-5" data-row-category="<?php echo $row_key; ?>">
+                <div class="row-category-header mb-4">
+                    <h3 class="row-category-title"><i class="<?php echo $row_data['icon']; ?> me-2" style="color: <?php echo $row_data['color']; ?>;"></i> <?php echo htmlspecialchars($row_data['title']); ?></h3>
+                    <span class="row-category-badge"><?php echo htmlspecialchars($row_data['badge']); ?></span>
+                </div>
                 <div class="row g-4 justify-content-center">
                     <?php foreach ($row_data['leaders'] as $leader): ?>
                         <div class="col-12 leader-item" data-category="<?php echo $leader['category']; ?>">
@@ -612,7 +728,7 @@ body {
                                     <!-- Left Details -->
                                     <div class="leader-details-left">
                                         <div class="header-meta">
-                                            <span class="hod-badge"><i class="fas fa-crown"></i> <?php echo htmlspecialchars($leader['badge']); ?></span>
+                                            <span class="hod-badge"><i class="fas fa-award"></i> <?php echo htmlspecialchars($leader['badge']); ?></span>
                                         </div>
                                         <h3 class="leader-name"><?php echo htmlspecialchars($leader['name']); ?></h3>
                                         <div class="leader-designation"><?php echo htmlspecialchars($leader['designation']); ?></div>

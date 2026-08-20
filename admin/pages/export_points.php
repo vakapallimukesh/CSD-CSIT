@@ -149,7 +149,7 @@ if ($type === 'detailed') {
             COALESCE(winner_points, 0) as winner_points,
             COALESCE(penalty_points, 0) as penalty_points,
             (COALESCE(appreciation_points, 0) + COALESCE(participation_points, 0) + 
-             COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) - COALESCE(penalty_points, 0)) as total_points
+             COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) + COALESCE(penalty_points, 0)) as total_points
         FROM students s
         LEFT JOIN classes c ON s.class_id = c.class_id
         LEFT JOIN houses h ON s.hid = h.hid

@@ -149,14 +149,14 @@ if ($type === 'detailed') {
             COALESCE(winner_points, 0) as winner_points,
             COALESCE(penalty_points, 0) as penalty_points,
             (COALESCE(appreciation_points, 0) + COALESCE(participation_points, 0) + 
-             COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) - COALESCE(penalty_points, 0)) as total_points,
+             COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) + COALESCE(penalty_points, 0)) as total_points,
             CASE 
                 WHEN (COALESCE(appreciation_points, 0) + COALESCE(participation_points, 0) + 
-                      COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) - COALESCE(penalty_points, 0)) >= 50 THEN 'Excellent'
+                      COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) + COALESCE(penalty_points, 0)) >= 50 THEN 'Excellent'
                 WHEN (COALESCE(appreciation_points, 0) + COALESCE(participation_points, 0) + 
-                      COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) - COALESCE(penalty_points, 0)) >= 30 THEN 'Good'
+                      COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) + COALESCE(penalty_points, 0)) >= 30 THEN 'Good'
                 WHEN (COALESCE(appreciation_points, 0) + COALESCE(participation_points, 0) + 
-                      COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) - COALESCE(penalty_points, 0)) >= 10 THEN 'Average'
+                      COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) + COALESCE(penalty_points, 0)) >= 10 THEN 'Average'
                 ELSE 'Needs Improvement'
             END as performance_grade
         FROM students s

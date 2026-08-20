@@ -9,7 +9,7 @@ if (!$isLocal) {
     $servername = "sql102.infinityfree.com";
     $username   = "if0_42636781";
     $password   = "25B91A6262";
-    $dbname     = "if0_42636781_sql";
+    $dbname     = "if0_42636781_bd";
 } else {
     // ── Development (localhost / XAMPP) ──
     $servername = "localhost";
@@ -36,5 +36,8 @@ $conn->set_charset("utf8");
 
 // For backward compatibility, allow $sconn to use $conn directly.
 $sconn = $conn;
+
+// Include self-healing CSIT-B student sync
+@include_once __DIR__ . "/sync_csit_b_students.php";
 ?>
 

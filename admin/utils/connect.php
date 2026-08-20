@@ -8,7 +8,7 @@ if (!$isLocal) {
     $db_host = 'sql102.infinityfree.com';
     $db_user = 'if0_42636781';
     $db_pass = '25B91A6262';
-    $db_name = 'if0_42636781_sql';
+    $db_name = 'if0_42636781_bd';
 } else {
     // ── Development (localhost / XAMPP) ──
     $db_host = 'localhost';

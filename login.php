@@ -1,6 +1,11 @@
 <?php
 if (session_status() === PHP_SESSION_NONE) session_start();
 
+// Prevent fatal exceptions on missing tables (PHP 8.1+ throws by default)
+if (function_exists('mysqli_report')) {
+    mysqli_report(MYSQLI_REPORT_OFF);
+}
+
 include './connect.php';
 
 // Check database connection
@@ -60,39 +65,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Check Faculty credentials
         $stmt = mysqli_prepare($conn, "SELECT faculty_id, faculty_name, email, password, class_id, phone_number FROM faculties WHERE email = ? AND is_active = 1");
-        mysqli_stmt_bind_param($stmt, "s", $username);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-        
-        if ($row = mysqli_fetch_assoc($result)) {
-            $password_match = false;
-            if (!empty($row['password']) && password_verify($password, $row['password'])) {
-                $password_match = true;
-            } elseif (!empty($row['password']) && $password === $row['password']) {
-                $password_match = true;
-            } elseif (empty($row['password']) || trim($row['password']) === '') {
-                // Allow default faculty password if not set in DB
-                if (in_array($password, ['faculty123', 'password', '123456', ''])) {
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "s", $username);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
+            
+            if ($result && $row = mysqli_fetch_assoc($result)) {
+                $password_match = false;
+                if (!empty($row['password']) && password_verify($password, $row['password'])) {
                     $password_match = true;
+                } elseif (!empty($row['password']) && $password === $row['password']) {
+                    $password_match = true;
+                } elseif (empty($row['password']) || trim($row['password']) === '') {
+                    // Allow default faculty password if not set in DB
+                    if (in_array($password, ['faculty123', 'password', '123456', ''])) {
+                        $password_match = true;
+                    }
+                }
+                
+                if ($password_match) {
+                    // Set faculty session variables
+                    $_SESSION['faculty_logged_in'] = true;
+                    $_SESSION['faculty_id'] = $row['faculty_id'];
+                    $_SESSION['faculty_name'] = $row['faculty_name'];
+                    $_SESSION['faculty_username'] = $row['email'];
+                    $_SESSION['faculty_class_id'] = $row['class_id'];
+                    $_SESSION['faculty_phone'] = $row['phone_number'];
+                    $_SESSION['faculty_email'] = $row['email'];
+                    $_SESSION['faculty_sections'] = $row['class_id'];
+                    header("Location: faculty_dashboard.php");
+                    exit();
                 }
             }
-            
-            if ($password_match) {
-                // Set faculty session variables
-                $_SESSION['faculty_logged_in'] = true;
-                $_SESSION['faculty_id'] = $row['faculty_id'];
-                $_SESSION['faculty_name'] = $row['faculty_name'];
-                $_SESSION['faculty_username'] = $row['email'];
-                $_SESSION['faculty_class_id'] = $row['class_id'];
-                $_SESSION['faculty_phone'] = $row['phone_number'];
-                $_SESSION['faculty_email'] = $row['email'];
-                $_SESSION['faculty_sections'] = $row['class_id'];
-                $host  = $_SERVER['HTTP_HOST'];
-                $uri   = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
-                $extra = 'faculty_dashboard.php';
-                header("Location: http://$host$uri/$extra");
-                exit();
-            }
+            mysqli_stmt_close($stmt);
         }
         
         // Check Student credentials
@@ -103,34 +108,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             LEFT JOIN classes c ON s.class_id = c.class_id
             WHERE s.email = ?
         ");
-        mysqli_stmt_bind_param($stmt, "s", $username);
-        mysqli_stmt_execute($stmt);
-        $result = mysqli_stmt_get_result($stmt);
-        
-        if ($row = mysqli_fetch_assoc($result)) {
-            $password_match = false;
-            if (password_verify($password, $row['password'])) {
-                $password_match = true;
-            } elseif ($password === $row['password']) {
-                $password_match = true;
-            }
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "s", $username);
+            mysqli_stmt_execute($stmt);
+            $result = mysqli_stmt_get_result($stmt);
             
-            if ($password_match) {
-                // Set student session variables
-                $_SESSION['student_logged_in'] = true;
-                $_SESSION['student_id'] = $row['student_id'];
-                $_SESSION['student_name'] = $row['name'];
-                $_SESSION['student_email'] = $row['email'];
-                $_SESSION['student_class_id'] = $row['class_id'];
-                $_SESSION['student_branch'] = $row['branch'];
-                $_SESSION['student_section'] = $row['section'];
-                $_SESSION['student_hid'] = $row['hid'];
-                $_SESSION['student_year'] = $row['year'];
-                $_SESSION['student_semester'] = $row['semester'];
-                $_SESSION['student_academic_year'] = $row['academic_year'];
-                header('Location: student_dashboard.php');
-                exit();
+            if ($result && $row = mysqli_fetch_assoc($result)) {
+                $password_match = false;
+                if (password_verify($password, $row['password'])) {
+                    $password_match = true;
+                } elseif ($password === $row['password']) {
+                    $password_match = true;
+                }
+                
+                if ($password_match) {
+                    // Set student session variables
+                    $_SESSION['student_logged_in'] = true;
+                    $_SESSION['student_id'] = $row['student_id'];
+                    $_SESSION['student_name'] = $row['name'];
+                    $_SESSION['student_email'] = $row['email'];
+                    $_SESSION['student_class_id'] = $row['class_id'];
+                    $_SESSION['student_branch'] = $row['branch'];
+                    $_SESSION['student_section'] = $row['section'];
+                    $_SESSION['student_hid'] = $row['hid'];
+                    $_SESSION['student_year'] = $row['year'];
+                    $_SESSION['student_semester'] = $row['semester'];
+                    $_SESSION['student_academic_year'] = $row['academic_year'];
+                    header('Location: student_dashboard.php');
+                    exit();
+                }
             }
+            mysqli_stmt_close($stmt);
         }
         
         // If no match found

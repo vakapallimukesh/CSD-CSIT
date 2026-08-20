@@ -296,7 +296,8 @@
             /* Table improvements for mobile */
             .table-responsive {
                 border-radius: 10px;
-                overflow: hidden;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
             }
             
             .table th,

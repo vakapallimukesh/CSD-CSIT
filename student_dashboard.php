@@ -955,18 +955,24 @@ while ($row = mysqli_fetch_assoc($won_result)) {
                                     <i class="fas fa-star me-1"></i> Points Summary
                                 </h6>
                                 <?php
-                                // Get appreciation points
-                                $appreciation_query = "SELECT SUM(points) as total_appreciation 
-                                                     FROM appreciations 
-                                                     WHERE student_id = ?";
-                                $stmt = mysqli_prepare($conn, $appreciation_query);
-                                mysqli_stmt_bind_param($stmt, "s", $student_id);
-                                mysqli_stmt_execute($stmt);
-                                $appreciation_result = mysqli_stmt_get_result($stmt);
-                                $appreciation_points = mysqli_fetch_assoc($appreciation_result)['total_appreciation'] ?? 0;
+                                // Get points breakdown across all tables
+                                $part_q = mysqli_query($conn, "SELECT COALESCE(SUM(points), 0) as pts FROM participants WHERE student_id = '$student_id'");
+                                $win_q = mysqli_query($conn, "SELECT COALESCE(SUM(points), 0) as pts FROM winners WHERE student_id = '$student_id'");
+                                $org_q = mysqli_query($conn, "SELECT COALESCE(SUM(points), 0) as pts FROM organizers WHERE student_id = '$student_id'");
+                                $app_q = mysqli_query($conn, "SELECT COALESCE(SUM(points), 0) as pts FROM appreciations WHERE student_id = '$student_id'");
+                                $pen_q = mysqli_query($conn, "SELECT COALESCE(SUM(points), 0) as pts FROM penalties WHERE student_id = '$student_id'");
+
+                                $part_pts = (int)(mysqli_fetch_assoc($part_q)['pts'] ?? 0);
+                                $win_pts = (int)(mysqli_fetch_assoc($win_q)['pts'] ?? 0);
+                                $org_pts = (int)(mysqli_fetch_assoc($org_q)['pts'] ?? 0);
+                                $appreciation_points = (int)(mysqli_fetch_assoc($app_q)['pts'] ?? 0);
+                                $penalty_points = (int)(mysqli_fetch_assoc($pen_q)['pts'] ?? 0);
+
+                                $event_activities_points = $part_pts + $win_pts + $org_pts;
+                                $activities_points = $event_activities_points + $appreciation_points + $penalty_points; // Penalty is negative
                                 
-                                // Calculate total points (attendance + appreciation)
-                                $total_points = $total_attendance_points + $appreciation_points;
+                                // Calculate total points (attendance + activities points)
+                                $total_points = $total_attendance_points + $activities_points;
                                 ?>
                                 
                                 <div class="text-center mb-3">
@@ -974,14 +980,22 @@ while ($row = mysqli_fetch_assoc($won_result)) {
                                     <div class="stat-label">Total Points</div>
                                 </div>
                                 
-                                <div class="stats-grid">
+                                <div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); gap: 10px;">
                                     <div class="stat-item">
-                                        <div class="stat-number text-success"><?php echo $total_attendance_points; ?></div>
-                                        <div class="stat-label">attendace points</div>
+                                        <div class="stat-number text-success" style="font-size: 1.1rem;"><?php echo $total_attendance_points; ?></div>
+                                        <div class="stat-label">Attendance</div>
                                     </div>
                                     <div class="stat-item">
-                                        <div class="stat-number text-info"><?php echo $appreciation_points; ?></div>
-                                        <div class="stat-label">Activities Points</div>
+                                        <div class="stat-number text-info" style="font-size: 1.1rem;"><?php echo $appreciation_points; ?></div>
+                                        <div class="stat-label">Appreciations</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-number text-danger" style="font-size: 1.1rem;"><?php echo $penalty_points; ?></div>
+                                        <div class="stat-label">Penalties</div>
+                                    </div>
+                                    <div class="stat-item">
+                                        <div class="stat-number text-primary" style="font-size: 1.1rem;"><?php echo $event_activities_points; ?></div>
+                                        <div class="stat-label">Events</div>
                                     </div>
                                 </div>
                             </div>
@@ -1207,6 +1221,16 @@ while ($row = mysqli_fetch_assoc($won_result)) {
                             </button>
                         </li>
                         <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="appreciations-tab" data-bs-toggle="tab" data-bs-target="#appreciations" type="button" role="tab" aria-controls="appreciations" aria-selected="false">
+                                <i class="fas fa-award text-success"></i> Appreciations
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="penalties-tab" data-bs-toggle="tab" data-bs-target="#penalties" type="button" role="tab" aria-controls="penalties" aria-selected="false">
+                                <i class="fas fa-minus-circle text-danger"></i> Penalties
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
                             <button class="nav-link" id="events-tab" data-bs-toggle="tab" data-bs-target="#events" type="button" role="tab" aria-controls="events" aria-selected="false">
                                 <i class="fas fa-calendar-alt"></i> Events
                                 <?php 
@@ -1221,6 +1245,92 @@ while ($row = mysqli_fetch_assoc($won_result)) {
                     
                     
                     <div class="tab-content" id="attendanceLeaveTabContent">
+                        <!-- Appreciations Tab -->
+                        <div class="tab-pane fade" id="appreciations" role="tabpanel" aria-labelledby="appreciations-tab">
+                            <?php 
+                            $app_list_q = mysqli_query($conn, "SELECT a.*, e.title as event_title FROM appreciations a LEFT JOIN events e ON a.event_id = e.event_id WHERE a.student_id = '$student_id' ORDER BY a.created_at DESC");
+                            $student_apps = [];
+                            if ($app_list_q) {
+                                while ($row = mysqli_fetch_assoc($app_list_q)) {
+                                    $student_apps[] = $row;
+                                }
+                            }
+                            ?>
+                            <?php if (!empty($student_apps)): ?>
+                                <div class="table-responsive">
+                                    <table class="table table-modern">
+                                        <thead>
+                                            <tr>
+                                                <th>Points</th>
+                                                <th>Reason</th>
+                                                <th>Event / Title</th>
+                                                <th>Awarded Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($student_apps as $app): ?>
+                                            <tr>
+                                                <td><span class="badge bg-success">+<?php echo htmlspecialchars($app['points']); ?> pts</span></td>
+                                                <td><?php echo htmlspecialchars($app['reason']); ?></td>
+                                                <td><?php echo htmlspecialchars($app['event_title'] ?? 'General Activity'); ?></td>
+                                                <td><?php echo date('d M Y', strtotime($app['created_at'])); ?></td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <?php else: ?>
+                                <div class="no-data py-5 text-center">
+                                    <i class="fas fa-award" style="font-size: 3rem; color: #198754; opacity: 0.3; margin-bottom: 1rem; display: block;"></i>
+                                    <h6>No Appreciations Recorded</h6>
+                                    <p class="text-muted mb-0">You don't have any appreciation points assigned yet.</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
+                        <!-- Penalties Tab -->
+                        <div class="tab-pane fade" id="penalties" role="tabpanel" aria-labelledby="penalties-tab">
+                            <?php 
+                            $pen_list_q = mysqli_query($conn, "SELECT p.*, e.title as event_title FROM penalties p LEFT JOIN events e ON p.event_id = e.event_id WHERE p.student_id = '$student_id' ORDER BY p.created_at DESC");
+                            $student_pens = [];
+                            if ($pen_list_q) {
+                                while ($row = mysqli_fetch_assoc($pen_list_q)) {
+                                    $student_pens[] = $row;
+                                }
+                            }
+                            ?>
+                            <?php if (!empty($student_pens)): ?>
+                                <div class="table-responsive">
+                                    <table class="table table-modern">
+                                        <thead>
+                                            <tr>
+                                                <th>Points</th>
+                                                <th>Reason</th>
+                                                <th>Event / Source</th>
+                                                <th>Assigned Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($student_pens as $pen): ?>
+                                            <tr>
+                                                <td><span class="badge bg-danger"><?php echo htmlspecialchars($pen['points']); ?> pts</span></td>
+                                                <td><?php echo htmlspecialchars($pen['reason']); ?></td>
+                                                <td><?php echo htmlspecialchars($pen['event_title'] ?? 'Department Action'); ?></td>
+                                                <td><?php echo date('d M Y', strtotime($pen['created_at'])); ?></td>
+                                            </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <?php else: ?>
+                                <div class="no-data py-5 text-center">
+                                    <i class="fas fa-check-circle" style="font-size: 3rem; color: #198754; opacity: 0.3; margin-bottom: 1rem; display: block;"></i>
+                                    <h6>No Penalties</h6>
+                                    <p class="text-muted mb-0">Clean record! You don't have any penalties assigned.</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+
                         <div class="tab-pane fade show active" id="attendance" role="tabpanel" aria-labelledby="attendance-tab">
                             <?php if (!empty($attendance_summary)): ?>
                                 <div class="table-responsive">

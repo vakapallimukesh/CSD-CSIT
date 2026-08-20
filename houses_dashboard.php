@@ -147,7 +147,7 @@ foreach ($houses as $house_key => $house_info) {
                 $stats['penalties_points'] = (int)($points_data['points'] ?? 0);
             }
 
-            $stats['total_points'] = $stats['winners_points'] + $stats['participants_points'] + $stats['organizers_points'] + $stats['appreciations_points'] - $stats['penalties_points'];
+            $stats['total_points'] = $stats['winners_points'] + $stats['participants_points'] + $stats['organizers_points'] + $stats['appreciations_points'] + $stats['penalties_points'];
             $stats['avg_points'] = $stats['student_count'] > 0 ? round($stats['total_points'] / $stats['student_count'], 1) : 0;
         }
     }
@@ -682,6 +682,14 @@ body {
     background: transparent !important;
     border: none !important;
     box-shadow: none !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+.table-responsive table {
+    min-width: 950px !important;
 }
 
 .table {
@@ -1091,8 +1099,11 @@ body {
                         
                         <!-- TAB 1: Full Matrix Table -->
                         <div class="tab-pane fade show active" id="matrix-view" role="tabpanel">
+                            <div class="d-block d-md-none alert alert-warning py-2 px-3 mb-3 rounded-3 text-center shadow-sm" style="font-size: 0.8rem; font-weight: 700; background: #fff8e1; color: #b45309; border: 1px solid #ffe082;">
+                                <i class="fas fa-hand-point-right me-1 text-primary"></i> Swipe table left/right to view full performance details &nbsp;👉
+                            </div>
                             <div class="table-responsive">
-                                <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem;">
+                                <table class="table table-hover align-middle mb-0" style="font-size: 0.9rem; min-width: 950px;">
                                     <thead style="background: rgba(255,255,255,0.22); border-bottom: 2px solid rgba(139, 69, 19, 0.2);">
                                         <tr>
                                             <th class="py-3 px-3">Rank</th>
@@ -1109,11 +1120,23 @@ body {
                                     </thead>
                                     <tbody id="matrixTableBody">
                                         <?php 
+                                        // Sort house keys by total_points DESCENDING
+                                        $sorted_house_keys = array_keys($houses);
+                                        usort($sorted_house_keys, function($a, $b) use ($house_stats) {
+                                            $ptsA = $house_stats[$a]['total_points'] ?? 0;
+                                            $ptsB = $house_stats[$b]['total_points'] ?? 0;
+                                            return $ptsB <=> $ptsA;
+                                        });
+
+                                        $top_house_A = $sorted_house_keys[0] ?? 'Vayu';
+                                        $top_house_B = $sorted_house_keys[1] ?? 'PRUDHVI';
+
                                         $matrix_rank = 1;
                                         $max_matrix_points = max(array_column($house_stats, 'total_points'));
                                         if ($max_matrix_points <= 0) $max_matrix_points = 1;
 
-                                        foreach ($houses as $h_key => $h_data):
+                                        foreach ($sorted_house_keys as $h_key):
+                                            $h_data = $houses[$h_key];
                                             $st = $house_stats[$h_key];
                                             $pct = round(($st['total_points'] / $max_matrix_points) * 100);
                                             $badge_icon = '#' . $matrix_rank;
@@ -1162,7 +1185,7 @@ body {
                                                     +<?php echo number_format($st['appreciations_points']); ?>
                                                 </td>
                                                 <td class="px-3 text-center text-danger font-semibold">
-                                                    -<?php echo number_format($st['penalties_points']); ?>
+                                                     -<?php echo number_format(abs($st['penalties_points'])); ?>
                                                 </td>
                                                 <td class="px-3 text-end">
                                                     <a href="house_detail.php?house=<?php echo urlencode($h_key); ?>" class="btn btn-sm btn-outline-primary rounded-pill px-3" style="font-size: 0.8rem;">
@@ -1187,10 +1210,11 @@ body {
                                         <label class="form-label font-semibold text-muted mb-2"><i class="fas fa-shield-alt text-primary me-1"></i> Select House A</label>
                                         <select class="form-select border-0 shadow-sm font-semibold" id="h2hHouseA" onchange="runHeadToHeadCompare()">
                                             <?php 
-                                            $keys = array_keys($houses);
-                                            foreach ($houses as $hk => $hd):
+                                            foreach ($sorted_house_keys as $hk):
+                                                $hd = $houses[$hk];
+                                                $selected_a = ($hk === $top_house_A) ? 'selected' : '';
                                             ?>
-                                                <option value="<?php echo $hk; ?>"><?php echo $hd['name']; ?> House</option>
+                                                <option value="<?php echo $hk; ?>" <?php echo $selected_a; ?>><?php echo $hd['name']; ?> House (<?php echo number_format($house_stats[$hk]['total_points'] ?? 0); ?> pts)</option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -1205,10 +1229,11 @@ body {
                                         <label class="form-label font-semibold text-muted mb-2"><i class="fas fa-shield-alt text-info me-1"></i> Select House B</label>
                                         <select class="form-select border-0 shadow-sm font-semibold" id="h2hHouseB" onchange="runHeadToHeadCompare()">
                                             <?php 
-                                            $reversed = array_reverse($houses, true);
-                                            foreach ($reversed as $hk => $hd):
+                                            foreach ($sorted_house_keys as $hk):
+                                                $hd = $houses[$hk];
+                                                $selected_b = ($hk === $top_house_B) ? 'selected' : '';
                                             ?>
-                                                <option value="<?php echo $hk; ?>"><?php echo $hd['name']; ?> House</option>
+                                                <option value="<?php echo $hk; ?>" <?php echo $selected_b; ?>><?php echo $hd['name']; ?> House (<?php echo number_format($house_stats[$hk]['total_points'] ?? 0); ?> pts)</option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -1782,7 +1807,7 @@ body {
                             +${(st.appreciations_points || 0).toLocaleString()}
                         </td>
                         <td class="px-3 text-center text-danger font-semibold">
-                            -${(st.penalties_points || 0).toLocaleString()}
+                            -${Math.abs(st.penalties_points || 0).toLocaleString()}
                         </td>
                         <td class="px-3 text-end">
                             <a href="house_detail.php?house=${encodeURIComponent(hKey)}" class="btn btn-sm btn-outline-primary rounded-pill px-3" style="font-size: 0.8rem;">
@@ -1871,7 +1896,7 @@ body {
                                     <div class="col-6"><div class="p-2 border rounded bg-light"><small class="text-muted d-block">Wins Points</small><strong class="text-success">+${(statA.winners_points || 0).toLocaleString()}</strong></div></div>
                                     <div class="col-6"><div class="p-2 border rounded bg-light"><small class="text-muted d-block">Participation</small><strong class="text-info">+${(statA.participants_points || 0).toLocaleString()}</strong></div></div>
                                     <div class="col-6"><div class="p-2 border rounded bg-light"><small class="text-muted d-block">Appreciations</small><strong class="text-warning">+${(statA.appreciations_points || 0).toLocaleString()}</strong></div></div>
-                                    <div class="col-6"><div class="p-2 border rounded bg-light"><small class="text-muted d-block">Penalties</small><strong class="text-danger">-${(statA.penalties_points || 0).toLocaleString()}</strong></div></div>
+                                    <div class="col-6"><div class="p-2 border rounded bg-light"><small class="text-muted d-block">Penalties</small><strong class="text-danger">-${Math.abs(statA.penalties_points || 0).toLocaleString()}</strong></div></div>
                                 </div>
                             </div>
                         </div>
@@ -1902,7 +1927,7 @@ body {
                                     <div class="col-6"><div class="p-2 border rounded bg-light"><small class="text-muted d-block">Wins Points</small><strong class="text-success">+${(statB.winners_points || 0).toLocaleString()}</strong></div></div>
                                     <div class="col-6"><div class="p-2 border rounded bg-light"><small class="text-muted d-block">Participation</small><strong class="text-info">+${(statB.participants_points || 0).toLocaleString()}</strong></div></div>
                                     <div class="col-6"><div class="p-2 border rounded bg-light"><small class="text-muted d-block">Appreciations</small><strong class="text-warning">+${(statB.appreciations_points || 0).toLocaleString()}</strong></div></div>
-                                    <div class="col-6"><div class="p-2 border rounded bg-light"><small class="text-muted d-block">Penalties</small><strong class="text-danger">-${(statB.penalties_points || 0).toLocaleString()}</strong></div></div>
+                                    <div class="col-6"><div class="p-2 border rounded bg-light"><small class="text-muted d-block">Penalties</small><strong class="text-danger">-${Math.abs(statB.penalties_points || 0).toLocaleString()}</strong></div></div>
                                 </div>
                             </div>
                         </div>

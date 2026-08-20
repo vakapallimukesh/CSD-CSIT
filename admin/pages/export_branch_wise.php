@@ -136,10 +136,10 @@ $query = "
             s8.class_id,
             s8.name as student_name,
             (COALESCE(app_p.points, 0) + COALESCE(part_p.points, 0) + 
-             COALESCE(org_p.points, 0) + COALESCE(win_p.points, 0) - COALESCE(pen_p.points, 0)) as top_points,
+             COALESCE(org_p.points, 0) + COALESCE(win_p.points, 0) + COALESCE(pen_p.points, 0)) as top_points,
             ROW_NUMBER() OVER (PARTITION BY s8.class_id ORDER BY 
                 (COALESCE(app_p.points, 0) + COALESCE(part_p.points, 0) + 
-                 COALESCE(org_p.points, 0) + COALESCE(win_p.points, 0) - COALESCE(pen_p.points, 0)) DESC) as rn
+                 COALESCE(org_p.points, 0) + COALESCE(win_p.points, 0) + COALESCE(pen_p.points, 0)) DESC) as rn
         FROM students s8
         LEFT JOIN (SELECT student_id, SUM(points) as points FROM appreciations GROUP BY student_id) app_p ON s8.student_id = app_p.student_id
         LEFT JOIN (SELECT student_id, SUM(points) as points FROM participants GROUP BY student_id) part_p ON s8.student_id = part_p.student_id

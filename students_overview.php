@@ -2139,7 +2139,8 @@ if ($class_result) {
                                             </div>
                                             <div class="student-info">
                                                 <h6>${student.name}</h6>
-                                                <small>${student.email || 'No email provided'}</small>
+                                                <small class="d-block text-muted mb-1" style="font-family: monospace; font-size: 0.8rem; font-weight: 600; background: #eef2f5; padding: 2px 6px; border-radius: 4px; width: fit-content; letter-spacing: 0.5px;">${student.student_id.toUpperCase()}</small>
+                                                <small class="d-block text-muted" style="font-size: 0.75rem;">${student.email || 'No email provided'}</small>
                                             </div>
                                         </div>
                                         <div class="student-stats">

@@ -40,10 +40,10 @@ export const classRepresentatives: ClassRepresentative[] = [
     name: "B J S V D N ASRITHA",
     registrationNumber: "25B91A0711",
     phone: "6281771313",
-    className: "CSIT - II Year - Section B",
+    className: "CSIT - II Year - Section A",
     branch: "CSIT",
     year: "II Year",
-    section: "Section B",
+    section: "Section A",
     image: "public/images/cr/b-j-s-v-d-n-asritha.jpg"
   },
   {

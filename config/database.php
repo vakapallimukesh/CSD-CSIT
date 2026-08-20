@@ -32,7 +32,7 @@ class Database {
             $this->host = 'sql102.infinityfree.com';
             $this->username = 'if0_42636781';
             $this->password = '25B91A6262';
-            $this->database = 'if0_42636781_sql';
+            $this->database = 'if0_42636781_bd';
         } else {
             // Development configuration
             $this->host = '127.0.0.1';

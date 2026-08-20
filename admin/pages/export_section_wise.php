@@ -182,14 +182,14 @@ if ($type === 'detailed') {
             COALESCE(winner_points, 0) as winner_points,
             COALESCE(penalty_points, 0) as penalty_points,
             (COALESCE(appreciation_points, 0) + COALESCE(participation_points, 0) + 
-             COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) - COALESCE(penalty_points, 0)) as total_points,
+             COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) + COALESCE(penalty_points, 0)) as total_points,
             CASE 
                 WHEN (COALESCE(appreciation_points, 0) + COALESCE(participation_points, 0) + 
-                      COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) - COALESCE(penalty_points, 0)) >= 50 THEN 'Excellent'
+                      COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) + COALESCE(penalty_points, 0)) >= 50 THEN 'Excellent'
                 WHEN (COALESCE(appreciation_points, 0) + COALESCE(participation_points, 0) + 
-                      COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) - COALESCE(penalty_points, 0)) >= 30 THEN 'Good'
+                      COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) + COALESCE(penalty_points, 0)) >= 30 THEN 'Good'
                 WHEN (COALESCE(appreciation_points, 0) + COALESCE(participation_points, 0) + 
-                      COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) - COALESCE(penalty_points, 0)) >= 10 THEN 'Average'
+                      COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) + COALESCE(penalty_points, 0)) >= 10 THEN 'Average'
                 ELSE 'Needs Improvement'
             END as performance_grade,
             (SELECT COUNT(*) FROM appreciations a2 WHERE a2.student_id = s.student_id) as total_appreciations,
@@ -198,7 +198,7 @@ if ($type === 'detailed') {
             (SELECT COUNT(*) FROM winners w2 WHERE w2.student_id = s.student_id) as total_wins,
             (SELECT COUNT(*) FROM penalties pen2 WHERE pen2.student_id = s.student_id) as total_penalties,
             RANK() OVER (ORDER BY (COALESCE(appreciation_points, 0) + COALESCE(participation_points, 0) + 
-                                  COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) - COALESCE(penalty_points, 0)) DESC) as class_rank
+                                  COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) + COALESCE(penalty_points, 0)) DESC) as class_rank
         FROM students s
         LEFT JOIN classes c ON s.class_id = c.class_id
         LEFT JOIN houses h ON s.hid = h.hid

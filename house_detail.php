@@ -136,7 +136,7 @@ if ($stmt_hp_exists) {
     $stmt_hp_exists->execute();
     $hp_exists_result = $stmt_hp_exists->get_result();
     if ($hp_exists_result && $hp_exists_result->num_rows > 0) {
-        $sql = "SELECT * FROM house_points WHERE house_name = ? ORDER BY total_points DESC, name ASC";
+        $sql = "SELECT * FROM house_points WHERE house_name = ? ORDER BY total_points DESC, regd_no ASC";
         $stmt = $conn->prepare($sql);
         if ($stmt) {
             $stmt->bind_param("s", $house_name_param);
@@ -242,12 +242,12 @@ if (empty($students)) {
                         COALESCE((SELECT SUM(p.points) FROM participants p WHERE p.student_id = s.student_id), 0) +
                         COALESCE((SELECT SUM(w.points) FROM winners w WHERE w.student_id = s.student_id), 0) +
                         COALESCE((SELECT SUM(o.points) FROM organizers o WHERE o.student_id = s.student_id), 0) +
-                        COALESCE((SELECT SUM(a.points) FROM appreciations a WHERE a.student_id = s.student_id), 0) -
+                        COALESCE((SELECT SUM(a.points) FROM appreciations a WHERE a.student_id = s.student_id), 0) +
                         COALESCE((SELECT SUM(pen.points) FROM penalties pen WHERE pen.student_id = s.student_id), 0)
                     ) as total_points
                 FROM students s 
                 WHERE s.hid = ? 
-                ORDER BY total_points DESC, s.name ASC";
+                ORDER BY total_points DESC, s.student_id ASC";
                 
                 $stmt_students = $conn->prepare($sql);
                 if ($stmt_students) {
@@ -291,7 +291,7 @@ foreach ($houses as $hk => $hv) {
                 (COALESCE((SELECT SUM(p.points) FROM participants p JOIN students s ON p.student_id = s.student_id WHERE s.hid = $h_id), 0) +
                  COALESCE((SELECT SUM(w.points) FROM winners w JOIN students s ON w.student_id = s.student_id WHERE s.hid = $h_id), 0) +
                  COALESCE((SELECT SUM(o.points) FROM organizers o JOIN students s ON o.student_id = s.student_id WHERE s.hid = $h_id), 0) +
-                 COALESCE((SELECT SUM(a.points) FROM appreciations a JOIN students s ON a.student_id = s.student_id WHERE s.hid = $h_id), 0) -
+                 COALESCE((SELECT SUM(a.points) FROM appreciations a JOIN students s ON a.student_id = s.student_id WHERE s.hid = $h_id), 0) +
                  COALESCE((SELECT SUM(pen.points) FROM penalties pen JOIN students s ON pen.student_id = s.student_id WHERE s.hid = $h_id), 0)) as total";
         $r = mysqli_query($conn, $q);
         if ($r && $row = mysqli_fetch_assoc($r)) {
@@ -2177,11 +2177,9 @@ $house_stats = [
                                     <th style="padding: 16px 20px; border: none; font-weight: 600; color: <?php echo $house_info['color']; ?>;">
                                         Section
                                     </th>
-                                    <?php if (!$using_new_schema): ?>
-                                        <th style="padding: 16px 20px; border: none; font-weight: 600; color: <?php echo $house_info['color']; ?>; text-align: right;">
-                                            Points
-                                        </th>
-                                    <?php endif; ?>
+                                    <th style="padding: 16px 20px; border: none; font-weight: 600; color: <?php echo $house_info['color']; ?>; text-align: right;">
+                                        Points
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -2221,13 +2219,11 @@ $house_stats = [
                                         <td style="padding: 16px 20px; border: none; color: #6c757d; font-weight: 500;">
                                             <?php echo htmlspecialchars($section); ?>
                                         </td>
-                                        <?php if (!$using_new_schema): ?>
-                                            <td style="padding: 16px 20px; border: none; text-align: right;">
-                                                <span style="font-weight: 700; font-size: 1.1rem; color: <?php echo $house_info['color']; ?>;">
-                                                    <?php echo number_format($student['total_points']); ?>
-                                                </span>
-                                            </td>
-                                        <?php endif; ?>
+                                        <td style="padding: 16px 20px; border: none; text-align: right;">
+                                            <span style="font-weight: 700; font-size: 1.1rem; color: <?php echo $house_info['color']; ?>;">
+                                                <?php echo number_format($student['total_points']); ?>
+                                            </span>
+                                        </td>
                                     </tr>
                                 <?php 
                                     $rank++;

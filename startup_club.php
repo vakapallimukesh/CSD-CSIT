@@ -368,8 +368,67 @@ body {
         </div>
     </section>
 
-    <!-- Programs & Activities -->
-    
+    <!-- Details Section Below #about-startup (Updated per Request) -->
+    <section class="py-4" style="background: #ffffff; border-top: 1px solid #f1f5f9; border-bottom: 1px solid #f1f5f9;">
+        <div class="container">
+            <h3 class="font-outfit fw-bold text-dark mb-4" style="font-size: 1.75rem; font-family: 'Outfit', sans-serif;">Details</h3>
+            
+            <div class="row g-4">
+                <!-- Category Card -->
+                <div class="col-md-6">
+                    <div class="p-4 rounded-4 bg-white border shadow-sm d-flex align-items-center gap-3 h-100">
+                        <div class="p-3 rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; flex-shrink: 0;">
+                            <i class="fas fa-tags fs-4"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted small fw-bold text-uppercase d-block" style="letter-spacing: 0.5px; font-size: 0.75rem;">Category</span>
+                            <span class="fw-bold text-dark fs-6">Startup Club</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Founder Card -->
+                <div class="col-md-6">
+                    <div class="p-4 rounded-4 bg-white border shadow-sm d-flex align-items-center gap-3 h-100">
+                        <div class="p-3 rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; flex-shrink: 0;">
+                            <i class="fas fa-user-tie fs-4"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted small fw-bold text-uppercase d-block" style="letter-spacing: 0.5px; font-size: 0.75rem;">Founder</span>
+                            <span class="fw-bold text-dark fs-6">Dr. M. Suresh Babu</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Co-Founder Card -->
+                <div class="col-md-6">
+                    <div class="p-4 rounded-4 bg-white border shadow-sm d-flex align-items-center gap-3 h-100">
+                        <div class="p-3 rounded-circle bg-info-subtle text-info d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; flex-shrink: 0;">
+                            <i class="fas fa-user-friends fs-4"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted small fw-bold text-uppercase d-block" style="letter-spacing: 0.5px; font-size: 0.75rem;">Co-Founder</span>
+                            <span class="fw-bold text-dark fs-6">K Sri Vigyna</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Phone Card -->
+                <div class="col-md-6">
+                    <div class="p-4 rounded-4 bg-white border shadow-sm d-flex align-items-center gap-3 h-100">
+                        <div class="p-3 rounded-circle bg-success-subtle text-success d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; flex-shrink: 0;">
+                            <i class="fas fa-phone-alt fs-4"></i>
+                        </div>
+                        <div>
+                            <span class="text-muted small fw-bold text-uppercase d-block" style="letter-spacing: 0.5px; font-size: 0.75rem;">Phone</span>
+                            <a href="tel:9866600002" class="fw-bold text-dark text-decoration-none fs-6 d-block">9866600002</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
 
     <style>
     .startups-section {

@@ -19,6 +19,7 @@ $startupsData = [
         'founder' => 'Dr. M. Suresh Babu',
         'phone' => '9866600002',
         'appUrl' => 'https://play.google.com/store/apps/details?id=com.bhimavaramonline.androidapp',
+        'iosUrl' => 'https://apps.apple.com/in/app/bhimavaram-online/id1449700181',
         'instagram' => 'https://www.instagram.com/bhimavaram_online?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==',
         'themeColor' => '#2563eb',
         'themeColorDark' => '#1e3a8a',
@@ -39,6 +40,7 @@ $startupsData = [
         'founder' => 'Dr. M. Suresh Babu',
         'phone' => '9866600002',
         'appUrl' => 'https://play.google.com/store/apps/details?id=com.bhimavaramonline.androidapp',
+        'iosUrl' => 'https://apps.apple.com/in/app/bhimavaram-online/id1449700181',
         'instagram' => 'https://www.instagram.com/bhimavaram_online?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==',
         'themeColor' => '#2563eb',
         'themeColorDark' => '#1e3a8a',
@@ -1241,6 +1243,24 @@ body {
                                             Get Bhimavaram Online App on Play Store <i class="fas fa-external-link-alt ms-1 small" style="font-size: 0.75rem;"></i>
                                         </a>
                                         <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1 rounded-pill" style="font-size: 0.78rem;">ONDC-Enabled Hyperlocal App</span>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- iOS App / Apple App Store Card -->
+                        <?php if (!empty($startup['iosUrl'])): ?>
+                            <div class="col-md-6">
+                                <div class="p-4 rounded-4 bg-white border shadow-sm d-flex align-items-center gap-3 detail-row-item h-100">
+                                    <div class="p-3 rounded-circle bg-dark-subtle text-dark d-flex align-items-center justify-content-center" style="width: 52px; height: 52px; flex-shrink: 0;">
+                                        <i class="fab fa-apple fs-4"></i>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted small fw-bold text-uppercase d-block" style="letter-spacing: 0.5px;">iOS Mobile App</span>
+                                        <a href="<?= htmlspecialchars($startup['iosUrl']); ?>" target="_blank" rel="noopener noreferrer" class="fw-bold text-dark text-decoration-none fs-6 d-block mb-1">
+                                            Get Bhimavaram Online App on App Store <i class="fas fa-external-link-alt ms-1 small" style="font-size: 0.75rem;"></i>
+                                        </a>
+                                        <span class="badge bg-dark-subtle text-dark border border-secondary-subtle px-2.5 py-1 rounded-pill" style="font-size: 0.78rem;">Available on iOS App Store</span>
                                     </div>
                                 </div>
                             </div>

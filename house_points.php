@@ -248,24 +248,24 @@ $houses = $db_helper->getHouses();
                             <label for="section_filter" class="form-label">Filter by Section</label>
                             <select class="form-control" id="section_filter" name="section">
                                 <option value="">All Sections</option>
-                                <?php while ($section = mysqli_fetch_assoc($sections_result)): ?>
-                                    <option value="<?php echo htmlspecialchars($section['year_section']); ?>" 
-                                            <?php echo $filter_section == $section['year_section'] ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($section['year_section']); ?>
+                                <?php foreach ($classes as $class_id => $display_name): ?>
+                                    <option value="<?php echo htmlspecialchars($display_name); ?>" 
+                                            <?php echo $filter_section == $display_name ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($display_name); ?>
                                     </option>
-                                <?php endwhile; ?>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="house_filter" class="form-label">Filter by House</label>
                             <select class="form-control" id="house_filter" name="house">
                                 <option value="">All Houses</option>
-                                <?php while ($house = mysqli_fetch_assoc($houses_result)): ?>
-                                    <option value="<?php echo htmlspecialchars($house['house_name']); ?>" 
-                                            <?php echo $filter_house == $house['house_name'] ? 'selected' : ''; ?>>
-                                        <?php echo htmlspecialchars($house['house_name']); ?>
+                                <?php foreach ($houses as $hid => $house_name): ?>
+                                    <option value="<?php echo htmlspecialchars($house_name); ?>" 
+                                            <?php echo $filter_house == $house_name ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($house_name); ?>
                                     </option>
-                                <?php endwhile; ?>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="col-md-4 mb-3 d-flex align-items-end">
@@ -286,57 +286,42 @@ $houses = $db_helper->getHouses();
                     <h4 class="mb-0"><i class="fas fa-list"></i> Student House Points Data</h4>
                 </div>
                 <div class="card-body">
-                    <?php if (mysqli_num_rows($result) > 0): ?>
+                    <?php if (!empty($filtered_students)): ?>
                         <div class="table-responsive">
                             <table class="table table-striped table-hover">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>Regd No</th>
+                                        <th>Student ID</th>
                                         <th>Name</th>
-                                        <th>Year & Section</th>
+                                        <th>Branch / Section</th>
                                         <th>House Name</th>
-                                        <th>Total Points</th>
-                                        <?php if ($is_admin): ?>
-                                            <th>Actions</th>
-                                        <?php endif; ?>
+                                        <th>Email</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                                    <?php foreach ($filtered_students as $row): ?>
                                         <tr>
-                                            <td><?php echo htmlspecialchars($row['regd_no']); ?></td>
-                                            <td><?php echo htmlspecialchars($row['name']); ?></td>
+                                            <td><?php echo htmlspecialchars($row['student_id'] ?? ''); ?></td>
+                                            <td><?php echo htmlspecialchars($row['name'] ?? ''); ?></td>
                                             <td>
                                                 <span class="badge bg-info">
-                                                    <?php echo htmlspecialchars($row['year_section']); ?>
+                                                    <?php 
+                                                        $display = ($row['branch'] ?? '');
+                                                        if (!empty($row['section'])) {
+                                                            $display .= '-' . $row['section'];
+                                                        }
+                                                        echo htmlspecialchars($display);
+                                                    ?>
                                                 </span>
                                             </td>
                                             <td>
                                                 <span class="badge bg-success">
-                                                    <?php echo htmlspecialchars($row['house_name']); ?>
+                                                    <?php echo htmlspecialchars($row['house_name'] ?? 'Unassigned'); ?>
                                                 </span>
                                             </td>
-                                            <td>
-                                                <span class="badge bg-warning text-dark">
-                                                    <?php echo $row['total_points']; ?> pts
-                                                </span>
-                                            </td>
-                                            <?php if ($is_admin): ?>
-                                                <td>
-                                                    <button class="btn btn-sm btn-primary" onclick="editStudent('<?php echo $row['regd_no']; ?>', '<?php echo $row['name']; ?>', '<?php echo $row['year_section']; ?>', '<?php echo $row['house_name']; ?>', <?php echo $row['total_points']; ?>)">
-                                                        <i class="fas fa-edit"></i>
-                                                    </button>
-                                                    <form method="post" action="" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this student?')">
-                                                        <input type="hidden" name="action" value="delete">
-                                                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                                                        <button type="submit" class="btn btn-sm btn-danger">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                </td>
-                                            <?php endif; ?>
+                                            <td><?php echo htmlspecialchars($row['email'] ?? ''); ?></td>
                                         </tr>
-                                    <?php endwhile; ?>
+                                    <?php endforeach; ?>
                                 </tbody>
                             </table>
                         </div>

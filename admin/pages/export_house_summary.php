@@ -22,11 +22,11 @@ $query = "
         COALESCE(winner_points, 0) as winner_points,
         COALESCE(penalty_points, 0) as penalty_points,
         (COALESCE(appreciation_points, 0) + COALESCE(participation_points, 0) + 
-         COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) - COALESCE(penalty_points, 0)) as total_points,
+         COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) + COALESCE(penalty_points, 0)) as total_points,
         CASE 
             WHEN COUNT(DISTINCT s.student_id) > 0 THEN 
                 ROUND((COALESCE(appreciation_points, 0) + COALESCE(participation_points, 0) + 
-                       COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) - COALESCE(penalty_points, 0)) / COUNT(DISTINCT s.student_id), 2)
+                       COALESCE(organizer_points, 0) + COALESCE(winner_points, 0) + COALESCE(penalty_points, 0)) / COUNT(DISTINCT s.student_id), 2)
             ELSE 0 
         END as avg_points_per_student
     FROM houses h

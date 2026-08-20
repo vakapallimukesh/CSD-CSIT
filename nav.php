@@ -23,6 +23,22 @@ $current_page = basename($_SERVER['PHP_SELF']);
         }
     }
 
+    /* Modal & Lightbox Layering Fix - Ensure modals appear cleanly OVER navigation bar */
+    .modal-backdrop {
+        z-index: 10450 !important;
+    }
+    .modal {
+        z-index: 10500 !important;
+    }
+    .modal-dialog-centered {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-height: calc(100vh - 2rem) !important;
+        margin-top: auto !important;
+        margin-bottom: auto !important;
+    }
+
     .navbar.navbar-expand-lg {
         background: #1a0d06 !important;
         box-shadow: 0 4px 25px rgba(0, 0, 0, 0.4), 
@@ -39,7 +55,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         width: 100% !important;
         max-width: 100% !important;
         border-radius: 0 !important;
-        z-index: 10000 !important;
+        z-index: 1030 !important;
         -webkit-backface-visibility: hidden !important;
         backface-visibility: hidden !important;
         transform: translate3d(0, 0, 0) !important;
@@ -218,7 +234,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
         min-width: 220px !important;
         overflow: visible !important;
         transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
-        z-index: 10001 !important;
+        z-index: 1035 !important;
     }
     
     .navbar .dropdown-item {
@@ -445,6 +461,9 @@ $current_page = basename($_SERVER['PHP_SELF']);
             <img src="logo.png" alt="SRKR Engineering College" 
                  onerror="this.style.display='none'" 
                  style="height:45px; margin-right:10px;">
+            <span class="text-white font-bold ms-1" style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.92rem; letter-spacing: 0.5px; white-space: nowrap;">
+                CSD-CSIT DEPARTMENT
+            </span>
         </a>
 
         <!-- Toggler -->
@@ -470,15 +489,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     </a>
                 </li>
 
-                <!-- Faculty Dropdown -->
+                <!-- Team Dropdown -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= in_array($current_page, ['faculty.php', 'faculty_dashboard.php']) ? 'active' : '' ?>" href="faculty.php" id="facultyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-chalkboard-teacher"></i> Faculty
+                    <a class="nav-link dropdown-toggle <?= in_array($current_page, ['faculty.php', 'faculty_dashboard.php', 'esteemed-leaders.php', 'esteemed-leaders']) ? 'active' : '' ?>" href="faculty.php" id="facultyDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-users"></i> Team
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="facultyDropdown">
-                        <li><a class="dropdown-item" href="faculty.php?filter=hod#hod"><i class="fas fa-user-shield me-2"></i> Program Coordinators</a></li>
-                        <li><a class="dropdown-item" href="faculty.php?filter=csd#csd"><i class="fas fa-laptop-code me-2"></i> CSD Faculty</a></li>
-                        <li><a class="dropdown-item" href="faculty.php?filter=csit#csit"><i class="fas fa-microchip me-2"></i> CSIT Faculty</a></li>
+                        <li><a class="dropdown-item <?= ($current_page == 'esteemed-leaders.php' || $current_page == 'esteemed-leaders') ? 'active' : '' ?>" href="esteemed-leaders.php"><i class="fas fa-user-tie me-2" style="color: #ec4899;"></i> Our Esteemed Leaders</a></li>
+                        <li><a class="dropdown-item <?= $current_page == 'faculty.php' ? 'active' : '' ?>" href="faculty.php"><i class="fas fa-chalkboard-teacher me-2"></i> Faculty</a></li>
                     </ul>
                 </li>
 
@@ -573,7 +591,6 @@ $current_page = basename($_SERVER['PHP_SELF']);
                     <ul class="dropdown-menu dropdown-menu-end shadow-lg" aria-labelledby="moreDetailsDropdown" style="min-width: 230px !important;">
                         <li><h6 class="dropdown-header text-uppercase text-muted fw-bold px-3 py-1" style="font-size: 0.7rem; letter-spacing: 0.8px;">More Details</h6></li>
 
-                        <li><a class="dropdown-item <?= ($current_page == 'esteemed-leaders.php' || $current_page == 'esteemed-leaders') ? 'active' : '' ?>" href="esteemed-leaders.php"><i class="fas fa-user-tie me-2" style="color: #ec4899;"></i> Our Esteemed Leaders</a></li>
                         <li><a class="dropdown-item <?= $current_page == 'student_achievements.php' ? 'active' : '' ?>" href="student_achievements.php"><i class="fas fa-user-graduate me-2" style="color: #3b82f6;"></i> Student Achievements</a></li>
                         <li><a class="dropdown-item <?= $current_page == 'news_events.php' ? 'active' : '' ?>" href="news_events.php"><i class="fas fa-newspaper me-2" style="color: #10b981;"></i> News & Events</a></li>
                         <li><a class="dropdown-item <?= $current_page == 'heroes_of_department.php' ? 'active' : '' ?>" href="heroes_of_department.php"><i class="fas fa-medal me-2" style="color: #8b5cf6;"></i> Heroes of Department</a></li>

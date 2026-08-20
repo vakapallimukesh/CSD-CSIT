@@ -25,7 +25,7 @@ try {
     FROM students s 
     LEFT JOIN student_profile sp ON s.student_id = sp.student_id 
     WHERE s.class_id = '$class_id'
-    ORDER BY s.name ASC";
+    ORDER BY s.student_id ASC";
     
     $students_result = mysqli_query($conn, $students_query);
     $students = [];

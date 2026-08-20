@@ -98,6 +98,7 @@ export const STARTUPS_DATA: Record<string, Startup> = {
     founder: 'Dr. M. Suresh Babu',
     phone: '9866600002',
     appUrl: 'https://play.google.com/store/apps/details?id=com.bhimavaramonline.androidapp',
+    iosUrl: 'https://apps.apple.com/in/app/bhimavaram-online/id1449700181',
     instagram: 'https://www.instagram.com/bhimavaram_online?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==',
     themeColor: '#2563eb',
     gradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%)'
@@ -115,6 +116,7 @@ export const STARTUPS_DATA: Record<string, Startup> = {
     founder: 'Dr. M. Suresh Babu',
     phone: '9866600002',
     appUrl: 'https://play.google.com/store/apps/details?id=com.bhimavaramonline.androidapp',
+    iosUrl: 'https://apps.apple.com/in/app/bhimavaram-online/id1449700181',
     instagram: 'https://www.instagram.com/bhimavaram_online?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==',
     themeColor: '#2563eb',
     gradient: 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%)'

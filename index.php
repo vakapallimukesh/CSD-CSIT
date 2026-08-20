@@ -2,7 +2,49 @@
 if (session_status() === PHP_SESSION_NONE) {
     @session_start();
 }
+
+// Prevent fatal exceptions on missing tables
+if (function_exists('mysqli_report')) {
+    mysqli_report(MYSQLI_REPORT_OFF);
+}
+
 include "./head.php";
+include_once "./connect.php";
+
+// Query house points for display on home page
+$home_house_points = [];
+$house_names_list = ['Agni', 'Vayu', 'Prudhvi', 'Jal', 'Aakash', 'PRUDHVI', 'Pruthvi'];
+if (isset($conn) && $conn) {
+    foreach (['Agni', 'Vayu', 'Prudhvi', 'Jal', 'Aakash'] as $h_name) {
+        $total = 0;
+        // Find house ID
+        $hid = null;
+        $h_escaped = mysqli_real_escape_string($conn, $h_name);
+        $h_res = @mysqli_query($conn, "SELECT hid FROM houses WHERE name = '$h_escaped' OR UPPER(name) = UPPER('$h_escaped')");
+        if ($h_res && mysqli_num_rows($h_res) > 0) {
+            $h_row = mysqli_fetch_assoc($h_res);
+            $hid = $h_row['hid'];
+        }
+        if ($hid) {
+            // Participants points
+            $r = @mysqli_query($conn, "SELECT SUM(p.points) as pts FROM participants p JOIN students s ON p.student_id = s.student_id WHERE s.hid = $hid");
+            if ($r) { $d = mysqli_fetch_assoc($r); $total += (int)($d['pts'] ?? 0); }
+            // Winners points
+            $r = @mysqli_query($conn, "SELECT SUM(w.points) as pts FROM winners w JOIN students s ON w.student_id = s.student_id WHERE s.hid = $hid");
+            if ($r) { $d = mysqli_fetch_assoc($r); $total += (int)($d['pts'] ?? 0); }
+            // Organizers points
+            $r = @mysqli_query($conn, "SELECT SUM(o.points) as pts FROM organizers o JOIN students s ON o.student_id = s.student_id WHERE s.hid = $hid");
+            if ($r) { $d = mysqli_fetch_assoc($r); $total += (int)($d['pts'] ?? 0); }
+            // Appreciations points
+            $r = @mysqli_query($conn, "SELECT SUM(a.points) as pts FROM appreciations a JOIN students s ON a.student_id = s.student_id WHERE s.hid = $hid");
+            if ($r) { $d = mysqli_fetch_assoc($r); $total += (int)($d['pts'] ?? 0); }
+            // Subtract penalties
+            $r = @mysqli_query($conn, "SELECT SUM(p.points) as pts FROM penalties p JOIN students s ON p.student_id = s.student_id WHERE s.hid = $hid");
+            if ($r) { $d = mysqli_fetch_assoc($r); $total += (int)($d['pts'] ?? 0); }
+        }
+        $home_house_points[$h_name] = max(0, $total);
+    }
+}
 ?>
 <link rel="stylesheet" href="./premium-hero.css">
 <link rel="stylesheet" href="./assets/css/depth-carousel.css">
@@ -217,6 +259,20 @@ include "./head.php";
         border-radius: 12px;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
         pointer-events: auto;
+    }
+
+    .house-points-badge {
+        margin-top: 3px;
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+        color: #fff;
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        padding: 2px 8px;
+        border-radius: 10px;
+        box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
+        pointer-events: auto;
+        display: inline-block;
     }
 
     .connecting-lines {
@@ -3147,6 +3203,9 @@ include "./head.php";
                             <img src="./assets/logos/3.jpg" alt="Agni">
                         </div>
                         <div class="house-name">Agni</div>
+                        <?php if (!empty($home_house_points['Agni'])): ?>
+                            <div class="house-points-badge"><i class="fas fa-star" style="font-size:9px"></i> <?php echo $home_house_points['Agni']; ?> pts</div>
+                        <?php endif; ?>
                     </a>
 
                     <a href="house_detail.php?house=Vayu" class="house-item house-vayu" style="cursor: pointer; text-decoration: none; z-index: 100;">
@@ -3154,6 +3213,9 @@ include "./head.php";
                             <img src="./assets/logos/2.jpg" alt="Vayu">
                         </div>
                         <div class="house-name">Vayu</div>
+                        <?php if (!empty($home_house_points['Vayu'])): ?>
+                            <div class="house-points-badge"><i class="fas fa-star" style="font-size:9px"></i> <?php echo $home_house_points['Vayu']; ?> pts</div>
+                        <?php endif; ?>
                     </a>
 
                     <a href="house_detail.php?house=Prudhvi" class="house-item house-prudhvi" style="cursor: pointer; text-decoration: none; z-index: 100;">
@@ -3161,6 +3223,9 @@ include "./head.php";
                             <img src="./assets/logos/4.jpg" alt="Prudhvi">
                         </div>
                         <div class="house-name">Prudhvi</div>
+                        <?php if (!empty($home_house_points['Prudhvi'])): ?>
+                            <div class="house-points-badge"><i class="fas fa-star" style="font-size:9px"></i> <?php echo $home_house_points['Prudhvi']; ?> pts</div>
+                        <?php endif; ?>
                     </a>
 
                     <a href="house_detail.php?house=Jal" class="house-item house-jal" style="cursor: pointer; text-decoration: none; z-index: 100;">
@@ -3168,6 +3233,9 @@ include "./head.php";
                             <img src="./assets/logos/1.jpg" alt="Jal">
                         </div>
                         <div class="house-name">Jal</div>
+                        <?php if (!empty($home_house_points['Jal'])): ?>
+                            <div class="house-points-badge"><i class="fas fa-star" style="font-size:9px"></i> <?php echo $home_house_points['Jal']; ?> pts</div>
+                        <?php endif; ?>
                     </a>
 
                     <a href="house_detail.php?house=Aakash" class="house-item house-aakash" style="cursor: pointer; text-decoration: none; z-index: 100;">
@@ -3175,6 +3243,9 @@ include "./head.php";
                             <img src="./assets/logos/5.jpg" alt="Aakash">
                         </div>
                         <div class="house-name">Aakash</div>
+                        <?php if (!empty($home_house_points['Aakash'])): ?>
+                            <div class="house-points-badge"><i class="fas fa-star" style="font-size:9px"></i> <?php echo $home_house_points['Aakash']; ?> pts</div>
+                        <?php endif; ?>
                     </a>
                 </div>
             </div>

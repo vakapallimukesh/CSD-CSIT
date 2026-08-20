@@ -338,6 +338,32 @@ export const StartupDetails: React.FC = () => {
                 </div>
               )}
 
+              {/* iOS App / App Store URL for Bhimavaram Online */}
+              {(startup as any).iosUrl && (
+                <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-center gap-5 hover:-translate-y-1 hover:border-slate-800 hover:shadow-md transition-all">
+                  <div className="w-14 h-14 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center shrink-0">
+                    <i className="fab fa-apple text-xl"></i>
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                      iOS Mobile App
+                    </span>
+                    <a
+                      href={(startup as any).iosUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-extrabold text-slate-900 hover:text-slate-700 transition-colors text-base flex items-center gap-1.5"
+                    >
+                      Get Bhimavaram Online App on App Store
+                      <i className="fas fa-external-link-alt text-xs"></i>
+                    </a>
+                    <span className="inline-block mt-1 px-2.5 py-0.5 bg-slate-100 text-slate-800 rounded-full font-bold text-xs border border-slate-300">
+                      Available on iOS App Store
+                    </span>
+                  </div>
+                </div>
+              )}
+
               {/* Address / Location */}
               {startup.address && (
                 <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-start gap-5 hover:-translate-y-1 hover:border-red-500 hover:shadow-md transition-all">

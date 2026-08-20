@@ -1,5 +1,11 @@
 <?php
 session_start();
+ob_start();
+
+// Prevent fatal exceptions on missing tables (PHP 8.1+ throws by default)
+if (function_exists('mysqli_report')) {
+    mysqli_report(MYSQLI_REPORT_OFF);
+}
 
 // Check if faculty is logged in
 if (!isset($_SESSION['faculty_logged_in']) || !$_SESSION['faculty_logged_in']) {
@@ -525,19 +531,16 @@ if (!empty($assigned_sections)) {
                           GROUP BY sa.attendance_date
                           ORDER BY sa.attendance_date";
 
-        echo "<!-- DEBUG: Faculty ID: $faculty_id -->\n";
-        echo "<!-- DEBUG: Assigned sections: " . implode(',', $assigned_sections) . " -->\n";
-        echo "<!-- DEBUG: Date range: $start_range to $end_range -->\n";
-        echo "<!-- DEBUG: Query: $calendar_query -->\n";
+        // Debug info logged instead of echoed to avoid output before DOCTYPE
+        error_log("Faculty Dashboard - Faculty ID: $faculty_id, Sections: " . implode(',', $assigned_sections) . ", Date range: $start_range to $end_range");
 
         $calendar_result = mysqli_query($conn, $calendar_query);
         if (!$calendar_result) {
             error_log("Calendar query failed: " . mysqli_error($conn));
-            echo "<!-- DEBUG: Query failed: " . mysqli_error($conn) . " -->\n";
+            error_log("Calendar query failed detail: " . mysqli_error($conn));
             $attendance_calendar_data = [];
         } else {
             $row_count = mysqli_num_rows($calendar_result);
-            echo "<!-- DEBUG: Query returned $row_count rows -->\n";
 
             while ($row = mysqli_fetch_assoc($calendar_result)) {
                 $date = $row['attendance_date'];
@@ -545,7 +548,7 @@ if (!empty($assigned_sections)) {
                 $sessions = explode(',', $row['sessions']);
                 $sessions = array_map('strtolower', $sessions);
 
-                echo "<!-- DEBUG: Date $date has $session_count sessions: " . implode(',', $sessions) . " -->\n";
+
 
                 $attendance_calendar_data[$date] = [
                     'session_count' => $session_count,
@@ -555,14 +558,14 @@ if (!empty($assigned_sections)) {
             mysqli_free_result($calendar_result);
         }
     } else {
-        echo "<!-- DEBUG: No class IDs in assigned sections -->\n";
+        error_log("Faculty Dashboard: No class IDs in assigned sections");
     }
 } else {
-    echo "<!-- DEBUG: No assigned sections -->\n";
+    error_log("Faculty Dashboard: No assigned sections");
 }
 
-echo "<!-- DEBUG: Final attendance data count: " . count($attendance_calendar_data) . " -->\n";
-
+// Flush any buffered output before HTML starts
+ob_end_clean();
 ?>
 <!DOCTYPE html>
 <html lang="en">

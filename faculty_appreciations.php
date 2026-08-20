@@ -257,8 +257,21 @@ if (!empty($assigned_sections)) {
                       WHERE class_id IN ($class_ids_in) 
                       ORDER BY year, branch, section";
     $classes_result = mysqli_query($conn, $classes_query);
-    while ($class = mysqli_fetch_assoc($classes_result)) {
-        $available_classes[] = $class;
+    if ($classes_result) {
+        while ($class = mysqli_fetch_assoc($classes_result)) {
+            $available_classes[] = $class;
+        }
+    }
+}
+if (empty($available_classes)) {
+    $classes_query = "SELECT class_id, year, branch, section 
+                      FROM classes 
+                      ORDER BY year, branch, section";
+    $classes_result = mysqli_query($conn, $classes_query);
+    if ($classes_result) {
+        while ($class = mysqli_fetch_assoc($classes_result)) {
+            $available_classes[] = $class;
+        }
     }
 }
 
@@ -347,26 +360,31 @@ if (!empty($assigned_sections)) {
                                         <select class="form-control" id="student_select_single" name="student_id" required>
                                             <option value="">Choose a student...</option>
                                             <?php
-                                            if (!empty($assigned_sections)) {
-                                                if ($selected_class_filter > 0) {
-                                                    $class_ids_in = (int)$selected_class_filter;
-                                                    $students_query = "SELECT s.student_id, s.name, c.year, c.branch, c.section 
-                                                                     FROM students s 
-                                                                     JOIN classes c ON s.class_id = c.class_id 
-                                                                     WHERE s.class_id = $class_ids_in 
-                                                                     ORDER BY s.name";
-                                                } else {
-                                                    $class_ids_in = implode(',', array_map('intval', $assigned_sections));
-                                                    $students_query = "SELECT s.student_id, s.name, c.year, c.branch, c.section 
-                                                                     FROM students s 
-                                                                     JOIN classes c ON s.class_id = c.class_id 
-                                                                     WHERE s.class_id IN ($class_ids_in) 
-                                                                     ORDER BY c.year, c.branch, c.section, s.name";
-                                                }
-                                                $students_result = mysqli_query($conn, $students_query);
+                                            if ($selected_class_filter > 0) {
+                                                $filter_id = (int)$selected_class_filter;
+                                                $students_query = "SELECT s.student_id, s.name, c.year, c.branch, c.section 
+                                                                 FROM students s 
+                                                                 JOIN classes c ON s.class_id = c.class_id 
+                                                                 WHERE s.class_id = $filter_id 
+                                                                 ORDER BY s.student_id ASC";
+                                            } else if (!empty($assigned_sections)) {
+                                                $class_ids_in = implode(',', array_map('intval', $assigned_sections));
+                                                $students_query = "SELECT s.student_id, s.name, c.year, c.branch, c.section 
+                                                                 FROM students s 
+                                                                 JOIN classes c ON s.class_id = c.class_id 
+                                                                 WHERE s.class_id IN ($class_ids_in) 
+                                                                 ORDER BY c.year, c.branch, c.section, s.student_id ASC";
+                                            } else {
+                                                $students_query = "SELECT s.student_id, s.name, c.year, c.branch, c.section 
+                                                                 FROM students s 
+                                                                 JOIN classes c ON s.class_id = c.class_id 
+                                                                 ORDER BY c.year, c.branch, c.section, s.student_id ASC";
+                                            }
+                                            $students_result = mysqli_query($conn, $students_query);
+                                            if ($students_result) {
                                                 while ($student = mysqli_fetch_assoc($students_result)) {
                                                     echo '<option value="' . htmlspecialchars($student['student_id']) . '">' 
-                                                        . htmlspecialchars($student['name']) . ' - ' 
+                                                        . htmlspecialchars($student['name']) . ' (' . htmlspecialchars($student['student_id']) . ') - ' 
                                                         . htmlspecialchars($student['year'] . '/' . $student['branch'] . '-' . $student['section'])
                                                         . '</option>';
                                                 }
@@ -421,26 +439,31 @@ if (!empty($assigned_sections)) {
                                         <label for="student_select_bulk" class="form-label">Select Students (Hold Ctrl/Cmd to select multiple)</label>
                                         <select class="form-control" id="student_select_bulk" name="student_ids[]" multiple size="8" required style="height: auto; min-height: 200px;">
                                             <?php
-                                            if (!empty($assigned_sections)) {
-                                                if ($selected_class_filter > 0) {
-                                                    $class_ids_in = (int)$selected_class_filter;
-                                                    $students_query = "SELECT s.student_id, s.name, c.year, c.branch, c.section 
-                                                                     FROM students s 
-                                                                     JOIN classes c ON s.class_id = c.class_id 
-                                                                     WHERE s.class_id = $class_ids_in 
-                                                                     ORDER BY s.name";
-                                                } else {
-                                                    $class_ids_in = implode(',', array_map('intval', $assigned_sections));
-                                                    $students_query = "SELECT s.student_id, s.name, c.year, c.branch, c.section 
-                                                                     FROM students s 
-                                                                     JOIN classes c ON s.class_id = c.class_id 
-                                                                     WHERE s.class_id IN ($class_ids_in) 
-                                                                     ORDER BY c.year, c.branch, c.section, s.name";
-                                                }
-                                                $students_result = mysqli_query($conn, $students_query);
+                                            if ($selected_class_filter > 0) {
+                                                $filter_id = (int)$selected_class_filter;
+                                                $students_query = "SELECT s.student_id, s.name, c.year, c.branch, c.section 
+                                                                 FROM students s 
+                                                                 JOIN classes c ON s.class_id = c.class_id 
+                                                                 WHERE s.class_id = $filter_id 
+                                                                 ORDER BY s.student_id ASC";
+                                            } else if (!empty($assigned_sections)) {
+                                                $class_ids_in = implode(',', array_map('intval', $assigned_sections));
+                                                $students_query = "SELECT s.student_id, s.name, c.year, c.branch, c.section 
+                                                                 FROM students s 
+                                                                 JOIN classes c ON s.class_id = c.class_id 
+                                                                 WHERE s.class_id IN ($class_ids_in) 
+                                                                 ORDER BY c.year, c.branch, c.section, s.student_id ASC";
+                                            } else {
+                                                $students_query = "SELECT s.student_id, s.name, c.year, c.branch, c.section 
+                                                                 FROM students s 
+                                                                 JOIN classes c ON s.class_id = c.class_id 
+                                                                 ORDER BY c.year, c.branch, c.section, s.student_id ASC";
+                                            }
+                                            $students_result = mysqli_query($conn, $students_query);
+                                            if ($students_result) {
                                                 while ($student = mysqli_fetch_assoc($students_result)) {
                                                     echo '<option value="' . htmlspecialchars($student['student_id']) . '">' 
-                                                        . htmlspecialchars($student['name']) . ' - ' 
+                                                        . htmlspecialchars($student['name']) . ' (' . htmlspecialchars($student['student_id']) . ') - ' 
                                                         . htmlspecialchars($student['year'] . '/' . $student['branch'] . '-' . $student['section'])
                                                         . '</option>';
                                                 }

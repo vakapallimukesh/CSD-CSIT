@@ -73,7 +73,7 @@ if ($action === 'get_top_performers') {
     ORDER BY 
         CASE WHEN sp.cgpa IS NULL THEN 1 ELSE 0 END,
         sp.cgpa DESC,
-        s.name ASC
+        s.student_id ASC
     LIMIT $limit OFFSET $offset";
     
     $result = mysqli_query($conn, $query);
@@ -170,6 +170,24 @@ if ($action === 'get_top_performers') {
             $data = mysqli_fetch_assoc($organized_result);
             $participation_stats['organized'] = $data['count'];
             $participation_stats['total_points'] += (int)$data['points'];
+        }
+
+        // Count appreciations
+        $appreciations_query = "SELECT COUNT(*) as count, SUM(points) as points FROM appreciations WHERE student_id = '$student_id'";
+        $appreciations_result = mysqli_query($conn, $appreciations_query);
+        if ($appreciations_result) {
+            $data = mysqli_fetch_assoc($appreciations_result);
+            $participation_stats['appreciations'] = $data['count'];
+            $participation_stats['total_points'] += (int)$data['points'];
+        }
+
+        // Count penalties
+        $penalties_query = "SELECT COUNT(*) as count, SUM(points) as points FROM penalties WHERE student_id = '$student_id'";
+        $penalties_result = mysqli_query($conn, $penalties_query);
+        if ($penalties_result) {
+            $data = mysqli_fetch_assoc($penalties_result);
+            $participation_stats['penalties'] = $data['count'];
+            $participation_stats['total_points'] += (int)$data['points']; // Adds negative value (correctly deducting)
         }
         
         // Add participation stats to student data
