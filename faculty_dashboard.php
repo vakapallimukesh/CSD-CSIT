@@ -697,6 +697,9 @@ ob_end_clean();
                             <a href="faculty_penalties.php" class="action-btn">
                                 <i class="fas fa-minus-circle"></i> Penalties
                             </a>
+                            <a href="upload_tp_excel.php" class="action-btn" style="background: linear-gradient(135deg, #059669 0%, #047857 100%); color: white; border: none;">
+                                <i class="fas fa-file-excel"></i> T&P Excel Upload
+                            </a>
                             
                         </div>
                     </div>

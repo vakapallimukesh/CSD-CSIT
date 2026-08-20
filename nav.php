@@ -502,13 +502,12 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
                 <!-- Placements Dropdown -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle <?= in_array($current_page, ['placements.php', 'internships.php', 'upload_tp_excel.php']) ? 'active' : '' ?>" href="placements.php" id="placementsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle <?= in_array($current_page, ['placements.php', 'internships.php']) ? 'active' : '' ?>" href="placements.php" id="placementsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="fas fa-briefcase"></i> Placements
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="placementsDropdown">
                         <li><a class="dropdown-item <?= $current_page == 'placements.php' ? 'active' : '' ?>" href="placements.php"><i class="fas fa-chart-line me-2"></i> Placements Overview</a></li>
                         <li><a class="dropdown-item <?= $current_page == 'internships.php' ? 'active' : '' ?>" href="internships.php"><i class="fas fa-laptop-code me-2"></i> Internships</a></li>
-                        <li><a class="dropdown-item <?= $current_page == 'upload_tp_excel.php' ? 'active' : '' ?>" href="upload_tp_excel.php"><i class="fas fa-file-excel me-2 text-success"></i> T&P Classes Excel Upload</a></li>
                     </ul>
                 </li>
 

@@ -490,8 +490,11 @@ while ($row = mysqli_fetch_assoc($all_faculty_result)) {
     <!-- Main Content -->
     <div class="main-content">
         <div class="container">
-            <!-- Logout Button -->
+            <!-- Action Bar -->
             <div class="text-end mb-4">
+                <a href="upload_tp_excel.php" class="btn btn-success me-2 fw-bold">
+                    <i class="fas fa-file-excel me-1"></i> Upload T&P Excel Sheet
+                </a>
                 <a href="hod_logout.php" class="btn btn-danger">
                     <i class="fas fa-sign-out-alt"></i> Logout
                 </a>
