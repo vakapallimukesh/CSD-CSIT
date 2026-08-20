@@ -129,11 +129,12 @@ function parseCollegeAttendanceSheetPHP($file_tmp, $default_date) {
         $regNoColIdx = -1;
         $nameColIdx = -1;
         
-        for ($r = 0; $r < min(count($all_lines), 15); $r++) {
+        for ($r = 0; $r < min(count($all_lines), 20); $r++) {
             $row = $all_lines[$r];
             foreach ($row as $c => $val) {
                 $cellStr = strtolower($val);
-                if (strpos($cellStr, 'hallticket') !== false || strpos($cellStr, 'reg') !== false || strpos($cellStr, 'roll') !== false) {
+                // Do NOT match "STUDENT ROLL LIST" title row!
+                if (strpos($cellStr, 'hallticket') !== false || strpos($cellStr, 'hall ticket') !== false || strpos($cellStr, 'reg') !== false || $cellStr === 'htno' || $cellStr === 'pin') {
                     $headerRowIdx = $r;
                     $regNoColIdx = $c;
                 }
@@ -168,7 +169,7 @@ function parseCollegeAttendanceSheetPHP($file_tmp, $default_date) {
         for ($r = $headerRowIdx + 1; $r < count($all_lines); $r++) {
             $row = $all_lines[$r];
             $regNo = strtoupper(preg_replace('/\s+/', '', $row[$regNoColIdx] ?? ''));
-            if (empty($regNo) || strlen($regNo) < 5 || strpos($regNo, 'HALLTICKET') !== false || strpos($regNo, 'SNO') !== false) {
+            if (empty($regNo) || strlen($regNo) < 5 || strpos($regNo, 'HALLTICKET') !== false || strpos($regNo, 'SNO') !== false || strpos($regNo, 'ROLL') !== false) {
                 continue;
             }
             
@@ -226,7 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
         $skip_count = 0;
         $db_errors = [];
         
-        // Prepare Insert Statements
+        // Prepare Insert Statements (event_id = 999 for T&P Points)
         $app_stmt = mysqli_prepare($conn, "INSERT INTO appreciations (student_id, event_id, points, reason, created_by, created_at) VALUES (?, 999, 1, ?, ?, NOW())");
         $pen_stmt = mysqli_prepare($conn, "INSERT INTO penalties (student_id, event_id, points, reason, created_by, created_at) VALUES (?, 999, -1, ?, ?, NOW())");
         
@@ -725,16 +726,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
             parsedRows = [];
             if (!rows || rows.length < 1) return;
 
-            // 1. Locate Header Row containing HallTicketNo / Reg / Roll
+            // 1. Locate Header Row containing HallTicketNo / Reg / Htno (specifically exclude "STUDENT ROLL LIST" title row)
             let headerRowIdx = -1;
             let regNoColIdx = -1;
             let nameColIdx = -1;
 
-            for (let r = 0; r < Math.min(rows.length, 15); r++) {
+            for (let r = 0; r < Math.min(rows.length, 20); r++) {
                 const row = rows[r] || [];
                 for (let c = 0; c < row.length; c++) {
                     const cellStr = String(row[c] || '').trim().toLowerCase();
-                    if (cellStr.includes('hallticket') || cellStr.includes('hall ticket') || cellStr.includes('reg') || cellStr.includes('roll')) {
+                    if (cellStr.includes('hallticket') || cellStr.includes('hall ticket') || cellStr.includes('reg') || cellStr === 'htno' || cellStr === 'pin') {
                         headerRowIdx = r;
                         regNoColIdx = c;
                     }
@@ -784,7 +785,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                 const row = rows[r] || [];
                 const regNo = String(row[regNoColIdx] || '').trim().toUpperCase().replace(/\s+/g, '');
                 
-                // Skip invalid rows
+                // Skip invalid title/header rows
                 if (!regNo || regNo.length < 5 || regNo.includes('HALLTICKET') || regNo.includes('SNO') || regNo.includes('ROLL')) {
                     continue;
                 }
