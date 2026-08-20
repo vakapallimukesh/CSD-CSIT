@@ -227,7 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
         $db_errors = [];
         
         // Prepare Insert Statements
-        $app_stmt = mysqli_prepare($conn, "INSERT INTO appreciations (student_id, points, reason, created_by, created_at) VALUES (?, 1, ?, ?, NOW())");
+        $app_stmt = mysqli_prepare($conn, "INSERT INTO appreciations (student_id, event_id, points, reason, created_by, created_at) VALUES (?, 999, 1, ?, ?, NOW())");
         $pen_stmt = mysqli_prepare($conn, "INSERT INTO penalties (student_id, event_id, points, reason, created_by, created_at) VALUES (?, 999, -1, ?, ?, NOW())");
         
         foreach ($rows_data as $row) {
