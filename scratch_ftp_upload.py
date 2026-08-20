@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Upload corrected files to InfinityFree via FTP."""
+"""Robust upload of files to InfinityFree via FTP with auto-reconnect."""
 import ftplib
 import os
-import io
+import time
 
 FTP_HOST = 'ftpupload.net'
 FTP_PORT = 21
@@ -11,14 +11,65 @@ FTP_PASS = '25B91A6262'
 LOCAL_ROOT = '/Applications/XAMPP/xamppfiles/htdocs/department-website'
 REMOTE_ROOT = '/htdocs'
 
-# Files/dirs to skip
 SKIP_NAMES = {
     '.git', '.DS_Store', '.agents', 'department-website',
-    'cache', 'logs', 'uploads', 'scratch_ftp_upload.py',
+    'cache', 'logs', 'uploads', 'scratch_ftp_upload.py', 'node_modules'
 }
 
-# Large files to skip (videos > 10MB)
 SKIP_EXTENSIONS = {'.mp4', '.avi', '.mov', '.mkv', '.wmv'}
+
+class RobustFTP:
+    def __init__(self):
+        self.ftp = None
+        self.connect()
+
+    def connect(self):
+        if self.ftp:
+            try:
+                self.ftp.quit()
+            except Exception:
+                pass
+        print(f'Connecting to {FTP_HOST}...')
+        self.ftp = ftplib.FTP()
+        self.ftp.connect(FTP_HOST, FTP_PORT, timeout=60)
+        self.ftp.login(FTP_USER, FTP_PASS)
+        self.ftp.set_pasv(True)
+        print('Connected successfully!')
+
+    def ensure_remote_dir(self, remote_dir):
+        parts = [p for p in remote_dir.split('/') if p]
+        curr = ''
+        for p in parts:
+            curr += '/' + p
+            try:
+                self.ftp.cwd(curr)
+            except Exception:
+                try:
+                    self.ftp.mkd(curr)
+                    print(f'  📁 Created directory: {curr}')
+                except Exception:
+                    pass
+
+    def upload_file(self, local_path, remote_path, retries=3):
+        for attempt in range(retries):
+            try:
+                # Ensure parent dir exists
+                parent_dir = os.path.dirname(remote_path)
+                self.ensure_remote_dir(parent_dir)
+                
+                with open(local_path, 'rb') as f:
+                    self.ftp.storbinary(f'STOR {remote_path}', f)
+                print(f'  ✓ {remote_path}')
+                return True
+            except Exception as e:
+                print(f'  ⚠️ Upload error on {remote_path} (attempt {attempt+1}/{retries}): {e}')
+                time.sleep(2)
+                try:
+                    self.connect()
+                except Exception as ce:
+                    print(f'  Failed reconnect: {ce}')
+        print(f'  ✗ FAILED to upload {remote_path}')
+        return False
 
 def should_skip(name, path):
     if name in SKIP_NAMES:
@@ -28,105 +79,40 @@ def should_skip(name, path):
     _, ext = os.path.splitext(name)
     if ext.lower() in SKIP_EXTENSIONS:
         return True
-    # Skip files larger than 10MB
     if os.path.isfile(path) and os.path.getsize(path) > 10 * 1024 * 1024:
         return True
     return False
 
-def upload_file(ftp, local_path, remote_path):
-    """Upload a single file."""
-    try:
-        with open(local_path, 'rb') as f:
-            ftp.storbinary(f'STOR {remote_path}', f)
-        print(f'  ✓ {remote_path}')
-        return True
-    except Exception as e:
-        print(f'  ✗ {remote_path}: {e}')
-        return False
-
-def ensure_remote_dir(ftp, remote_dir):
-    """Create remote directory if it doesn't exist."""
-    try:
-        ftp.cwd(remote_dir)
-        ftp.cwd('/')  # go back to root
-    except:
-        try:
-            ftp.mkd(remote_dir)
-            print(f'  📁 Created directory: {remote_dir}')
-        except:
-            pass  # might already exist or be a nested path
-
-def upload_directory(ftp, local_dir, remote_dir):
-    """Recursively upload a directory."""
-    # Ensure remote dir exists
-    ensure_remote_dir(ftp, remote_dir)
-    
-    entries = sorted(os.listdir(local_dir))
-    uploaded = 0
-    skipped = 0
-    
-    for name in entries:
-        local_path = os.path.join(local_dir, name)
-        remote_path = f'{remote_dir}/{name}'
-        
-        if should_skip(name, local_path):
-            skipped += 1
-            continue
-        
-        if os.path.isdir(local_path):
-            ensure_remote_dir(ftp, remote_path)
-            sub_up, sub_sk = upload_directory(ftp, local_path, remote_path)
-            uploaded += sub_up
-            skipped += sub_sk
-        else:
-            if upload_file(ftp, local_path, remote_path):
-                uploaded += 1
-            else:
-                skipped += 1
-    
-    return uploaded, skipped
-
 def main():
-    print(f'Connecting to {FTP_HOST}...')
-    ftp = ftplib.FTP()
-    ftp.connect(FTP_HOST, FTP_PORT, timeout=60)
-    ftp.login(FTP_USER, FTP_PASS)
-    print(f'Connected! Server: {ftp.getwelcome()}')
+    rftp = RobustFTP()
     
-    # Set passive mode
-    ftp.set_pasv(True)
+    all_files = []
+    for root, dirs, files in os.walk(LOCAL_ROOT):
+        # Filter dirs in-place to avoid traversing skipped folders
+        dirs[:] = [d for d in dirs if not should_skip(d, os.path.join(root, d))]
+        
+        rel_path = os.path.relpath(root, LOCAL_ROOT)
+        remote_dir = REMOTE_ROOT if rel_path == '.' else f'{REMOTE_ROOT}/{rel_path}'.replace('\\', '/')
+        
+        for f in files:
+            local_file = os.path.join(root, f)
+            if not should_skip(f, local_file):
+                remote_file = f'{remote_dir}/{f}'
+                all_files.append((local_file, remote_file))
+
+    print(f'\nTotal files to process: {len(all_files)}')
     
-    # First, upload the two critical fixed files
-    print('\n=== Uploading critical fixes ===')
-    
-    # 1. Upload corrected index.php (replacing XAMPP default)
-    upload_file(ftp, f'{LOCAL_ROOT}/index.php', f'{REMOTE_ROOT}/index.php')
-    
-    # 2. Upload corrected .htaccess
-    upload_file(ftp, f'{LOCAL_ROOT}/.htaccess', f'{REMOTE_ROOT}/.htaccess')
-    
-    # 3. Upload all other files
-    print('\n=== Uploading all project files ===')
-    uploaded, skipped = upload_directory(ftp, LOCAL_ROOT, REMOTE_ROOT)
-    
-    print(f'\n=== DONE ===')
-    print(f'Uploaded: {uploaded} files')
-    print(f'Skipped: {skipped} files/dirs')
-    
-    # Verify index.php was replaced
-    print('\n=== Verifying index.php ===')
-    buf = io.BytesIO()
-    ftp.retrbinary(f'RETR {REMOTE_ROOT}/index.php', buf.write)
-    content = buf.getvalue().decode('utf-8', errors='replace')
-    if 'XAMPP' in content or '/dashboard/' in content:
-        print('⚠️  WARNING: index.php still has XAMPP content!')
-    else:
-        print('✓ index.php is the correct department website homepage')
-    
-    print(f'\nFirst 200 chars: {content[:200]}')
-    
-    ftp.quit()
-    print('\nFTP connection closed.')
+    success = 0
+    failed = 0
+    for local_file, remote_file in all_files:
+        if rftp.upload_file(local_file, remote_file):
+            success += 1
+        else:
+            failed += 1
+
+    print(f'\n=== SUMMARY ===')
+    print(f'Uploaded successfully: {success}')
+    print(f'Failed: {failed}')
 
 if __name__ == '__main__':
     main()

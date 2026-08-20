@@ -137,7 +137,10 @@ if ($students_result) {
         $appreciations_details = [];
         if ($appreciations_detail_result) {
             while ($row = mysqli_fetch_assoc($appreciations_detail_result)) {
-                $appreciations_details[] = $row;
+                $check_text = strtolower(($row['event_title'] ?? '') . ' ' . ($row['reason'] ?? ''));
+                if (strpos($check_text, 't&p') !== false || strpos($check_text, 't & p') !== false || strpos($check_text, 'training') !== false) {
+                    $appreciations_details[] = $row;
+                }
             }
         }
 
