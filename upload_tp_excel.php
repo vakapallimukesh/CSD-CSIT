@@ -6,9 +6,95 @@ if (!$conn) {
     die('Database connection failed: ' . mysqli_connect_error());
 }
 
+// Handle AJAX endpoint for fetching section students
+if (isset($_GET['action']) && $_GET['action'] === 'get_section_students') {
+    header('Content-Type: application/json');
+    $class_id = isset($_GET['class_id']) ? (int)$_GET['class_id'] : 0;
+    
+    $where_clause = $class_id > 0 ? "WHERE s.class_id = " . $class_id : "";
+    $query = "SELECT s.student_id, s.name, h.name as house_name, c.year, c.branch, c.section
+              FROM students s 
+              LEFT JOIN houses h ON s.hid = h.hid 
+              LEFT JOIN classes c ON s.class_id = c.class_id 
+              $where_clause 
+              ORDER BY s.student_id ASC";
+    $result = mysqli_query($conn, $query);
+    $students = [];
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $students[] = [
+                'student_id' => $row['student_id'],
+                'name' => $row['name'],
+                'house' => $row['house_name'] ?? '',
+                'section' => $row['year'] ? $row['year'] . '/4 ' . strtoupper($row['branch']) . '-' . strtoupper($row['section']) : ''
+            ];
+        }
+    }
+    echo json_encode(['success' => true, 'students' => $students]);
+    exit();
+}
+
+// Handle Template Download for Selected Section
+if (isset($_GET['action']) && $_GET['action'] === 'download_section_template') {
+    $class_id = isset($_GET['class_id']) ? (int)$_GET['class_id'] : 0;
+    
+    $section_label = "All_Sections";
+    $where_clause = "";
+    if ($class_id > 0) {
+        $c_res = mysqli_query($conn, "SELECT year, branch, section FROM classes WHERE class_id = " . $class_id);
+        if ($c_row = mysqli_fetch_assoc($c_res)) {
+            $section_label = "Section_" . $c_row['year'] . "_" . strtoupper($c_row['branch']) . "_" . strtoupper($c_row['section']);
+        }
+        $where_clause = "WHERE s.class_id = " . $class_id;
+    }
+    
+    $query = "SELECT s.student_id, s.name FROM students s $where_clause ORDER BY s.student_id ASC";
+    $result = mysqli_query($conn, $query);
+    
+    header('Content-Type: text/csv; charset=utf-8');
+    header('Content-Disposition: attachment; filename=TP_Attendance_Template_' . $section_label . '.csv');
+    
+    $output = fopen('php://output', 'w');
+    // Header row matching official college format
+    fputcsv($output, ['SNo', 'HallTicketNo', 'Student Name', '10-07', '14-07', '15-07', '21-07', '28-07']);
+    
+    $sno = 1;
+    if ($result && mysqli_num_rows($result) > 0) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            fputcsv($output, [$sno++, $row['student_id'], $row['name'], '', '', '', '', '']);
+        }
+    } else {
+        // Fallback sample rows if database has no students for this section
+        fputcsv($output, [1, '24B91A0773', 'MEDISETTI SRINIJA', '', '', '', 'AB', 'AB']);
+        fputcsv($output, [2, '24B91A0774', 'MULAGALA PRANATI SANDHYA', 'AB', '', '', '', '']);
+        fputcsv($output, [3, '24B91A0775', 'MURIKITHA ARCHANA SAI SRI', '', 'AB', 'AB', '', 'AB']);
+    }
+    fclose($output);
+    exit();
+}
+
 $success_msg = '';
 $error_msg = '';
 $processed_summary = [];
+
+// Get all available sections/classes from DB
+$classes_query = "SELECT class_id, year, branch, section FROM classes ORDER BY year, branch, section";
+$classes_result = mysqli_query($conn, $classes_query);
+$available_classes = [];
+if ($classes_result) {
+    while ($c = mysqli_fetch_assoc($classes_result)) {
+        if ($c['year'] >= 5) {
+            $c['name'] = 'Graduated Batch';
+        } else {
+            $c['name'] = $c['year'] . '/4 ' . strtoupper($c['branch']) . '-' . strtoupper($c['section']);
+        }
+        
+        $st_count_q = mysqli_query($conn, "SELECT COUNT(*) as count FROM students WHERE class_id = " . (int)$c['class_id']);
+        $c['student_count'] = ($st_count = mysqli_fetch_assoc($st_count_q)) ? (int)$st_count['count'] : 0;
+        
+        $available_classes[] = $c;
+    }
+}
 
 // Helper function to format date for reason text
 function formatReasonDate($rawDate) {
@@ -30,6 +116,7 @@ function formatReasonDate($rawDate) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
     $default_date = $_POST['tp_date'] ?? date('Y-m-d');
     $action_filter = $_POST['action_filter'] ?? 'both'; // 'both', 'presents_only', 'absents_only'
+    $selected_class_id = isset($_POST['class_id']) ? (int)$_POST['class_id'] : 0;
     $created_by = $_SESSION['faculty_id'] ?? ($_SESSION['admin_id'] ?? 1);
     
     // Check if JSON rows were sent via client-side XLSX parser
@@ -120,7 +207,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
 <html lang="en">
 <head>
     <?php include "./head.php"; ?>
-    <title>T&P Classes - Official College Excel Attendance Upload</title>
+    <title>T&P Classes - Section Selection & Excel Attendance Upload</title>
     <!-- SheetJS for client-side multi-date Excel Parsing -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
@@ -213,6 +300,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
             font-weight: 600;
             font-size: 0.88rem;
         }
+        .student-reg-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 8px 12px;
+            transition: all 0.2s ease;
+        }
+        .student-reg-card:hover {
+            border-color: #059669;
+            box-shadow: 0 2px 8px rgba(5, 150, 105, 0.15);
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body>
@@ -222,10 +321,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
         <div class="row justify-content-center">
             <div class="col-lg-10">
                 
-                <div class="mb-4">
+                <div class="mb-4 d-flex justify-content-between align-items-center">
                     <a href="javascript:history.back()" class="btn btn-outline-secondary rounded-pill px-4 fw-bold">
                         <i class="fas fa-arrow-left me-2"></i> Back
                     </a>
+                    <span class="badge bg-success px-3 py-2 rounded-pill fw-bold" style="font-size: 0.9rem;">
+                        <i class="fas fa-desktop me-1"></i> Running on Localhost
+                    </span>
                 </div>
 
                 <?php if ($success_msg): ?>
@@ -247,29 +349,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                 <div class="upload-card">
                     <div class="upload-header">
                         <h3><i class="fas fa-file-excel me-2"></i> Official College T&P Attendance Excel Upload</h3>
-                        <p class="mb-0 text-white-50">Upload official college attendance sheets (CSIT-A, CSIT-B, CSD, etc.). Blank cells = Present (+1 Appreciation), 'AB' cells = Absent (-1 Penalty).</p>
+                        <p class="mb-0 text-white-50">Select a section to view student registration numbers, download pre-filled templates, and upload official college attendance sheets (Blank = Present (+1), 'AB' = Absent (-1)).</p>
                     </div>
                     
                     <div class="p-4 p-md-5">
                         
-                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 p-3 bg-light rounded-4 border">
-                            <div>
-                                <h6 class="fw-bold mb-1"><i class="fas fa-university me-2 text-success"></i> Official College Roll List Format Supported</h6>
-                                <div class="d-flex gap-2 flex-wrap mt-2">
-                                    <span class="rule-pill"><i class="fas fa-check me-1"></i> Blank = Present (+1 Appreciation)</span>
-                                    <span class="rule-pill" style="background:#fef2f2; border-color:#fca5a5; color:#dc2626;"><i class="fas fa-times me-1"></i> AB = Absent (-1 Penalty)</span>
-                                    <span class="rule-pill" style="background:#f0f9ff; border-color:#bae6fd; color:#0284c7;"><i class="fas fa-calendar-week me-1"></i> Auto-detects Multiple Date Columns</span>
-                                </div>
-                            </div>
-                            <button type="button" onclick="downloadCollegeTemplate()" class="btn-sample">
-                                <i class="fas fa-download text-success"></i> Download Official College Excel Template
-                            </button>
-                        </div>
-
                         <form method="POST" action="upload_tp_excel.php" enctype="multipart/form-data" id="tpExcelForm">
                             <input type="hidden" name="process_excel" value="1">
                             <input type="hidden" name="parsed_rows_json" id="parsedRowsJson" value="">
 
+                            <!-- 1. Section Selection & Download Template -->
+                            <div class="p-4 bg-light rounded-4 border mb-4">
+                                <h5 class="fw-bold mb-3 text-dark"><i class="fas fa-layer-group text-success me-2"></i> Step 1: Select Section & Download Pre-filled Template</h5>
+                                <div class="row g-3 align-items-end">
+                                    <div class="col-md-7">
+                                        <label class="form-label fw-bold"><i class="fas fa-university me-1 text-success"></i> Department Section / Class</label>
+                                        <select class="form-select form-select-lg rounded-3" name="class_id" id="sectionSelect" onchange="onSectionChange(this.value)">
+                                            <option value="0" selected>All Sections (Auto-detect from Registration Numbers)</option>
+                                            <?php foreach ($available_classes as $cls): ?>
+                                                <option value="<?php echo $cls['class_id']; ?>">
+                                                    <?php echo htmlspecialchars($cls['name']); ?> (<?php echo $cls['student_count']; ?> students)
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <button type="button" id="btnDownloadSectionTemplate" onclick="downloadSelectedSectionTemplate()" class="btn btn-outline-success btn-lg w-100 rounded-3 fw-bold py-2">
+                                            <i class="fas fa-download me-2"></i> Download Excel Template
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section Student Registration Numbers Box -->
+                            <div id="sectionStudentsBox" class="mb-4 p-4 bg-white rounded-4 border shadow-sm" style="display: none;">
+                                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+                                    <div>
+                                        <h6 class="fw-bold mb-0 text-dark">
+                                            <i class="fas fa-id-card text-success me-2"></i> Student Registration Numbers in <span id="selectedSectionTitle" class="text-success"></span>
+                                        </h6>
+                                        <small class="text-muted"><span id="selectedSectionCount">0</span> students registered in this section</small>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button type="button" onclick="copyRegNumbers()" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                                            <i class="fas fa-copy me-1"></i> Copy All Reg Nos
+                                        </button>
+                                        <button type="button" onclick="toggleRegNumbersView()" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                            <i class="fas fa-eye me-1"></i> <span id="toggleRegText">Show Reg Numbers</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Reg Numbers Grid Container -->
+                                <div id="regNumbersContainer" style="max-height: 250px; overflow-y: auto; display: none;" class="p-3 bg-light border rounded-3">
+                                    <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4 row-cols-lg-6 g-2" id="regNumbersList"></div>
+                                </div>
+                            </div>
+
+                            <!-- 2. Options -->
                             <div class="row g-4 mb-4">
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold"><i class="fas fa-filter me-1 text-success"></i> Processing Mode</label>
@@ -287,12 +424,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                                 </div>
                             </div>
 
+                            <!-- 3. Upload File Drop Zone -->
                             <div class="mb-4">
-                                <label class="form-label fw-bold"><i class="fas fa-upload me-1 text-success"></i> Select or Drag Official College Attendance Sheet (.xlsx / .xls / .csv)</label>
+                                <label class="form-label fw-bold"><i class="fas fa-upload me-1 text-success"></i> Step 2: Upload Completed College Attendance Sheet (.xlsx / .xls / .csv)</label>
                                 <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
                                     <i class="fas fa-file-excel"></i>
-                                    <h5 class="fw-bold text-dark mb-1" id="fileLabel">Click to browse or drag & drop official college roll list sheet</h5>
-                                    <p class="text-muted small mb-0">Supports STUDENT ROLL LIST sheets for all sections (CSIT-A, CSIT-B, CSD)</p>
+                                    <h5 class="fw-bold text-dark mb-1" id="fileLabel">Click to browse or drag & drop attendance sheet</h5>
+                                    <p class="text-muted small mb-0">Supports STUDENT ROLL LIST sheets with Blank = Present, AB = Absent</p>
                                     <input type="file" id="fileInput" name="excel_file" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleFileSelect(event)">
                                 </div>
                             </div>
@@ -379,22 +517,89 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
 
     <script>
         let parsedRows = [];
+        let currentSectionStudents = [];
 
-        function downloadCollegeTemplate() {
-            const csvContent = "data:text/csv;charset=utf-8," 
-                + "SNo,HallTicketNo,Student Name,10-07,14-07,15-07,21-07,28-07\n"
-                + "1,24B91A0773,MEDISETTI SRINIJA,,,AB,AB\n"
-                + "2,24B91A0774,MULAGALA PRANATI SANDHYA,AB,,,,\n"
-                + "3,24B91A0775,MURIKITHA ARCHANA SAI SRI,,AB,AB,,AB\n"
-                + "4,24B91A0776,NALAMALA KEVIN RISHITH,AB,,AB,AB,AB\n";
-            
-            const encodedUri = encodeURI(csvContent);
-            const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "College_Roll_List_TP_Attendance_Sample.csv");
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+        function onSectionChange(classId) {
+            const btn = document.getElementById('btnDownloadSectionTemplate');
+            const select = document.getElementById('sectionSelect');
+            const selectedText = select.options[select.selectedIndex].text;
+
+            if (classId && classId != '0') {
+                btn.innerHTML = `<i class="fas fa-download me-2"></i> Download Template for ${selectedText.split('(')[0].trim()}`;
+            } else {
+                btn.innerHTML = `<i class="fas fa-download me-2"></i> Download Template (All Sections)`;
+            }
+
+            loadSectionStudents(classId);
+        }
+
+        function loadSectionStudents(classId) {
+            fetch(`upload_tp_excel.php?action=get_section_students&class_id=${classId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        currentSectionStudents = data.students || [];
+                        renderSectionStudents(currentSectionStudents);
+                    }
+                })
+                .catch(err => console.error(err));
+        }
+
+        function renderSectionStudents(students) {
+            const box = document.getElementById('sectionStudentsBox');
+            const countSpan = document.getElementById('selectedSectionCount');
+            const listDiv = document.getElementById('regNumbersList');
+            const select = document.getElementById('sectionSelect');
+            const titleSpan = document.getElementById('selectedSectionTitle');
+
+            const selectedText = select.options[select.selectedIndex].text;
+            titleSpan.innerText = selectedText.split('(')[0].trim();
+            countSpan.innerText = students.length;
+
+            if (students.length === 0) {
+                box.style.display = 'none';
+                return;
+            }
+
+            box.style.display = 'block';
+            listDiv.innerHTML = '';
+
+            students.forEach(st => {
+                const col = document.createElement('div');
+                col.className = 'col';
+                col.innerHTML = `
+                    <div class="student-reg-card text-center">
+                        <div class="fw-bold font-monospace text-dark" style="font-size: 0.85rem;">${st.student_id}</div>
+                        <div class="text-truncate text-muted small" title="${st.name}">${st.name}</div>
+                    </div>
+                `;
+                listDiv.appendChild(col);
+            });
+        }
+
+        function downloadSelectedSectionTemplate() {
+            const classId = document.getElementById('sectionSelect').value || 0;
+            window.location.href = `upload_tp_excel.php?action=download_section_template&class_id=${classId}`;
+        }
+
+        function copyRegNumbers() {
+            if (!currentSectionStudents || currentSectionStudents.length === 0) return;
+            const regList = currentSectionStudents.map(s => s.student_id).join(', ');
+            navigator.clipboard.writeText(regList).then(() => {
+                alert(`Copied ${currentSectionStudents.length} Registration Numbers to clipboard!`);
+            });
+        }
+
+        function toggleRegNumbersView() {
+            const container = document.getElementById('regNumbersContainer');
+            const toggleText = document.getElementById('toggleRegText');
+            if (container.style.display === 'none') {
+                container.style.display = 'block';
+                toggleText.innerText = 'Hide Reg Numbers';
+            } else {
+                container.style.display = 'none';
+                toggleText.innerText = 'Show Reg Numbers';
+            }
         }
 
         function handleFileSelect(event) {
