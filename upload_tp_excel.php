@@ -17,48 +17,29 @@ function formatReasonDate($rawDate) {
     }
     $timestamp = strtotime($rawDate);
     if ($timestamp === false) {
-        // Handle formats like 21-07-2026 or 21-07
+        // Handle formats like 21-07-2026, 21-07, 21/07
         if (preg_match('/^(\d{1,2})[- \/.](\d{1,2})/', $rawDate, $m)) {
             return sprintf('%02d-%02d', $m[1], $m[2]);
         }
-        return date('d-m');
+        return trim($rawDate);
     }
     return date('d-m', $timestamp);
 }
 
 // Handle Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
-    $selected_date = $_POST['tp_date'] ?? date('Y-m-d');
+    $default_date = $_POST['tp_date'] ?? date('Y-m-d');
+    $action_filter = $_POST['action_filter'] ?? 'both'; // 'both', 'presents_only', 'absents_only'
     $created_by = $_SESSION['faculty_id'] ?? ($_SESSION['admin_id'] ?? 1);
     
     // Check if JSON rows were sent via client-side XLSX parser
     $rows_data = [];
     if (!empty($_POST['parsed_rows_json'])) {
         $rows_data = json_decode($_POST['parsed_rows_json'], true) ?? [];
-    } elseif (isset($_FILES['excel_file']) && $_FILES['excel_file']['error'] === UPLOAD_ERR_OK) {
-        $file_tmp = $_FILES['excel_file']['tmp_name'];
-        $file_name = $_FILES['excel_file']['name'];
-        $ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
-        
-        if ($ext === 'csv') {
-            if (($handle = fopen($file_tmp, "r")) !== FALSE) {
-                $header = fgetcsv($handle, 1000, ",");
-                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                    if (count($data) >= 2) {
-                        $rows_data[] = [
-                            'reg_no' => trim($data[0]),
-                            'status' => trim($data[1]),
-                            'date' => isset($data[2]) ? trim($data[2]) : $selected_date
-                        ];
-                    }
-                }
-                fclose($handle);
-            }
-        }
     }
     
     if (empty($rows_data)) {
-        $error_msg = "Please select a valid Excel (.xlsx, .xls) or CSV file with Registration Numbers and Status.";
+        $error_msg = "Please select a valid Excel (.xlsx, .xls) or CSV file with HallTicketNo and attendance columns.";
     } else {
         $app_count = 0;
         $pen_count = 0;
@@ -69,11 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
         $pen_stmt = mysqli_prepare($conn, "INSERT INTO penalties (student_id, event_id, points, reason, created_by, created_at) VALUES (?, 999, -1, ?, ?, NOW())");
         
         foreach ($rows_data as $row) {
-            $reg_no = strtoupper(trim($row['reg_no'] ?? ($row['Registration Number'] ?? ($row['student_id'] ?? ''))));
-            $status = strtolower(trim($row['status'] ?? ($row['Status'] ?? '')));
-            $row_date = !empty($row['date']) ? $row['date'] : $selected_date;
+            $reg_no = strtoupper(trim($row['reg_no'] ?? ''));
+            $status = strtolower(trim($row['status'] ?? ''));
+            $row_date = !empty($row['date']) ? $row['date'] : $default_date;
             
-            // Clean registration number (e.g. remove spaces)
+            // Clean registration number
             $reg_no = preg_replace('/\s+/', '', $reg_no);
             if (empty($reg_no) || strlen($reg_no) < 5) {
                 continue;
@@ -82,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
             $formatted_date = formatReasonDate($row_date);
             
             // Check if Present
-            if (in_array($status, ['present', 'p', '1', 'yes', 'true'])) {
+            if ($status === 'present' && in_array($action_filter, ['both', 'presents_only'])) {
                 $reason = "T&P Classes (1 pts) - present on " . $formatted_date;
                 if ($app_stmt) {
                     mysqli_stmt_bind_param($app_stmt, "ssi", $reg_no, $reason, $created_by);
@@ -90,6 +71,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                         $app_count++;
                         $processed_summary[] = [
                             'reg_no' => $reg_no,
+                            'name' => $row['name'] ?? '',
+                            'date' => $formatted_date,
                             'type' => 'appreciation',
                             'points' => '+1 pts',
                             'reason' => $reason
@@ -100,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                 }
             } 
             // Check if Absent
-            elseif (in_array($status, ['absent', 'a', '0', 'no', 'false'])) {
+            elseif ($status === 'absent' && in_array($action_filter, ['both', 'absents_only'])) {
                 $reason = "absent on " . $formatted_date . " T&P (-1 pts)";
                 if ($pen_stmt) {
                     mysqli_stmt_bind_param($pen_stmt, "ssi", $reg_no, $reason, $created_by);
@@ -108,6 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                         $pen_count++;
                         $processed_summary[] = [
                             'reg_no' => $reg_no,
+                            'name' => $row['name'] ?? '',
+                            'date' => $formatted_date,
                             'type' => 'penalty',
                             'points' => '-1 pts',
                             'reason' => $reason
@@ -124,9 +109,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
         if ($app_stmt) mysqli_stmt_close($app_stmt);
         if ($pen_stmt) mysqli_stmt_close($pen_stmt);
         
-        $success_msg = "Successfully processed T&P Sheet! Added <strong>{$app_count} Appreciations (+1 pts)</strong> and <strong>{$pen_count} Penalties (-1 pts)</strong>.";
+        $success_msg = "Successfully processed T&P College Attendance Sheet! Logged <strong>{$app_count} Appreciations (+1 pts)</strong> and <strong>{$pen_count} Penalties (-1 pts)</strong> across date columns.";
         if ($skip_count > 0) {
-            $success_msg .= " (Skipped {$skip_count} invalid or unparsed rows)";
+            $success_msg .= " (Skipped {$skip_count} entries based on filter settings)";
         }
     }
 }
@@ -135,8 +120,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
 <html lang="en">
 <head>
     <?php include "./head.php"; ?>
-    <title>T&P Classes - Excel Upload Points & Penalties</title>
-    <!-- SheetJS for client-side Excel Parsing -->
+    <title>T&P Classes - Official College Excel Attendance Upload</title>
+    <!-- SheetJS for client-side multi-date Excel Parsing -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <style>
         body {
@@ -162,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
             font-size: 1.8rem;
         }
         .drop-zone {
-            border: 2px dashed #cbd5e1;
+            border: 2.5px dashed #cbd5e1;
             border-radius: 16px;
             padding: 40px 20px;
             text-align: center;
@@ -184,9 +169,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
             color: white;
             border: none;
             border-radius: 50px;
-            padding: 12px 32px;
+            padding: 14px 36px;
             font-weight: 700;
-            font-size: 1rem;
+            font-size: 1.05rem;
             box-shadow: 0 4px 14px rgba(5, 150, 105, 0.3);
             transition: all 0.3s ease;
         }
@@ -218,6 +203,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
             color: #047857;
             font-size: 0.85rem;
             text-transform: uppercase;
+        }
+        .rule-pill {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #047857;
+            padding: 8px 14px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.88rem;
         }
     </style>
 </head>
@@ -252,19 +246,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
 
                 <div class="upload-card">
                     <div class="upload-header">
-                        <h3><i class="fas fa-file-excel me-2"></i> Upload T&P Classes Attendance & Points Excel</h3>
-                        <p class="mb-0 text-white-50">Upload Excel sheet (.xlsx, .xls, .csv) with Registration Numbers and Status (Present / Absent). Points (+1) and Penalties (-1) will be calculated automatically.</p>
+                        <h3><i class="fas fa-file-excel me-2"></i> Official College T&P Attendance Excel Upload</h3>
+                        <p class="mb-0 text-white-50">Upload official college attendance sheets (CSIT-A, CSIT-B, CSD, etc.). Blank cells = Present (+1 Appreciation), 'AB' cells = Absent (-1 Penalty).</p>
                     </div>
                     
                     <div class="p-4 p-md-5">
                         
                         <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 p-3 bg-light rounded-4 border">
                             <div>
-                                <h6 class="fw-bold mb-1"><i class="fas fa-download me-2 text-success"></i> Need a sample format?</h6>
-                                <small class="text-muted">Download template with columns: Registration Number, Status, Date</small>
+                                <h6 class="fw-bold mb-1"><i class="fas fa-university me-2 text-success"></i> Official College Roll List Format Supported</h6>
+                                <div class="d-flex gap-2 flex-wrap mt-2">
+                                    <span class="rule-pill"><i class="fas fa-check me-1"></i> Blank = Present (+1 Appreciation)</span>
+                                    <span class="rule-pill" style="background:#fef2f2; border-color:#fca5a5; color:#dc2626;"><i class="fas fa-times me-1"></i> AB = Absent (-1 Penalty)</span>
+                                    <span class="rule-pill" style="background:#f0f9ff; border-color:#bae6fd; color:#0284c7;"><i class="fas fa-calendar-week me-1"></i> Auto-detects Multiple Date Columns</span>
+                                </div>
                             </div>
-                            <button type="button" onclick="downloadSampleTemplate()" class="btn-sample">
-                                <i class="fas fa-file-csv text-success"></i> Download Sample Excel/CSV Template
+                            <button type="button" onclick="downloadCollegeTemplate()" class="btn-sample">
+                                <i class="fas fa-download text-success"></i> Download Official College Excel Template
                             </button>
                         </div>
 
@@ -274,45 +272,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
 
                             <div class="row g-4 mb-4">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold"><i class="fas fa-calendar-alt me-1 text-success"></i> Default T&P Class Date</label>
-                                    <input type="date" class="form-control form-control-lg rounded-3" name="tp_date" id="tpDate" value="<?php echo date('Y-m-d'); ?>" required>
-                                    <small class="text-muted">Used if date is not specified inside the uploaded sheet rows.</small>
+                                    <label class="form-label fw-bold"><i class="fas fa-filter me-1 text-success"></i> Processing Mode</label>
+                                    <select class="form-select form-select-lg rounded-3" name="action_filter" id="actionFilter">
+                                        <option value="both" selected>Process Both (Blank = +1 Appreciation, AB = -1 Penalty)</option>
+                                        <option value="absents_only">Process Absents Only (AB = -1 Penalty)</option>
+                                        <option value="presents_only">Process Presents Only (Blank = +1 Appreciation)</option>
+                                    </select>
+                                    <small class="text-muted">Choose whether to award points, penalties, or both from the sheet.</small>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold"><i class="fas fa-info-circle me-1 text-success"></i> Automatic Point Assignment</label>
-                                    <div class="p-3 bg-light rounded-3 border">
-                                        <div class="d-flex align-items-center gap-3 mb-1">
-                                            <span class="badge bg-success"><i class="fas fa-plus-circle me-1"></i> Present (P)</span>
-                                            <span class="fw-bold text-success">+1 Appreciation Point</span>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-3">
-                                            <span class="badge bg-danger"><i class="fas fa-minus-circle me-1"></i> Absent (A)</span>
-                                            <span class="fw-bold text-danger">-1 Penalty Point</span>
-                                        </div>
-                                    </div>
+                                    <label class="form-label fw-bold"><i class="fas fa-calendar-alt me-1 text-success"></i> Fallback Date</label>
+                                    <input type="date" class="form-control form-control-lg rounded-3" name="tp_date" id="tpDate" value="<?php echo date('Y-m-d'); ?>" required>
+                                    <small class="text-muted">Used if date headers are not found in the uploaded file.</small>
                                 </div>
                             </div>
 
                             <div class="mb-4">
-                                <label class="form-label fw-bold"><i class="fas fa-upload me-1 text-success"></i> Select or Drag Excel/CSV File</label>
+                                <label class="form-label fw-bold"><i class="fas fa-upload me-1 text-success"></i> Select or Drag Official College Attendance Sheet (.xlsx / .xls / .csv)</label>
                                 <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-                                    <i class="fas fa-cloud-upload-alt"></i>
-                                    <h5 class="fw-bold text-dark mb-1" id="fileLabel">Click to browse or drag & drop Excel / CSV file</h5>
-                                    <p class="text-muted small mb-0">Supports .xlsx, .xls, .csv files</p>
+                                    <i class="fas fa-file-excel"></i>
+                                    <h5 class="fw-bold text-dark mb-1" id="fileLabel">Click to browse or drag & drop official college roll list sheet</h5>
+                                    <p class="text-muted small mb-0">Supports STUDENT ROLL LIST sheets for all sections (CSIT-A, CSIT-B, CSD)</p>
                                     <input type="file" id="fileInput" name="excel_file" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleFileSelect(event)">
                                 </div>
                             </div>
 
                             <!-- Live Sheet Preview Container -->
                             <div id="previewContainer" style="display: none;" class="mb-4">
-                                <h6 class="fw-bold text-dark mb-2"><i class="fas fa-eye me-1 text-success"></i> Sheet Preview (<span id="rowCount">0</span> students detected)</h6>
-                                <div class="table-responsive border rounded-3" style="max-height: 250px; overflow-y: auto;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-eye me-1 text-success"></i> Detected Sheet Preview (<span id="rowCount">0</span> records parsed)</h6>
+                                    <small class="text-muted">Showing first 150 parsed entries</small>
+                                </div>
+                                <div class="table-responsive border rounded-3" style="max-height: 300px; overflow-y: auto;">
                                     <table class="table table-sm table-hover align-middle mb-0 preview-table">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
-                                                <th>Registration Number</th>
-                                                <th>Status</th>
+                                                <th>HallTicketNo</th>
+                                                <th>Student Name</th>
+                                                <th>Date</th>
+                                                <th>Cell Value</th>
                                                 <th>Calculated Action</th>
                                             </tr>
                                         </thead>
@@ -323,7 +322,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
 
                             <div class="text-end">
                                 <button type="submit" class="btn-upload" id="submitBtn">
-                                    <i class="fas fa-check-circle me-2"></i> Process & Award T&P Points
+                                    <i class="fas fa-check-circle me-2"></i> Process & Award Points / Penalties
                                 </button>
                             </div>
                         </form>
@@ -334,12 +333,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                 <!-- Processed Summary Details Card -->
                 <?php if (!empty($processed_summary)): ?>
                     <div class="upload-card mt-4 p-4">
-                        <h5 class="fw-bold mb-3"><i class="fas fa-list-alt me-2 text-success"></i> Processed Students Summary</h5>
+                        <h5 class="fw-bold mb-3"><i class="fas fa-list-alt me-2 text-success"></i> Processed Attendance Summary</h5>
                         <div class="table-responsive border rounded-3" style="max-height: 350px; overflow-y: auto;">
                             <table class="table table-sm align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>Registration Number</th>
+                                        <th>HallTicketNo</th>
+                                        <th>Student Name</th>
+                                        <th>Date</th>
                                         <th>Action</th>
                                         <th>Points</th>
                                         <th>Reason Logged</th>
@@ -349,6 +350,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                                     <?php foreach ($processed_summary as $item): ?>
                                         <tr>
                                             <td class="fw-bold"><?php echo htmlspecialchars($item['reg_no']); ?></td>
+                                            <td><?php echo htmlspecialchars($item['name'] ?: '-'); ?></td>
+                                            <td><span class="badge bg-light text-dark border"><?php echo htmlspecialchars($item['date']); ?></span></td>
                                             <td>
                                                 <?php if ($item['type'] === 'appreciation'): ?>
                                                     <span class="badge bg-success">Appreciation</span>
@@ -377,18 +380,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
     <script>
         let parsedRows = [];
 
-        function downloadSampleTemplate() {
+        function downloadCollegeTemplate() {
             const csvContent = "data:text/csv;charset=utf-8," 
-                + "Registration Number,Status,Date\n"
-                + "24B91A0773,Present,21-07-2026\n"
-                + "24B91A0774,Present,21-07-2026\n"
-                + "24B91A0775,Absent,21-07-2026\n"
-                + "24B91A0776,Absent,21-07-2026\n";
+                + "SNo,HallTicketNo,Student Name,10-07,14-07,15-07,21-07,28-07\n"
+                + "1,24B91A0773,MEDISETTI SRINIJA,,,AB,AB\n"
+                + "2,24B91A0774,MULAGALA PRANATI SANDHYA,AB,,,,\n"
+                + "3,24B91A0775,MURIKITHA ARCHANA SAI SRI,,AB,AB,,AB\n"
+                + "4,24B91A0776,NALAMALA KEVIN RISHITH,AB,,AB,AB,AB\n";
             
             const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "TP_Classes_Attendance_Sample.csv");
+            link.setAttribute("download", "College_Roll_List_TP_Attendance_Sample.csv");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -408,58 +411,119 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                 const worksheet = workbook.Sheets[firstSheetName];
                 
                 const json = XLSX.utils.sheet_to_json(worksheet, {header: 1});
-                processParsedJson(json);
+                processCollegeAttendanceJson(json);
             };
             reader.readAsArrayBuffer(file);
         }
 
-        function processParsedJson(rows) {
+        function processCollegeAttendanceJson(rows) {
             parsedRows = [];
             if (!rows || rows.length < 1) return;
 
-            // Detect headers or starting row
-            let startIdx = 0;
-            let firstRowStr = (rows[0] || []).join(' ').toLowerCase();
-            if (firstRowStr.includes('reg') || firstRowStr.includes('student') || firstRowStr.includes('status')) {
-                startIdx = 1; // skip header row
+            // 1. Locate Header Row containing HallTicketNo / Reg / Roll
+            let headerRowIdx = -1;
+            let regNoColIdx = -1;
+            let nameColIdx = -1;
+
+            for (let r = 0; r < Math.min(rows.length, 15); r++) {
+                const row = rows[r] || [];
+                for (let c = 0; c < row.length; c++) {
+                    const cellStr = String(row[c] || '').trim().toLowerCase();
+                    if (cellStr.includes('hallticket') || cellStr.includes('hall ticket') || cellStr.includes('reg') || cellStr.includes('roll')) {
+                        headerRowIdx = r;
+                        regNoColIdx = c;
+                    }
+                    if (cellStr.includes('student name') || cellStr === 'name') {
+                        nameColIdx = c;
+                    }
+                }
+                if (headerRowIdx !== -1) break;
+            }
+
+            // Fallback if header row not found
+            if (headerRowIdx === -1) {
+                headerRowIdx = 0;
+                regNoColIdx = 1;
+                nameColIdx = 2;
+            }
+
+            const headerRow = rows[headerRowIdx] || [];
+            
+            // 2. Locate Date Columns
+            let dateCols = [];
+            const startCol = Math.max(regNoColIdx, nameColIdx) + 1;
+
+            for (let c = startCol; c < headerRow.length; c++) {
+                const headerVal = String(headerRow[c] || '').trim();
+                if (headerVal !== '') {
+                    dateCols.push({
+                        colIdx: c,
+                        dateStr: headerVal
+                    });
+                }
+            }
+
+            // Fallback to single date column if no header date columns found
+            if (dateCols.length === 0) {
+                dateCols.push({
+                    colIdx: regNoColIdx + 1,
+                    dateStr: ''
+                });
             }
 
             const tbody = document.getElementById('previewBody');
             tbody.innerHTML = '';
 
-            for (let i = startIdx; i < rows.length; i++) {
-                const row = rows[i];
-                if (!row || row.length < 2) continue;
-
-                const regNo = String(row[0] || '').trim();
-                const status = String(row[1] || '').trim();
-                const rowDate = row[2] ? String(row[2]).trim() : '';
-
-                if (!regNo || regNo.length < 5) continue;
-
-                const statusLower = status.toLowerCase();
-                let actionBadge = '<span class="badge bg-secondary">Skipped</span>';
-
-                if (['present', 'p', '1', 'yes', 'true'].includes(statusLower)) {
-                    actionBadge = '<span class="badge bg-success"><i class="fas fa-plus-circle me-1"></i> +1 Appreciation</span>';
-                } else if (['absent', 'a', '0', 'no', 'false'].includes(statusLower)) {
-                    actionBadge = '<span class="badge bg-danger"><i class="fas fa-minus-circle me-1"></i> -1 Penalty</span>';
+            // 3. Process Student Rows
+            for (let r = headerRowIdx + 1; r < rows.length; r++) {
+                const row = rows[r] || [];
+                const regNo = String(row[regNoColIdx] || '').trim().toUpperCase().replace(/\s+/g, '');
+                
+                // Skip invalid rows
+                if (!regNo || regNo.length < 5 || regNo.includes('HALLTICKET') || regNo.includes('SNO') || regNo.includes('ROLL')) {
+                    continue;
                 }
 
-                parsedRows.push({
-                    reg_no: regNo,
-                    status: status,
-                    date: rowDate
-                });
+                const studentName = nameColIdx !== -1 ? String(row[nameColIdx] || '').trim() : '';
 
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${parsedRows.length}</td>
-                    <td class="fw-bold">${regNo}</td>
-                    <td>${status}</td>
-                    <td>${actionBadge}</td>
-                `;
-                tbody.appendChild(tr);
+                for (const dCol of dateCols) {
+                    const cellRaw = String(row[dCol.colIdx] ?? '').trim();
+                    const cellUpper = cellRaw.toUpperCase();
+
+                    let status = 'present';
+                    let actionBadge = '<span class="badge bg-success"><i class="fas fa-plus-circle me-1"></i> +1 Appreciation</span>';
+
+                    if (cellUpper === 'AB' || cellUpper === 'A' || cellUpper === 'ABSENT') {
+                        status = 'absent';
+                        actionBadge = '<span class="badge bg-danger"><i class="fas fa-minus-circle me-1"></i> -1 Penalty</span>';
+                    } else if (cellUpper === '' || cellUpper === 'P' || cellUpper === 'PRESENT' || cellUpper === '1') {
+                        status = 'present';
+                        actionBadge = '<span class="badge bg-success"><i class="fas fa-plus-circle me-1"></i> +1 Appreciation</span>';
+                    } else {
+                        // Ignore non-attendance text cells
+                        continue;
+                    }
+
+                    parsedRows.push({
+                        reg_no: regNo,
+                        name: studentName,
+                        status: status,
+                        date: dCol.dateStr
+                    });
+
+                    if (parsedRows.length <= 150) {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td>${parsedRows.length}</td>
+                            <td class="fw-bold">${regNo}</td>
+                            <td>${studentName || '-'}</td>
+                            <td><span class="badge bg-light text-dark border">${dCol.dateStr || 'Default'}</span></td>
+                            <td>${cellRaw ? `<span class="badge bg-danger">${cellRaw}</span>` : '<em class="text-success fw-bold">Blank (Present)</em>'}</td>
+                            <td>${actionBadge}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    }
+                }
             }
 
             document.getElementById('rowCount').innerText = parsedRows.length;
