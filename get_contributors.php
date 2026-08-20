@@ -242,16 +242,16 @@ function handleContributorDetails() {
         
         // Get appreciation points
         $appreciations_query = "
-            SELECT e.title as event_title, a.points, a.reason, a.created_at
+            SELECT COALESCE(NULLIF(e.title, ''), NULLIF(a.reason, ''), 'Appreciation') as event_title, a.points, a.reason, a.created_at
             FROM appreciations a
-            JOIN events e ON a.event_id = e.event_id
+            LEFT JOIN events e ON a.event_id = e.event_id
             WHERE a.student_id = '$student_id' AND a.points > 0
             ORDER BY a.created_at DESC
         ";
         $appreciations_result = mysqli_query($conn, $appreciations_query);
         if ($appreciations_result) {
             while ($row = mysqli_fetch_assoc($appreciations_result)) {
-                $reason_text = $row['reason'] ? ' - ' . $row['reason'] : '';
+                $reason_text = ($row['reason'] && trim($row['reason']) !== trim($row['event_title'])) ? ' - ' . $row['reason'] : '';
                 $details['appreciations']['events'][] = [
                     'event_title' => $row['event_title'] . $reason_text,
                     'points' => (int)$row['points'],
@@ -263,16 +263,16 @@ function handleContributorDetails() {
         
         // Get penalties
         $penalties_query = "
-            SELECT e.title as event_title, p.points, p.reason, p.created_at
+            SELECT COALESCE(NULLIF(e.title, ''), NULLIF(p.reason, ''), 'Penalty') as event_title, p.points, p.reason, p.created_at
             FROM penalties p
-            JOIN events e ON p.event_id = e.event_id
+            LEFT JOIN events e ON p.event_id = e.event_id
             WHERE p.student_id = '$student_id'
             ORDER BY p.created_at DESC
         ";
         $penalties_result = mysqli_query($conn, $penalties_query);
         if ($penalties_result) {
             while ($row = mysqli_fetch_assoc($penalties_result)) {
-                $reason_text = $row['reason'] ? ' - ' . $row['reason'] : '';
+                $reason_text = ($row['reason'] && trim($row['reason']) !== trim($row['event_title'])) ? ' - ' . $row['reason'] : '';
                 $details['penalties']['events'][] = [
                     'event_title' => $row['event_title'] . $reason_text,
                     'points' => (int)$row['points'], // Keep negative value

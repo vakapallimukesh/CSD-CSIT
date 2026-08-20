@@ -112,23 +112,23 @@ if ($students_result) {
 
         // Appreciations detail
         $appreciations_detail_query = "
-            SELECT 'participant' as source, e.title as event_title, p.points, 'Participation' as reason, p.registered_at as created_at
+            SELECT 'participant' as source, COALESCE(NULLIF(e.title, ''), 'Participation') as event_title, p.points, 'Participation' as reason, p.registered_at as created_at
             FROM participants p
-            JOIN events e ON p.event_id = e.event_id
+            LEFT JOIN events e ON p.event_id = e.event_id
             WHERE p.student_id = '" . mysqli_real_escape_string($conn, $student['student_id']) . "' AND p.points > 0
             
             UNION ALL
             
-            SELECT 'organizer' as source, e.title as event_title, o.points, o.role as reason, o.assigned_at as created_at
+            SELECT 'organizer' as source, COALESCE(NULLIF(e.title, ''), 'Organizer') as event_title, o.points, o.role as reason, o.assigned_at as created_at
             FROM organizers o
-            JOIN events e ON o.event_id = e.event_id
+            LEFT JOIN events e ON o.event_id = e.event_id
             WHERE o.student_id = '" . mysqli_real_escape_string($conn, $student['student_id']) . "'
             
             UNION ALL
             
-            SELECT 'appreciation' as source, e.title as event_title, a.points, a.reason, a.created_at
+            SELECT 'appreciation' as source, COALESCE(NULLIF(e.title, ''), NULLIF(a.reason, ''), 'Appreciation') as event_title, a.points, a.reason, a.created_at
             FROM appreciations a
-            JOIN events e ON a.event_id = e.event_id
+            LEFT JOIN events e ON a.event_id = e.event_id
             WHERE a.student_id = '" . mysqli_real_escape_string($conn, $student['student_id']) . "'
             
             ORDER BY created_at DESC
@@ -143,9 +143,9 @@ if ($students_result) {
 
         // Penalties detail
         $penalties_detail_query = "
-            SELECT e.title as event_title, p.points, p.reason, p.created_at
+            SELECT COALESCE(NULLIF(e.title, ''), NULLIF(p.reason, ''), 'Penalty') as event_title, p.points, p.reason, p.created_at
             FROM penalties p
-            JOIN events e ON p.event_id = e.event_id
+            LEFT JOIN events e ON p.event_id = e.event_id
             WHERE p.student_id = '" . mysqli_real_escape_string($conn, $student['student_id']) . "'
             ORDER BY p.created_at DESC
         ";
@@ -679,7 +679,7 @@ $student_count = count($students);
                                                                     </span>
                                                                     <i class="<?php echo $icon; ?>"></i> <?php echo htmlspecialchars($appreciation['event_title']); ?>
                                                                     (<?php echo htmlspecialchars($appreciation['points']); ?> pts)
-                                                                    <?php if ($appreciation['reason']): ?>
+                                                                    <?php if (!empty($appreciation['reason']) && trim($appreciation['reason']) !== trim($appreciation['event_title'])): ?>
                                                                         - <?php echo htmlspecialchars($appreciation['reason']); ?>
                                                                     <?php endif; ?>
                                                                 </small>
@@ -698,7 +698,7 @@ $student_count = count($students);
                                                                 <small class="text-danger fw-bold">
                                                                     <i class="fas fa-minus-circle"></i> <?php echo htmlspecialchars($penalty['event_title']); ?>
                                                                     (<?php echo htmlspecialchars($penalty['points']); ?> pts)
-                                                                    <?php if ($penalty['reason']): ?>
+                                                                    <?php if (!empty($penalty['reason']) && trim($penalty['reason']) !== trim($penalty['event_title'])): ?>
                                                                         - <?php echo htmlspecialchars($penalty['reason']); ?>
                                                                     <?php endif; ?>
                                                                 </small>
