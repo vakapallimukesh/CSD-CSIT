@@ -64,7 +64,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'download_section_template') {
             fputcsv($output, [$sno++, $row['student_id'], $row['name'], '', '', '', '', '']);
         }
     } else {
-        // Fallback sample rows if database has no students for this section
+        // Fallback sample rows
         fputcsv($output, [1, '24B91A0773', 'MEDISETTI SRINIJA', '', '', '', 'AB', 'AB']);
         fputcsv($output, [2, '24B91A0774', 'MULAGALA PRANATI SANDHYA', 'AB', '', '', '', '']);
         fputcsv($output, [3, '24B91A0775', 'MURIKITHA ARCHANA SAI SRI', '', 'AB', 'AB', '', 'AB']);
@@ -112,6 +112,93 @@ function formatReasonDate($rawDate) {
     return date('d-m', $timestamp);
 }
 
+// PHP Multi-date CSV parser fallback
+function parseCollegeAttendanceSheetPHP($file_tmp, $default_date) {
+    $rows_data = [];
+    if (($handle = fopen($file_tmp, "r")) !== FALSE) {
+        $all_lines = [];
+        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            $all_lines[] = array_map('trim', $data);
+        }
+        fclose($handle);
+        
+        if (empty($all_lines)) return [];
+        
+        // Find header row
+        $headerRowIdx = -1;
+        $regNoColIdx = -1;
+        $nameColIdx = -1;
+        
+        for ($r = 0; $r < min(count($all_lines), 15); $r++) {
+            $row = $all_lines[$r];
+            foreach ($row as $c => $val) {
+                $cellStr = strtolower($val);
+                if (strpos($cellStr, 'hallticket') !== false || strpos($cellStr, 'reg') !== false || strpos($cellStr, 'roll') !== false) {
+                    $headerRowIdx = $r;
+                    $regNoColIdx = $c;
+                }
+                if (strpos($cellStr, 'student name') !== false || $cellStr === 'name') {
+                    $nameColIdx = $c;
+                }
+            }
+            if ($headerRowIdx !== -1) break;
+        }
+        
+        if ($headerRowIdx === -1) {
+            $headerRowIdx = 0;
+            $regNoColIdx = 1;
+            $nameColIdx = 2;
+        }
+        
+        $headerRow = $all_lines[$headerRowIdx];
+        $startCol = max($regNoColIdx, $nameColIdx) + 1;
+        $dateCols = [];
+        
+        for ($c = $startCol; $c < count($headerRow); $c++) {
+            $headerVal = trim($headerRow[$c]);
+            if ($headerVal !== '') {
+                $dateCols[] = ['colIdx' => $c, 'dateStr' => $headerVal];
+            }
+        }
+        
+        if (empty($dateCols)) {
+            $dateCols[] = ['colIdx' => $regNoColIdx + 1, 'dateStr' => $default_date];
+        }
+        
+        for ($r = $headerRowIdx + 1; $r < count($all_lines); $r++) {
+            $row = $all_lines[$r];
+            $regNo = strtoupper(preg_replace('/\s+/', '', $row[$regNoColIdx] ?? ''));
+            if (empty($regNo) || strlen($regNo) < 5 || strpos($regNo, 'HALLTICKET') !== false || strpos($regNo, 'SNO') !== false) {
+                continue;
+            }
+            
+            $studentName = $nameColIdx !== -1 ? trim($row[$nameColIdx] ?? '') : '';
+            
+            foreach ($dateCols as $dCol) {
+                $cellRaw = trim($row[$dCol['colIdx']] ?? '');
+                $cellUpper = strtoupper($cellRaw);
+                
+                $status = 'present';
+                if (in_array($cellUpper, ['AB', 'A', 'ABSENT'])) {
+                    $status = 'absent';
+                } elseif (in_array($cellUpper, ['', 'P', 'PRESENT', '1'])) {
+                    $status = 'present';
+                } else {
+                    continue;
+                }
+                
+                $rows_data[] = [
+                    'reg_no' => $regNo,
+                    'name' => $studentName,
+                    'status' => $status,
+                    'date' => $dCol['dateStr']
+                ];
+            }
+        }
+    }
+    return $rows_data;
+}
+
 // Handle Form Submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
     $default_date = $_POST['tp_date'] ?? date('Y-m-d');
@@ -125,12 +212,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
         $rows_data = json_decode($_POST['parsed_rows_json'], true) ?? [];
     }
     
+    // Fallback to PHP parser if file uploaded directly as CSV
+    if (empty($rows_data) && isset($_FILES['excel_file']) && $_FILES['excel_file']['error'] === UPLOAD_ERR_OK) {
+        $file_tmp = $_FILES['excel_file']['tmp_name'];
+        $rows_data = parseCollegeAttendanceSheetPHP($file_tmp, $default_date);
+    }
+    
     if (empty($rows_data)) {
         $error_msg = "Please select a valid Excel (.xlsx, .xls) or CSV file with HallTicketNo and attendance columns.";
     } else {
         $app_count = 0;
         $pen_count = 0;
         $skip_count = 0;
+        $db_errors = [];
         
         // Prepare Insert Statements
         $app_stmt = mysqli_prepare($conn, "INSERT INTO appreciations (student_id, points, reason, created_by, created_at) VALUES (?, 1, ?, ?, NOW())");
@@ -166,6 +260,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                         ];
                     } else {
                         $skip_count++;
+                        $db_errors[] = "Error for $reg_no ($reason): " . mysqli_stmt_error($app_stmt);
                     }
                 }
             } 
@@ -186,6 +281,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                         ];
                     } else {
                         $skip_count++;
+                        $db_errors[] = "Error for $reg_no ($reason): " . mysqli_stmt_error($pen_stmt);
                     }
                 }
             } else {
@@ -196,9 +292,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
         if ($app_stmt) mysqli_stmt_close($app_stmt);
         if ($pen_stmt) mysqli_stmt_close($pen_stmt);
         
-        $success_msg = "Successfully processed T&P College Attendance Sheet! Logged <strong>{$app_count} Appreciations (+1 pts)</strong> and <strong>{$pen_count} Penalties (-1 pts)</strong> across date columns.";
+        $success_msg = "Successfully processed T&P College Attendance Sheet! Added <strong>{$app_count} Appreciations (+1 pts for Blank/Present)</strong> and <strong>{$pen_count} Penalties (-1 pts for AB)</strong> across all date columns.";
         if ($skip_count > 0) {
-            $success_msg .= " (Skipped {$skip_count} entries based on filter settings)";
+            $success_msg .= " (Skipped {$skip_count} entries)";
+        }
+        if (!empty($db_errors) && count($db_errors) <= 5) {
+            $error_msg = "Database Warning: " . implode(" | ", array_unique($db_errors));
         }
     }
 }
@@ -340,7 +439,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
 
                 <?php if ($error_msg): ?>
                     <div class="alert alert-danger alert-dismissible fade show rounded-4 p-4 mb-4" role="alert">
-                        <h5 class="alert-heading fw-bold mb-2"><i class="fas fa-exclamation-triangle me-2"></i> Error</h5>
+                        <h5 class="alert-heading fw-bold mb-2"><i class="fas fa-exclamation-triangle me-2"></i> Notice</h5>
                         <div><?php echo $error_msg; ?></div>
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
@@ -430,7 +529,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                                 <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
                                     <i class="fas fa-file-excel"></i>
                                     <h5 class="fw-bold text-dark mb-1" id="fileLabel">Click to browse or drag & drop attendance sheet</h5>
-                                    <p class="text-muted small mb-0">Supports STUDENT ROLL LIST sheets with Blank = Present, AB = Absent</p>
+                                    <p class="text-muted small mb-0">Supports STUDENT ROLL LIST sheets with Blank = Present (+1), AB = Absent (-1)</p>
                                     <input type="file" id="fileInput" name="excel_file" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleFileSelect(event)">
                                 </div>
                             </div>
@@ -606,16 +705,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
             const file = event.target.files[0];
             if (!file) return;
 
-            document.getElementById('fileLabel').innerHTML = `<i class="fas fa-file-excel text-success me-2"></i> ${file.name}`;
+            document.getElementById('fileLabel').innerHTML = `<i class="fas fa-file-excel text-success me-2"></i> ${file.name} <span class="badge bg-primary ms-2">Parsing...</span>`;
             
             const reader = new FileReader();
             reader.onload = function(e) {
                 const data = new Uint8Array(e.target.result);
+                // SheetJS sheet_to_json with defval: '' so empty/blank cells are never omitted
                 const workbook = XLSX.read(data, {type: 'array'});
                 const firstSheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[firstSheetName];
                 
-                const json = XLSX.utils.sheet_to_json(worksheet, {header: 1});
+                const json = XLSX.utils.sheet_to_json(worksheet, {header: 1, defval: '', raw: false});
                 processCollegeAttendanceJson(json);
             };
             reader.readAsArrayBuffer(file);
@@ -731,6 +831,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                 }
             }
 
+            document.getElementById('fileLabel').innerHTML = `<i class="fas fa-file-excel text-success me-2"></i> Sheet Ready (${parsedRows.length} attendance entries detected)`;
             document.getElementById('rowCount').innerText = parsedRows.length;
             document.getElementById('previewContainer').style.display = parsedRows.length > 0 ? 'block' : 'none';
             document.getElementById('parsedRowsJson').value = JSON.stringify(parsedRows);
