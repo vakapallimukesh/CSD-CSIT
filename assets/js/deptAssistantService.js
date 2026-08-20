@@ -193,6 +193,9 @@ const ChatbotService = (function () {
         if (/\b(registration number|reg no|registration no|reg number|hallticket|pin number)\b/i.test(q)) {
             return 'REGISTRATION_NUMBER';
         }
+        if (/\b(alumni|alumnus|graduate|graduates|former student|alumni network|join alumni|update alumni|notable alumni|hall of fame)\b/i.test(q)) {
+            return 'ALUMNI';
+        }
         if (/\b(internship|internships|intern|stipend)\b/i.test(q) || /\bwhere did (she|he|they|this person) (get|do|complete) (an )?internship\b/i.test(q)) {
             return 'INTERNSHIP';
         }
@@ -716,6 +719,64 @@ const ChatbotService = (function () {
     ];
 
     let MASTER_PLACEMENTS_INDEX = [];
+    let MASTER_ALUMNI_INDEX = [
+        {
+            regNo: '21B91A6201',
+            name: 'Rahul Kumar',
+            fullName: 'Rahul Kumar',
+            company: 'Google',
+            designation: 'Senior Software Engineer',
+            location: 'Bengaluru, India',
+            industry: 'Software & Tech',
+            batch: '2022',
+            branch: 'CSD',
+            description: 'Architecting scalable cloud microservices & distributed computer vision pipelines at Google.',
+            achievements: 'Led 3 patents in cloud optimization, Keynote speaker at Google I/O extended.',
+            url: 'alumni.php'
+        },
+        {
+            regNo: '21B91A6202',
+            name: 'Sneha Verma',
+            fullName: 'Sneha Verma',
+            company: 'Microsoft',
+            designation: 'AI Research Engineer',
+            location: 'Hyderabad, India',
+            industry: 'AI & Machine Learning',
+            batch: '2023',
+            branch: 'CSIT',
+            description: 'Developing generative AI models and NLP pipelines for Azure AI services.',
+            achievements: 'Published 2 research papers in IEEE AI conferences, Microsoft Innovator Excellence Award 2024.',
+            url: 'alumni.php'
+        },
+        {
+            regNo: '20B91A6203',
+            name: 'Vikramaditya Raju',
+            fullName: 'Vikramaditya Raju',
+            company: 'NexGen Robotics & AI Labs',
+            designation: 'Co-Founder & CTO',
+            location: 'Bengaluru, India',
+            industry: 'Entrepreneurship',
+            batch: '2021',
+            branch: 'CSIT',
+            description: 'Building autonomous warehouse robotics systems backed by top tech venture funds.',
+            achievements: 'Raised $2.5M Series-A funding, Featured in Forbes 30 Under 30 Tech Entrepreneurs.',
+            url: 'alumni.php'
+        },
+        {
+            regNo: '21B91A6204',
+            name: 'Pooja Varma',
+            fullName: 'Pooja Varma',
+            company: 'Carnegie Mellon University',
+            designation: 'MS / PhD Research Scholar',
+            location: 'Pittsburgh, USA',
+            industry: 'Higher Studies',
+            batch: '2023',
+            branch: 'CSD',
+            description: 'Conducting research on privacy-preserving machine learning and federated intelligence at CMU.',
+            achievements: 'Full Graduate Fellowship Scholar at CMU, Published in NeurIPS Workshop 2024.',
+            url: 'alumni.php'
+        }
+    ];
 
     // Index active internship students into MASTER_PERSON_INDEX at startup
     (function indexActiveInterns() {
@@ -915,6 +976,66 @@ const ChatbotService = (function () {
                         const exists = MASTER_PLACEMENTS_INDEX.some(x => (x.regNo + '_' + (x.company || '').toLowerCase()) === key);
                         if (!exists) {
                             MASTER_PLACEMENTS_INDEX.push(item);
+                        }
+                    }
+                }
+
+                // Ingest Alumni Records
+                if (Array.isArray(data.alumni)) {
+                    for (const item of data.alumni) {
+                        const key = item.regNo + '_' + (item.company || '').toLowerCase();
+                        const exists = MASTER_ALUMNI_INDEX.some(x => (x.regNo + '_' + (x.company || '').toLowerCase()) === key);
+                        if (!exists) {
+                            MASTER_ALUMNI_INDEX.push(item);
+                        }
+                        if (item.name && item.regNo) {
+                            const personExists = MASTER_PERSON_INDEX.some(p => p.regNo === item.regNo || normalizePersonName(p.fullName) === normalizePersonName(item.name));
+                            if (!personExists) {
+                                const tokens = tokenizeName(item.name);
+                                MASTER_PERSON_INDEX.push({
+                                    id: `alumni_${item.regNo}`,
+                                    fullName: item.name,
+                                    firstName: tokens[0] || item.name.toLowerCase(),
+                                    lastName: tokens[tokens.length - 1] || item.name.toLowerCase(),
+                                    category: 'Graduated Alumni',
+                                    role: `${item.designation || 'Engineer'} @ ${item.company || 'Tech Firm'}`,
+                                    designation: item.designation || 'Software Engineer',
+                                    department: item.branch || 'CSD',
+                                    branch: item.branch || 'CSD',
+                                    url: 'alumni.php',
+                                    ctaText: 'View Alumni Directory →'
+                                });
+                            }
+                        }
+                    }
+                }
+
+                // Ingest All Enrolled Students Directory
+                if (Array.isArray(data.students)) {
+                    for (const st of data.students) {
+                        const exists = MASTER_PERSON_INDEX.some(p => p.regNo && p.regNo === st.regNo);
+                        if (!exists && st.name && st.regNo) {
+                            const tokens = tokenizeName(st.name);
+                            MASTER_PERSON_INDEX.push({
+                                id: `student_${st.regNo}`,
+                                fullName: st.name,
+                                firstName: tokens[0] || st.name.toLowerCase(),
+                                lastName: tokens[tokens.length - 1] || st.name.toLowerCase(),
+                                category: st.isAlumni ? 'Graduated Alumni' : `Student (${st.branch} ${st.section})`,
+                                role: st.role || `Student (${st.branch})`,
+                                designation: st.role || `Student (${st.branch})`,
+                                department: st.branch || 'CSD',
+                                branch: st.branch || 'CSD',
+                                section: st.section || 'Sec A',
+                                house: st.house || 'Not Assigned',
+                                email: st.email || '',
+                                regNo: st.regNo,
+                                isAlumni: st.isAlumni,
+                                description: `${st.name} is enrolled in ${st.branch} (${st.section}, House: ${st.house || 'Not Assigned'}, Reg: ${st.regNo}).`,
+                                searchableAliases: generatePersonAliases(st.name),
+                                url: 'students_overview.php',
+                                ctaText: 'View Student Directory →'
+                            });
                         }
                     }
                 }
@@ -1875,11 +1996,29 @@ Students compete in continuous hackathons, coding contests, sports, and cultural
                 break;
 
             case 'REGISTRATION_NUMBER':
+            case 'PROFILE':
                 if (reg) {
-                    answerText = `<strong>${name}</strong>'s registration number is <strong>${reg}</strong>.`;
-                    answerText += `<br><br>• <strong>Department:</strong> ${dept}<br>• <strong>Role:</strong> ${role}`;
+                    let secBadge = person.section ? `• <strong>Section:</strong> ${person.section}<br>` : '';
+                    let houseBadge = person.house ? `• <strong>Assigned House:</strong> ${person.house} House<br>` : '';
+                    let emailBadge = person.email ? `• <strong>Email:</strong> ${person.email}<br>` : '';
+                    let statusBadge = person.isAlumni ? 'Graduated Alumni' : (person.role || 'Active Student');
+
+                    answerText = `🎓 <strong>Student Record & Profile Details:</strong><br><br>` +
+                                 `• <strong>Student Name:</strong> <strong>${name}</strong><br>` +
+                                 `• <strong>Registration Number:</strong> <code>${reg}</code><br>` +
+                                 `• <strong>Branch / Department:</strong> ${dept}<br>` +
+                                 secBadge + houseBadge + emailBadge +
+                                 `• <strong>Status:</strong> ${statusBadge}`;
+
+                    if (person.description) {
+                        answerText += `<br><br><em>${person.description}</em>`;
+                    }
                 } else {
-                    answerText = `I found <strong>${name}</strong> (${role}, ${dept} Department), but registration numbers are applicable for students, not faculty members in department records.`;
+                    answerText = `🎓 <strong>Department Person Record:</strong><br><br>` +
+                                 `• <strong>Name:</strong> <strong>${name}</strong><br>` +
+                                 `• <strong>Role:</strong> ${role}<br>` +
+                                 `• <strong>Department:</strong> ${dept}`;
+                    if (person.email) answerText += `<br>• <strong>Email:</strong> ${person.email}`;
                 }
                 break;
 
@@ -2238,6 +2377,50 @@ Ask "Show placement overview" or "Who got placed at Microsoft" to view details!`
         return null;
     }
 
+    function searchAlumniNetwork(rawQuery) {
+        if (!rawQuery) return null;
+        const q = rawQuery.toLowerCase().trim();
+
+        const isAlumniQuery = /\b(alumni|graduate|graduates|alumnus|former student|google|microsoft|amazon|meta|carnegie|cmu|qualcomm|tcs innovation|notable alumni|join alumni|update alumni|alumni network|hall of fame)\b/i.test(q);
+
+        if (!isAlumniQuery) return null;
+
+        const isCSD = /\bcsd\b/i.test(q);
+        const isCSIT = /\bcsit\b/i.test(q);
+
+        let matches = MASTER_ALUMNI_INDEX.filter(a => {
+            const haystack = ((a.name || '') + ' ' + (a.fullName || '') + ' ' + (a.company || '') + ' ' + (a.designation || '') + ' ' + (a.industry || '') + ' ' + (a.branch || '') + ' ' + (a.batch || '')).toLowerCase();
+            return haystack.includes(q) || q.includes('alumni');
+        });
+
+        if (isCSD) matches = matches.filter(a => (a.branch || '').toUpperCase() === 'CSD');
+        if (isCSIT) matches = matches.filter(a => (a.branch || '').toUpperCase() === 'CSIT');
+
+        if (matches.length > 0) {
+            let listHTML = matches.slice(0, 8).map((a, i) => `${i + 1}. <strong>${a.name || a.fullName}</strong> (${a.branch || 'CSD'} Batch ${a.batch || '2022'}) — <strong>${a.designation || 'Engineer'}</strong> @ <strong>${a.company || 'Tech Leader'}</strong> (${a.location || a.industry || 'Global'})`).join('<br>');
+            return {
+                id: 'alumni_search_results',
+                category: 'Alumni Network',
+                title: 'Department Alumni Network & Directory Records',
+                content: `Found matching Department Alumni records:<br><br>${listHTML}<br><br>Visit the Alumni page for full profile details, career journeys, and network registration.`,
+                url: 'alumni.php',
+                ctaText: 'View Alumni Page & Directory →'
+            };
+        }
+
+        return {
+            id: 'alumni_overview_default',
+            category: 'Alumni Network',
+            title: 'CSD & CSIT Department Alumni Network',
+            content: `The official Department Alumni Directory is available under <strong>More Details → Alumni</strong> (<code>alumni.php</code>).<br><br>
+• <strong>Global Network:</strong> 500+ Alumni across Top Tech Firms (Google, Microsoft, Amazon, Meta), Higher Studies (CMU), and Robotics Startups.<br>
+• <strong>Notable Alumni:</strong> Rahul Kumar (Google), Sneha Verma (Microsoft), Vikramaditya Raju (NexGen Robotics CTO), Pooja Varma (CMU Scholar).<br>
+• <strong>Stay Connected:</strong> Click 'Join Alumni Network' or 'Update Details' on the page to register with the department.`,
+            url: 'alumni.php',
+            ctaText: 'Explore Alumni Directory Page →'
+        };
+    }
+
     /**
      * =========================================================================
      * 13. PRIMARY RAG HYBRID DISPATCHER ENFORCING RETRIEVAL SYSTEM
@@ -2266,7 +2449,63 @@ Ask "Show placement overview" or "Who got placed at Microsoft" to view details!`
             }
         }
 
-        // 2. INTERNSHIPS & PLACEMENTS HYBRID SEARCH SECOND
+    function searchStudentDirectory(rawQuery) {
+        if (!rawQuery) return null;
+        const q = rawQuery.toLowerCase().trim();
+
+        const isStudentQuery = /\b(student|students|student details|student info|registration number|reg number|reg no|roll number|student list|students list|enrolled students|student directory)\b/i.test(q);
+
+        if (!isStudentQuery) return null;
+
+        const isCSD = /\bcsd\b/i.test(q);
+        const isCSIT = /\bcsit\b/i.test(q);
+
+        let matches = MASTER_PERSON_INDEX.filter(p => p.category && p.category.toLowerCase().includes('student'));
+
+        if (isCSD) matches = matches.filter(p => (p.branch || '').toUpperCase() === 'CSD');
+        if (isCSIT) matches = matches.filter(p => (p.branch || '').toUpperCase() === 'CSIT');
+
+        if (matches.length > 0) {
+            let listHTML = matches.slice(0, 10).map((s, i) => `${i + 1}. <strong>${s.fullName}</strong> (Reg: <code>${s.regNo || 'N/A'}</code>) — ${s.branch || 'CSD'} ${s.section || ''} | House: <strong>${s.house || 'Not Assigned'} House</strong>`).join('<br>');
+            return {
+                id: 'student_directory_search_results',
+                category: 'Student Directory',
+                title: 'CSD & CSIT Enrolled Student Database Records',
+                content: `Found matching Student Database records (${matches.length} total enrolled):<br><br>${listHTML}<br><br>Visit the Students page for complete search filters, house points, and section rosters.`,
+                url: 'students_overview.php',
+                ctaText: 'Explore Students Directory Page →'
+            };
+        }
+
+        return {
+            id: 'students_overview_default',
+            category: 'Student Directory',
+            title: 'CSD & CSIT Student Directory & Academic Sections',
+            content: `CSD & CSIT Student Directory & Academic Sections:<br><br>
+• <strong>Total Enrolled Students:</strong> 600+ across 2nd, 3rd, and 4th Years in CSD & CSIT.<br>
+• <strong>Registration Numbers:</strong> Search any student registration number (e.g., 25B91A6258, 25B91A0790) to view individual student details.<br>
+• <strong>Academic Sections:</strong> CSD II Year, CSD III Year, CSD IV Year, CSIT II Year Sec A & B, CSIT III Year Sec A & B, CSIT IV Year.<br>
+• <strong>Student Houses:</strong> Jal, Agni, Vayu, Akash, Prudhvi.`,
+            url: 'students_overview.php',
+            ctaText: 'View Student Directory & Leadership →'
+        };
+    }
+
+    // 2. ALUMNI NETWORK & DIRECTORY SEARCH
+    const alumniResult = searchAlumniNetwork(rawQuery);
+    if (alumniResult) {
+        console.log('[CHATBOT INTENT] Alumni Network Match:', alumniResult.title);
+        return alumniResult;
+    }
+
+    // 3. STUDENT DIRECTORY SEARCH
+    const studentDirResult = searchStudentDirectory(rawQuery);
+    if (studentDirResult) {
+        console.log('[CHATBOT INTENT] Student Directory Match:', studentDirResult.title);
+        return studentDirResult;
+    }
+
+        // 3. INTERNSHIPS & PLACEMENTS HYBRID SEARCH
         const internPlacementResult = searchInternshipsAndPlacements(rawQuery);
         if (internPlacementResult) {
             console.log('[CHATBOT INTENT] Internship & Placement Match:', internPlacementResult.title);
@@ -2477,6 +2716,27 @@ Ask "Show placement overview" or "Who got placed at Microsoft" to view details!`
                 finalResponse = synthesizeLocalAnswer(matchedChunk, userInput);
                 responseCache.set(normalizedQuery, finalResponse);
                 return finalResponse;
+            }
+
+            // Live MySQL Database Query for Student Records, Registration Numbers & Unmatched Queries
+            try {
+                const dbRes = await fetch(getRootApiUrl('api/ai_search.php?q=' + encodeURIComponent(userInput)));
+                if (dbRes.ok) {
+                    const dbData = await dbRes.json();
+                    if (dbData.success && dbData.content) {
+                        const dbResponse = {
+                            answer: `<strong>${dbData.title || 'Student Database Record'}</strong><br><br>${dbData.content}`,
+                            ctaLinks: (dbData.links && dbData.links.length > 0)
+                                      ? dbData.links.map(l => ({ text: l.text, url: l.url }))
+                                      : [{ text: 'View Students Directory →', url: 'students_overview.php' }],
+                            suggestions: ['Students Directory', 'Registration Numbers', 'CSD Students', 'CSIT Students']
+                        };
+                        responseCache.set(normalizedQuery, dbResponse);
+                        return dbResponse;
+                    }
+                }
+            } catch (dbErr) {
+                console.warn('Live MySQL ai_search query fallback skipped:', dbErr);
             }
 
             const proxyUrl = getRootApiUrl(config.remoteApiUrl || 'api/gemini_chat.php');

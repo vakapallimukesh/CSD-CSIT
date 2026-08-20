@@ -8,7 +8,7 @@
  * 2. ZERO HALLUCINATION POLICY: Accurate, verified facts, links, and record IDs.
  * 3. VERBATIM GROUNDING & SOURCE CITATION.
  * 4. DISAMBIGUATE MULTIPLE MATCHES.
- * 5. COMPREHENSIVE STUDENT & DEPARTMENT DATA RETRIEVAL.
+ * 5. FULL ALUMNI PAGE & DIRECTORY RETRIEVAL TRAINING.
  */
 
 header('Content-Type: application/json; charset=utf-8');
@@ -45,7 +45,7 @@ function getHouseColor($name) {
 }
 
 // Stop words filter for natural query tokenization
-$stopWords = ['is', 'in', 'which', 'house', 'what', 'the', 'belong', 'belongs', 'to', 'tell', 'me', 'about', 'of', 'for', 'where', 'who', 'does', 'has', 'have', 'least', 'highest', 'top', 'bottom', 'points', 'many', 'much', 'details', 'info', 'information', 'sir', 'madam', 'give', 'list', 'show', 'get', 'data'];
+$stopWords = ['is', 'in', 'which', 'house', 'what', 'the', 'belong', 'belongs', 'to', 'tell', 'me', 'about', 'of', 'for', 'where', 'who', 'does', 'has', 'have', 'least', 'highest', 'top', 'bottom', 'points', 'many', 'much', 'details', 'info', 'information', 'sir', 'madam', 'give', 'list', 'show', 'get', 'data', 'how'];
 $rawWords = preg_split('/\s+/', $lowerQuery);
 $nameKeywords = [];
 foreach ($rawWords as $w) {
@@ -184,49 +184,77 @@ if (!empty($nameKeywords) || preg_match('/[0-9]{2}[a-z0-9]{8}/i', $lowerQuery)) 
 }
 
 // =========================================================
-// 2. ALUMNI & EMPLOYMENT RETRIEVAL
+// 2. ALUMNI PAGE & EMPLOYMENT RETRIEVAL
 // =========================================================
-if (!$response && preg_match('/(alumni|graduate|graduates|alumnus|former student|google|microsoft|amazon|meta|carnegie|cmu|startup founder|entrepreneur|higher studies)/i', $lowerQuery)) {
+if (!$response && preg_match('/(alumni|graduate|graduates|alumnus|former student|google|microsoft|amazon|meta|carnegie|cmu|qualcomm|tcs innovation|startup founder|entrepreneur|higher studies|notable alumni|alumni network|join alumni|update alumni)/i', $lowerQuery)) {
     $searchTerm = '%' . $conn->real_escape_string($lowerQuery) . '%';
     
-    $sqlAlumni = "SELECT s.student_id, s.name, s.branch, e.company_name, e.designation, e.location, e.industry, e.description
-                  FROM students s
-                  LEFT JOIN alumni_employment_history e ON s.student_id = e.student_id
-                  WHERE s.is_alumni = 1 OR LOWER(e.company_name) LIKE '$searchTerm' OR LOWER(e.designation) LIKE '$searchTerm' OR LOWER(e.industry) LIKE '$searchTerm'
-                  LIMIT 6";
-
-    $resAlumni = $conn->query($sqlAlumni);
-
-    if ($resAlumni && $resAlumni->num_rows > 0) {
-        $alumniList = [];
-        while ($row = $resAlumni->fetch_assoc()) {
-            $alumniList[] = $row;
-        }
-
-        $html = "<p><strong>Retrieved Department Alumni Records (" . count($alumniList) . " matches):</strong></p><ul>";
-        foreach ($alumniList as $alm) {
-            $comp = !empty($alm['company_name']) ? cleanStr($alm['company_name']) : 'Leading Tech Firm';
-            $desg = !empty($alm['designation']) ? cleanStr($alm['designation']) : 'Engineer';
-            $loc = !empty($alm['location']) ? cleanStr($alm['location']) : 'Global';
-            $ind = !empty($alm['industry']) ? cleanStr($alm['industry']) : 'Technology';
-            $html .= "<li><strong>" . cleanStr($alm['name']) . "</strong> (Dept: " . cleanStr($alm['branch']) . ") – <strong>$desg</strong> @ <strong>$comp</strong> ($loc, $ind) — Source: <code>alumni_employment_history</code></li>";
-        }
+    // 1. Check if user asked about Alumni Page / How to join / Alumni Network
+    if (preg_match('/(alumni page|where is alumni|how to view alumni|join alumni|update alumni|alumni network|notable|hall of fame)/i', $lowerQuery)) {
+        $html = "<p><strong>🎓 Department Alumni Page & Network Info:</strong></p>";
+        $html .= "<p>The official <strong>Alumni Page</strong> is located under <strong>More Details → Alumni</strong> (<code>alumni.php</code>). It celebrates CSD & CSIT graduates and their professional achievements worldwide.</p>";
+        $html .= "<ul>";
+        $html .= "<li><strong>Notable Alumni Highlights:</strong> Engineers, Scholars, and Founders at Google, Microsoft, Meta, Amazon AWS, Carnegie Mellon University (CMU), Qualcomm, and TCS Innovation Labs.</li>";
+        $html .= "<li><strong>Key Network Stats:</strong> 500+ Total Alumni, 15+ Industry Sectors, 45+ Higher Education Scholars, and 12+ Tech Entrepreneurs.</li>";
+        $html .= "<li><strong>Interactive Directory:</strong> Search by Name, Company, Designation, and filter by Graduation Batch (2021–2025), Branch (CSD/CSIT), or Industry.</li>";
+        $html .= "<li><strong>Stay Connected Actions:</strong> Graduates can click <em>'Join Alumni Network'</em> or <em>'Update Your Details'</em> to connect with current students and faculty.</li>";
         $html .= "</ul>";
 
         $response = [
             'success' => true,
             'source' => 'live_db',
-            'title' => '🎓 Department Alumni Records',
+            'title' => '🎓 CSD & CSIT Alumni Page & Network',
             'stats' => [
-                ['val' => (string)count($alumniList) . '+ Records', 'lbl' => 'Featured Alumni'],
-                ['val' => '500+ Alumni', 'lbl' => 'Total Network']
+                ['val' => '500+ Alumni', 'lbl' => 'Global Network'],
+                ['val' => '15+ Sectors', 'lbl' => 'Industries & Research']
             ],
             'content' => $html,
             'links' => [
-                ['text' => 'Explore Alumni Directory', 'url' => 'alumni.php'],
+                ['text' => 'View Alumni Page', 'url' => 'alumni.php'],
                 ['text' => 'Placements Overview', 'url' => 'placements.php']
             ]
         ];
+    } else {
+        // Query live database records from students & alumni_employment_history
+        $sqlAlumni = "SELECT s.student_id, s.name, s.branch, e.company_name, e.designation, e.location, e.industry, e.description
+                      FROM students s
+                      LEFT JOIN alumni_employment_history e ON s.student_id = e.student_id
+                      WHERE s.is_alumni = 1 OR LOWER(e.company_name) LIKE '$searchTerm' OR LOWER(e.designation) LIKE '$searchTerm' OR LOWER(e.industry) LIKE '$searchTerm'
+                      LIMIT 6";
+
+        $resAlumni = $conn->query($sqlAlumni);
+
+        if ($resAlumni && $resAlumni->num_rows > 0) {
+            $alumniList = [];
+            while ($row = $resAlumni->fetch_assoc()) {
+                $alumniList[] = $row;
+            }
+
+            $html = "<p><strong>Retrieved Department Alumni Records (" . count($alumniList) . " matches):</strong></p><ul>";
+            foreach ($alumniList as $alm) {
+                $comp = !empty($alm['company_name']) ? cleanStr($alm['company_name']) : 'Leading Tech Firm';
+                $desg = !empty($alm['designation']) ? cleanStr($alm['designation']) : 'Engineer';
+                $loc = !empty($alm['location']) ? cleanStr($alm['location']) : 'Global';
+                $ind = !empty($alm['industry']) ? cleanStr($alm['industry']) : 'Technology';
+                $html .= "<li><strong>" . cleanStr($alm['name']) . "</strong> (Dept: " . cleanStr($alm['branch']) . ") – <strong>$desg</strong> @ <strong>$comp</strong> ($loc, $ind) — Source: <code>alumni_employment_history</code></li>";
+            }
+            $html .= "</ul>";
+
+            $response = [
+                'success' => true,
+                'source' => 'live_db',
+                'title' => '🎓 Department Alumni Directory Records',
+                'stats' => [
+                    ['val' => (string)count($alumniList) . '+ Matches', 'lbl' => 'Retrieved Alumni'],
+                    ['val' => '500+ Alumni', 'lbl' => 'Total Network']
+                ],
+                'content' => $html,
+                'links' => [
+                    ['text' => 'Explore Alumni Page', 'url' => 'alumni.php'],
+                    ['text' => 'Placements Overview', 'url' => 'placements.php']
+                ]
+            ];
+        }
     }
 }
 

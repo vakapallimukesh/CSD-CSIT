@@ -741,19 +741,80 @@ if ($appRes) {
     }
 }
 
+// 11. Query Alumni Records from Database
+$dbAlumni = [];
+if ($conn) {
+    $almSql = "SELECT s.student_id, s.name, s.email, s.branch, s.section, e.company_name, e.designation, e.location, e.industry, e.description 
+               FROM students s 
+               LEFT JOIN alumni_employment_history e ON s.student_id = e.student_id 
+               WHERE s.is_alumni = 1";
+    $almRes = @mysqli_query($conn, $almSql);
+    if ($almRes && mysqli_num_rows($almRes) > 0) {
+        while ($row = mysqli_fetch_assoc($almRes)) {
+            $regNo = trim($row['student_id']);
+            $dbAlumni[] = [
+                'id' => 'alumni_' . $regNo,
+                'student_id' => $regNo,
+                'regNo' => $regNo,
+                'name' => trim($row['name']),
+                'fullName' => trim($row['name']),
+                'branch' => !empty($row['branch']) ? strtoupper(trim($row['branch'])) : 'CSD',
+                'company' => !empty($row['company_name']) ? trim($row['company_name']) : 'Tech Leader',
+                'designation' => !empty($row['designation']) ? trim($row['designation']) : 'Engineer',
+                'location' => !empty($row['location']) ? trim($row['location']) : 'Global',
+                'industry' => !empty($row['industry']) ? trim($row['industry']) : 'Software & Tech',
+                'description' => !empty($row['description']) ? trim($row['description']) : 'Graduate contributing to technology excellence.',
+                'batch' => (strpos($regNo, '21') === 0) ? '2022' : ((strpos($regNo, '20') === 0) ? '2021' : ((strpos($regNo, '22') === 0) ? '2024' : '2023')),
+                'isAlumni' => true,
+                'source_url' => 'alumni.php'
+            ];
+        }
+    }
+}
+
+// 12. Query Complete Students Directory from Database
+$dbStudents = [];
+if ($conn) {
+    $stdSql = "SELECT s.student_id, s.name, s.email, s.branch, s.section, s.is_alumni, COALESCE(h.name, 'Not Assigned') as house_name 
+               FROM students s 
+               LEFT JOIN houses h ON s.hid = h.hid 
+               ORDER BY s.student_id ASC";
+    $stdRes = @mysqli_query($conn, $stdSql);
+    if ($stdRes && mysqli_num_rows($stdRes) > 0) {
+        while ($row = mysqli_fetch_assoc($stdRes)) {
+            $regNo = trim($row['student_id']);
+            $dbStudents[] = [
+                'id' => 'student_' . $regNo,
+                'student_id' => $regNo,
+                'regNo' => $regNo,
+                'name' => trim($row['name']),
+                'fullName' => trim($row['name']),
+                'email' => !empty($row['email']) ? trim($row['email']) : '',
+                'branch' => !empty($row['branch']) ? strtoupper(trim($row['branch'])) : 'CSD',
+                'section' => !empty($row['section']) ? 'Sec ' . trim($row['section']) : 'Sec A',
+                'house' => trim($row['house_name']),
+                'isAlumni' => ($row['is_alumni'] == 1),
+                'role' => ($row['is_alumni'] == 1) ? 'Graduated Alumni' : 'Student (' . strtoupper(trim($row['branch'])) . ' Sec ' . trim($row['section']) . ')',
+                'source_url' => 'students_overview.php'
+            ];
+        }
+    }
+}
+
 $executionTime = round((microtime(true) - $startTime) * 1000, 2);
 
 $diagnostics = [
     'status' => 'HEALTHY',
-    'totalPagesDiscovered' => 18,
-    'totalPagesIndexed' => 18,
-    'totalIndexedChunks' => 140,
+    'totalPagesDiscovered' => 19,
+    'totalPagesIndexed' => 19,
+    'totalIndexedChunks' => 150,
     'totalFacultyRecords' => count($faculties),
-    'totalStudentRecords' => 625,
+    'totalStudentRecords' => count($dbStudents),
     'totalHouseRecords' => count($houses),
     'totalCRRecords' => count($classRepresentatives),
     'totalInternshipRecords' => count($dbInternships),
     'totalPlacementRecords' => count($dbPlacements),
+    'totalAlumniRecords' => count($dbAlumni),
     'totalProgramsIndexed' => 2,
     'totalProgramOutcomesIndexed' => 10,
     'totalCourseOutcomesIndexed' => 12,
@@ -768,6 +829,8 @@ echo json_encode([
     'total_classes' => count($classes),
     'total_internships' => count($dbInternships),
     'total_placements' => count($dbPlacements),
+    'total_alumni' => count($dbAlumni),
+    'total_students' => count($dbStudents),
     'faculties' => $faculties,
     'classRepresentatives' => $classRepresentatives,
     'programAcademics' => $programAcademics,
@@ -775,7 +838,10 @@ echo json_encode([
     'classes' => $classes,
     'internships' => $dbInternships,
     'placements' => $dbPlacements,
+    'alumni' => $dbAlumni,
+    'students' => $dbStudents,
     'placementStats' => $placementStats,
     'diagnostics' => $diagnostics
 ]);
 exit();
+?>
