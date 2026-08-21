@@ -657,12 +657,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <button type="button" class="user-badge" id="studentLoginBtn" data-role="student"><i class="fas fa-user-graduate me-1"></i> Student</button>
             </div>
             
-            <div class="mt-3 text-center">
-                <a href="upload_tp_excel.php" class="btn btn-sm btn-outline-success rounded-pill px-3 py-2 fw-bold text-decoration-none d-inline-flex align-items-center gap-2" style="font-size: 13px;">
-                    <i class="fas fa-file-excel text-success fs-6"></i> Upload T&P Classes Attendance & Points Excel
-                </a>
-            </div>
-            
             <div style="display: flex; justify-content: center; gap: 20px; margin-top: 16px;">
                 <a href="#" id="forgotMailLink" style="color: var(--primary-color); text-decoration: none; font-size: 14px; font-weight: 500; transition: all 0.3s ease;">
                     <i class="fas fa-envelope-open-text"></i> Forgot mail?

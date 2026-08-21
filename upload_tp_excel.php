@@ -34,43 +34,161 @@ if (isset($_GET['action']) && $_GET['action'] === 'get_section_students') {
     exit();
 }
 
-// Handle Template Download for Selected Section
+// Handle Template Download for Selected Section (Multi-format Document Generator matching official sheet format)
 if (isset($_GET['action']) && $_GET['action'] === 'download_section_template') {
     $class_id = isset($_GET['class_id']) ? (int)$_GET['class_id'] : 0;
+    $format = strtolower($_GET['format'] ?? 'doc');
     
-    $section_label = "All_Sections";
+    $section_label = "ALL_SECTIONS";
+    $display_title = "4:4 CSD T&P CLASS";
     $where_clause = "";
+    
     if ($class_id > 0) {
         $c_res = mysqli_query($conn, "SELECT year, branch, section FROM classes WHERE class_id = " . $class_id);
         if ($c_row = mysqli_fetch_assoc($c_res)) {
-            $section_label = "Section_" . $c_row['year'] . "_" . strtoupper($c_row['branch']) . "_" . strtoupper($c_row['section']);
+            $sec_part = !empty($c_row['section']) ? "-" . strtoupper($c_row['section']) : "";
+            $display_title = $c_row['year'] . ":" . $c_row['year'] . " " . strtoupper($c_row['branch']) . $sec_part . " T&P CLASS";
+            $section_label = "Section_" . $c_row['year'] . "_" . strtoupper($c_row['branch']) . $sec_part;
         }
         $where_clause = "WHERE s.class_id = " . $class_id;
     }
     
     $query = "SELECT s.student_id, s.name FROM students s $where_clause ORDER BY s.student_id ASC";
     $result = mysqli_query($conn, $query);
-    
-    header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename=TP_Attendance_Template_' . $section_label . '.csv');
-    
-    $output = fopen('php://output', 'w');
-    // Header row matching official college format
-    fputcsv($output, ['SNo', 'HallTicketNo', 'Student Name', '10-07', '14-07', '15-07', '21-07', '28-07']);
-    
-    $sno = 1;
+    $students = [];
     if ($result && mysqli_num_rows($result) > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
-            fputcsv($output, [$sno++, $row['student_id'], $row['name'], '', '', '', '', '']);
+            $students[] = $row;
         }
     } else {
-        // Fallback sample rows
-        fputcsv($output, [1, '24B91A0773', 'MEDISETTI SRINIJA', '', '', '', 'AB', 'AB']);
-        fputcsv($output, [2, '24B91A0774', 'MULAGALA PRANATI SANDHYA', 'AB', '', '', '', '']);
-        fputcsv($output, [3, '24B91A0775', 'MURIKITHA ARCHANA SAI SRI', '', 'AB', 'AB', '', 'AB']);
+        // Fallback sample rows matching image format
+        $students = [
+            ['student_id' => '23B91A6201', 'name' => 'ADDAGARLA SRI VIDYA SAGAR'],
+            ['student_id' => '23B91A6202', 'name' => 'AKSHINTALA HARSHATH'],
+            ['student_id' => '23B91A6203', 'name' => 'BANDARU BHANU SATYA PRAKASH'],
+            ['student_id' => '23B91A6204', 'name' => 'BODDETI DEVI NAGA VENKATA SAI DEEPAK'],
+            ['student_id' => '23B91A6206', 'name' => 'BOLISETTY KEDARESWARI'],
+            ['student_id' => '23B91A6207', 'name' => 'BORRA TERESSA'],
+            ['student_id' => '23B91A6208', 'name' => 'CHAGANTI DHANESH KUMAR'],
+            ['student_id' => '23B91A6209', 'name' => 'CHELLABOYINA YAMINI'],
+            ['student_id' => '23B91A6210', 'name' => 'CHINDADA JYOTHI']
+        ];
     }
-    fclose($output);
-    exit();
+
+    if ($format === 'doc') {
+        header('Content-Type: application/msword');
+        header('Content-Disposition: attachment; filename=TP_Attendance_Document_' . $section_label . '.doc');
+        echo '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">';
+        echo '<head><meta charset="utf-8"><title>' . htmlspecialchars($display_title) . '</title>';
+        echo '<style>';
+        echo 'body { font-family: "Calibri", "Arial", sans-serif; font-size: 9.5pt; margin: 15px; background: #ffffff; }';
+        echo '.sheet-header { text-align: center; font-size: 13pt; font-weight: bold; text-decoration: underline; margin-bottom: 12px; font-family: "Arial", sans-serif; }';
+        echo 'table { border-collapse: collapse; width: 100%; border: 1.5px solid #777777; }';
+        echo 'th { background-color: #b0b0b0; color: #000000; font-weight: bold; border: 1px solid #777777; padding: 4px 6px; text-align: left; font-size: 9.5pt; }';
+        echo 'td { border: 1px solid #777777; padding: 3px 6px; font-size: 9pt; vertical-align: middle; }';
+        echo '.sno { text-align: center; width: 35px; font-weight: bold; }';
+        echo '.htno { font-weight: bold; width: 100px; font-family: "Courier New", monospace; font-size: 9pt; }';
+        echo '.name { text-transform: uppercase; font-size: 8.5pt; font-weight: bold; }';
+        echo '.date-col { width: 42px; text-align: center; }';
+        echo '.date-cell { width: 42px; }';
+        echo '</style>';
+        echo '</head><body>';
+        echo '<div class="sheet-header">' . htmlspecialchars($display_title) . '</div>';
+        echo '<table>';
+        echo '<thead><tr>';
+        echo '<th style="width:35px; text-align:center;">SNo</th>';
+        echo '<th style="width:100px;">HallTicketNo</th>';
+        echo '<th>Student Name</th>';
+        echo '<th class="date-col">10-07</th>';
+        echo '<th class="date-col">14-07</th>';
+        echo '<th class="date-col">15-07</th>';
+        echo '<th class="date-col">21-07</th>';
+        echo '<th class="date-col">28-07</th>';
+        echo '</tr></thead><tbody>';
+        $sno = 1;
+        foreach ($students as $st) {
+            echo '<tr>';
+            echo '<td class="sno">' . $sno++ . '</td>';
+            echo '<td class="htno">' . htmlspecialchars($st['student_id']) . '</td>';
+            echo '<td class="name">' . htmlspecialchars(strtoupper($st['name'])) . '</td>';
+            echo '<td class="date-cell"></td>';
+            echo '<td class="date-cell"></td>';
+            echo '<td class="date-cell"></td>';
+            echo '<td class="date-cell"></td>';
+            echo '<td class="date-cell"></td>';
+            echo '</tr>';
+        }
+        echo '</tbody></table></body></html>';
+        exit();
+    } elseif ($format === 'pdf') {
+        header('Content-Type: text/html; charset=utf-8');
+        echo '<!DOCTYPE html><html><head><title>' . htmlspecialchars($display_title) . '</title>';
+        echo '<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">';
+        echo '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">';
+        echo '<style>';
+        echo '@media print { .no-print { display: none !important; } @page { margin: 8mm; } }';
+        echo 'body { font-family: Arial, sans-serif; font-size: 9.5pt; color: #000; background: #fff; }';
+        echo '.sheet-header { text-align: center; font-size: 14pt; font-weight: bold; text-decoration: underline; margin-bottom: 15px; }';
+        echo 'table { border: 1.5px solid #666 !important; width: 100%; border-collapse: collapse; }';
+        echo 'th, td { border: 1px solid #666 !important; padding: 3px 6px !important; }';
+        echo 'th { background-color: #b0b0b0 !important; color: #000 !important; font-weight: bold; text-align: left; }';
+        echo '.date-col { width: 45px; text-align: center; }';
+        echo '</style></head><body class="p-4">';
+        echo '<div class="no-print mb-3 d-flex justify-content-between align-items-center"><button onclick="window.print()" class="btn btn-success fw-bold rounded-pill px-4"><i class="fas fa-print me-2"></i> Print / Save PDF Document</button> <a href="javascript:history.back()" class="btn btn-outline-secondary rounded-pill px-4">Back</a></div>';
+        echo '<div class="sheet-header">' . htmlspecialchars($display_title) . '</div>';
+        echo '<table class="table align-middle">';
+        echo '<thead><tr>';
+        echo '<th style="width:35px; text-align:center;">SNo</th>';
+        echo '<th style="width:110px;">HallTicketNo</th>';
+        echo '<th>Student Name</th>';
+        echo '<th class="date-col">10-07</th>';
+        echo '<th class="date-col">14-07</th>';
+        echo '<th class="date-col">15-07</th>';
+        echo '<th class="date-col">21-07</th>';
+        echo '<th class="date-col">28-07</th>';
+        echo '</tr></thead><tbody>';
+        $sno = 1;
+        foreach ($students as $st) {
+            echo '<tr>';
+            echo '<td class="text-center font-monospace fw-bold">' . $sno++ . '</td>';
+            echo '<td class="fw-bold font-monospace">' . htmlspecialchars($st['student_id']) . '</td>';
+            echo '<td class="text-uppercase fw-semibold">' . htmlspecialchars(strtoupper($st['name'])) . '</td>';
+            echo '<td class="date-col"></td>';
+            echo '<td class="date-col"></td>';
+            echo '<td class="date-col"></td>';
+            echo '<td class="date-col"></td>';
+            echo '<td class="date-col"></td>';
+            echo '</tr>';
+        }
+        echo '</tbody></table></body></html>';
+        exit();
+    } elseif ($format === 'txt') {
+        header('Content-Type: text/plain; charset=utf-8');
+        header('Content-Disposition: attachment; filename=TP_Class_Template_' . $section_label . '.txt');
+        echo "========================================================================\n";
+        echo "                        " . $display_title . "\n";
+        echo "========================================================================\n\n";
+        printf("%-5s | %-12s | %-40s | %-5s | %-5s | %-5s | %-5s | %-5s\n", "SNo", "HallTicketNo", "Student Name", "10-07", "14-07", "15-07", "21-07", "28-07");
+        echo str_repeat("-", 100) . "\n";
+        $sno = 1;
+        foreach ($students as $st) {
+            printf("%-5d | %-12s | %-40s | %-5s | %-5s | %-5s | %-5s | %-5s\n", $sno++, $st['student_id'], strtoupper(substr($st['name'], 0, 40)), "", "", "", "", "");
+        }
+        exit();
+    } else {
+        // CSV Format matching official college attendance sheet
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=TP_Class_Template_' . $section_label . '.csv');
+        $output = fopen('php://output', 'w');
+        fputcsv($output, [$display_title]);
+        fputcsv($output, ['SNo', 'HallTicketNo', 'Student Name', '10-07', '14-07', '15-07', '21-07', '28-07']);
+        $sno = 1;
+        foreach ($students as $st) {
+            fputcsv($output, [$sno++, $st['student_id'], strtoupper($st['name']), '', '', '', '', '']);
+        }
+        fclose($output);
+        exit();
+    }
 }
 
 $success_msg = '';
@@ -307,9 +425,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
 <html lang="en">
 <head>
     <?php include "./head.php"; ?>
-    <title>T&P Classes - Section Selection & Excel Attendance Upload</title>
-    <!-- SheetJS for client-side multi-date Excel Parsing -->
+    <title>T&P Classes - Document & Attendance Auto Points / Penalty Upload</title>
+    <!-- Parsing Libraries: SheetJS (Excel), PDF.js (PDF), JSZip (Word .docx), Tesseract.js (Image OCR) -->
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <script>
+        if (window.pdfjsLib) {
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        }
+    </script>
     <style>
         body {
             background: #f8fafc;
@@ -350,6 +476,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
             font-size: 3rem;
             color: #059669;
             margin-bottom: 12px;
+        }
+        .doc-badge {
+            background: #e2e8f0;
+            color: #334155;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin: 2px;
+            display: inline-block;
         }
         .btn-upload {
             background: linear-gradient(135deg, #059669 0%, #047857 100%);
@@ -448,8 +584,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
 
                 <div class="upload-card">
                     <div class="upload-header">
-                        <h3><i class="fas fa-file-excel me-2"></i> Official College T&P Attendance Excel Upload</h3>
-                        <p class="mb-0 text-white-50">Select a section to view student registration numbers, download pre-filled templates, and upload official college attendance sheets (Blank = Present (+1), 'AB' = Absent (-1)).</p>
+                        <h3><i class="fas fa-file-upload me-2"></i> Official Attendance & Points Document Upload</h3>
+                        <p class="mb-0 text-white-50">Upload any document (Excel, PDF, Word, Image, Text, CSV) to automatically extract student roll numbers and award points (+1 Appreciation for Present) or penalties (-1 Penalty for Absent/AB).</p>
                     </div>
                     
                     <div class="p-4 p-md-5">
@@ -460,9 +596,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
 
                             <!-- 1. Section Selection & Download Template -->
                             <div class="p-4 bg-light rounded-4 border mb-4">
-                                <h5 class="fw-bold mb-3 text-dark"><i class="fas fa-layer-group text-success me-2"></i> Step 1: Select Section & Download Pre-filled Template</h5>
+                                <h5 class="fw-bold mb-3 text-dark"><i class="fas fa-layer-group text-success me-2"></i> Step 1: Select Section & Download Pre-filled Document Template</h5>
                                 <div class="row g-3 align-items-end">
-                                    <div class="col-md-7">
+                                    <div class="col-md-5">
                                         <label class="form-label fw-bold"><i class="fas fa-university me-1 text-success"></i> Department Section / Class</label>
                                         <select class="form-select form-select-lg rounded-3" name="class_id" id="sectionSelect" onchange="onSectionChange(this.value)">
                                             <option value="0" selected>All Sections (Auto-detect from Registration Numbers)</option>
@@ -473,9 +609,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
-                                    <div class="col-md-5">
+                                    <div class="col-md-3">
+                                        <label class="form-label fw-bold"><i class="fas fa-file-export me-1 text-success"></i> Template Format</label>
+                                        <select class="form-select form-select-lg rounded-3" id="templateFormatSelect">
+                                            <option value="doc" selected>Word Document (.doc)</option>
+                                            <option value="csv">Excel / CSV (.csv)</option>
+                                            <option value="pdf">Printable PDF (.pdf)</option>
+                                            <option value="txt">Text File (.txt)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
                                         <button type="button" id="btnDownloadSectionTemplate" onclick="downloadSelectedSectionTemplate()" class="btn btn-outline-success btn-lg w-100 rounded-3 fw-bold py-2">
-                                            <i class="fas fa-download me-2"></i> Download Excel Template
+                                            <i class="fas fa-download me-2"></i> Download Template
                                         </button>
                                     </div>
                                 </div>
@@ -506,42 +651,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                                 </div>
                             </div>
 
-                            <!-- 2. Options -->
+                            <!-- 2. Options & Multi-Date Selection -->
                             <div class="row g-4 mb-4">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold"><i class="fas fa-filter me-1 text-success"></i> Processing Mode</label>
+                                    <label class="form-label fw-bold"><i class="fas fa-filter me-1 text-success"></i> Automatic Action Mode</label>
                                     <select class="form-select form-select-lg rounded-3" name="action_filter" id="actionFilter">
-                                        <option value="both" selected>Process Both (Blank = +1 Appreciation, AB = -1 Penalty)</option>
-                                        <option value="absents_only">Process Absents Only (AB = -1 Penalty)</option>
-                                        <option value="presents_only">Process Presents Only (Blank = +1 Appreciation)</option>
+                                        <option value="both" selected>Auto Both (Present = +1 Point Appreciation, AB = -1 Penalty)</option>
+                                        <option value="absents_only">Auto Penalties Only (AB = -1 Penalty)</option>
+                                        <option value="presents_only">Auto Points Only (Present = +1 Appreciation)</option>
                                     </select>
-                                    <small class="text-muted">Choose whether to award points, penalties, or both from the sheet.</small>
+                                    <small class="text-muted">Extracted student records automatically adjust points or penalties in real-time.</small>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold"><i class="fas fa-calendar-alt me-1 text-success"></i> Fallback Date</label>
-                                    <input type="date" class="form-control form-control-lg rounded-3" name="tp_date" id="tpDate" value="<?php echo date('Y-m-d'); ?>" required>
-                                    <small class="text-muted">Used if date headers are not found in the uploaded file.</small>
+                                    <label class="form-label fw-bold"><i class="fas fa-calendar-alt me-1 text-success"></i> Select Multiple Dates for Appreciation / Penalty</label>
+                                    <div class="input-group mb-2">
+                                        <input type="date" class="form-control form-control-lg rounded-start-3" id="datePickerInput" value="<?php echo date('Y-m-d'); ?>">
+                                        <button type="button" onclick="addSelectedDate()" class="btn btn-success fw-bold px-3">
+                                            <i class="fas fa-plus me-1"></i> Add Date
+                                        </button>
+                                    </div>
+                                    
+                                    <div id="selectedDatesContainer" class="p-2 border rounded-3 bg-white d-flex flex-wrap gap-2 align-items-center" style="min-height: 48px;"></div>
+                                    <input type="hidden" name="selected_dates_json" id="selectedDatesJson" value="">
+                                    <input type="hidden" name="tp_date" id="tpDate" value="<?php echo date('Y-m-d'); ?>">
+                                    
+                                    <div class="mt-2 d-flex flex-wrap gap-2">
+                                        <button type="button" onclick="addCollegeStandardDates()" class="btn btn-sm btn-outline-success rounded-pill fw-semibold">
+                                            <i class="fas fa-magic me-1"></i> + Add 5 College Dates (10-07, 14-07, 15-07, 21-07, 28-07)
+                                        </button>
+                                        <button type="button" onclick="clearAllSelectedDates()" class="btn btn-sm btn-outline-danger rounded-pill fw-semibold">
+                                            <i class="fas fa-trash me-1"></i> Clear All Dates
+                                        </button>
+                                    </div>
+                                    <small class="text-muted d-block mt-1">Points/Penalties will be auto-calculated for every selected date.</small>
                                 </div>
                             </div>
 
                             <!-- 3. Upload File Drop Zone -->
                             <div class="mb-4">
-                                <label class="form-label fw-bold"><i class="fas fa-upload me-1 text-success"></i> Step 2: Upload Completed College Attendance Sheet (.xlsx / .xls / .csv)</label>
+                                <label class="form-label fw-bold"><i class="fas fa-upload me-1 text-success"></i> Step 2: Upload Attendance Document or File</label>
                                 <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
-                                    <i class="fas fa-file-excel"></i>
-                                    <h5 class="fw-bold text-dark mb-1" id="fileLabel">Click to browse or drag & drop attendance sheet</h5>
-                                    <p class="text-muted small mb-0">Supports STUDENT ROLL LIST sheets with Blank = Present (+1), AB = Absent (-1)</p>
-                                    <input type="file" id="fileInput" name="excel_file" accept=".xlsx, .xls, .csv" style="display: none;" onchange="handleFileSelect(event)">
+                                    <i class="fas fa-file-upload text-success mb-2" id="dropZoneIcon" style="font-size: 3.5rem;"></i>
+                                    <h5 class="fw-bold text-dark mb-1" id="fileLabel">Click to browse or drag & drop attendance document</h5>
+                                    <div class="mt-2">
+                                        <span class="doc-badge"><i class="fas fa-file-excel text-success me-1"></i> Excel (.xlsx/.xls)</span>
+                                        <span class="doc-badge"><i class="fas fa-file-pdf text-danger me-1"></i> PDF (.pdf)</span>
+                                        <span class="doc-badge"><i class="fas fa-file-word text-primary me-1"></i> Word (.docx/.doc)</span>
+                                        <span class="doc-badge"><i class="fas fa-file-image text-warning me-1"></i> Image (.png/.jpg)</span>
+                                        <span class="doc-badge"><i class="fas fa-file-csv text-info me-1"></i> CSV / Text (.txt)</span>
+                                    </div>
+                                    <p class="text-muted small mt-2 mb-0">Automatic Roll Number extraction and point/penalty processing.</p>
+                                    <input type="file" id="fileInput" name="excel_file" accept=".xlsx, .xls, .csv, .pdf, .docx, .doc, .txt, .tsv, .png, .jpg, .jpeg" style="display: none;" onchange="handleFileSelect(event)">
                                 </div>
                             </div>
 
                             <!-- Live Sheet Preview Container -->
                             <div id="previewContainer" style="display: none;" class="mb-4">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
-                                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-eye me-1 text-success"></i> Detected Sheet Preview (<span id="rowCount">0</span> records parsed)</h6>
-                                    <small class="text-muted">Showing first 150 parsed entries</small>
+                                    <h6 class="fw-bold text-dark mb-0"><i class="fas fa-eye me-1 text-success"></i> Detected Document Records (<span id="rowCount">0</span> parsed)</h6>
+                                    <small class="text-muted">Showing parsed entries ready to update student accounts</small>
                                 </div>
-                                <div class="table-responsive border rounded-3" style="max-height: 300px; overflow-y: auto;">
+                                <div class="table-responsive border rounded-3" style="max-height: 320px; overflow-y: auto;">
                                     <table class="table table-sm table-hover align-middle mb-0 preview-table">
                                         <thead>
                                             <tr>
@@ -549,8 +719,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                                                 <th>HallTicketNo</th>
                                                 <th>Student Name</th>
                                                 <th>Date</th>
-                                                <th>Cell Value</th>
-                                                <th>Calculated Action</th>
+                                                <th>Source / Value</th>
+                                                <th>Automatic Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="previewBody"></tbody>
@@ -560,7 +730,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
 
                             <div class="text-end">
                                 <button type="submit" class="btn-upload" id="submitBtn">
-                                    <i class="fas fa-check-circle me-2"></i> Process & Award Points / Penalties
+                                    <i class="fas fa-check-circle me-2"></i> Upload Document & Automatically Add Points / Penalties
                                 </button>
                             </div>
                         </form>
@@ -679,7 +849,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
 
         function downloadSelectedSectionTemplate() {
             const classId = document.getElementById('sectionSelect').value || 0;
-            window.location.href = `upload_tp_excel.php?action=download_section_template&class_id=${classId}`;
+            const format = document.getElementById('templateFormatSelect').value || 'doc';
+            window.location.href = `upload_tp_excel.php?action=download_section_template&class_id=${classId}&format=${format}`;
         }
 
         function copyRegNumbers() {
@@ -706,27 +877,298 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
             const file = event.target.files[0];
             if (!file) return;
 
-            document.getElementById('fileLabel').innerHTML = `<i class="fas fa-file-excel text-success me-2"></i> ${file.name} <span class="badge bg-primary ms-2">Parsing...</span>`;
-            
+            const ext = file.name.split('.').pop().toLowerCase();
+            const fileLabel = document.getElementById('fileLabel');
+            const dropIcon = document.getElementById('dropZoneIcon');
+
+            // Dynamic Icon
+            if (['pdf'].includes(ext)) {
+                dropIcon.className = 'fas fa-file-pdf text-danger mb-2';
+            } else if (['docx', 'doc'].includes(ext)) {
+                dropIcon.className = 'fas fa-file-word text-primary mb-2';
+            } else if (['png', 'jpg', 'jpeg'].includes(ext)) {
+                dropIcon.className = 'fas fa-file-image text-warning mb-2';
+            } else if (['xlsx', 'xls'].includes(ext)) {
+                dropIcon.className = 'fas fa-file-excel text-success mb-2';
+            } else {
+                dropIcon.className = 'fas fa-file-alt text-info mb-2';
+            }
+
+            fileLabel.innerHTML = `<i class="fas fa-spinner fa-spin me-2"></i> Parsing ${file.name}...`;
+
+            if (['xlsx', 'xls'].includes(ext)) {
+                parseExcelFile(file);
+            } else if (ext === 'pdf') {
+                parsePdfFile(file);
+            } else if (['docx', 'doc'].includes(ext)) {
+                parseDocxFile(file);
+            } else if (['png', 'jpg', 'jpeg'].includes(ext)) {
+                parseImageFile(file);
+            } else {
+                parseTextFile(file);
+            }
+        }
+
+        function parseExcelFile(file) {
             const reader = new FileReader();
             reader.onload = function(e) {
-                const data = new Uint8Array(e.target.result);
-                // SheetJS sheet_to_json with defval: '' so empty/blank cells are never omitted
-                const workbook = XLSX.read(data, {type: 'array'});
-                const firstSheetName = workbook.SheetNames[0];
-                const worksheet = workbook.Sheets[firstSheetName];
-                
-                const json = XLSX.utils.sheet_to_json(worksheet, {header: 1, defval: '', raw: false});
-                processCollegeAttendanceJson(json);
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    const json = XLSX.utils.sheet_to_json(worksheet, {header: 1, defval: '', raw: false});
+                    processCollegeAttendanceJson(json);
+                } catch(err) {
+                    console.error("Excel parse error:", err);
+                    parseTextFile(file);
+                }
             };
             reader.readAsArrayBuffer(file);
+        }
+
+        function parsePdfFile(file) {
+            if (!window.pdfjsLib) {
+                alert("PDF Parser loading... Please retry in a second.");
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const typedarray = new Uint8Array(e.target.result);
+                    const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                    let fullText = '';
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        const page = await pdf.getPage(i);
+                        const textContent = await page.getTextContent();
+                        const pageText = textContent.items.map(item => item.str).join(' ');
+                        fullText += pageText + '\n';
+                    }
+                    processExtractedText(fullText, 'PDF Document');
+                } catch (err) {
+                    console.error('PDF parsing error:', err);
+                    alert('Could not extract text from PDF. Ensure the PDF has selectable text.');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function parseDocxFile(file) {
+            if (!window.JSZip) {
+                alert("JSZip library loading... Please retry in a second.");
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const zip = await JSZip.loadAsync(e.target.result);
+                    if (zip.file("word/document.xml")) {
+                        const xmlText = await zip.file("word/document.xml").async("text");
+                        const cleanText = xmlText.replace(/<[^>]+>/g, ' ');
+                        processExtractedText(cleanText, 'Word Document (.docx)');
+                    } else {
+                        parseTextFile(file);
+                    }
+                } catch(err) {
+                    console.error("DOCX parsing error:", err);
+                    parseTextFile(file);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function parseImageFile(file) {
+            if (!window.Tesseract) {
+                alert("Tesseract OCR loading... Please retry in a second.");
+                return;
+            }
+            document.getElementById('fileLabel').innerHTML = `<i class="fas fa-file-image text-warning me-2"></i> ${file.name} <span class="badge bg-warning text-dark ms-2"><i class="fas fa-spinner fa-spin me-1"></i> Scanning Image OCR...</span>`;
+            
+            Tesseract.recognize(
+                file,
+                'eng',
+                { logger: m => {
+                    if (m.status === 'recognizing text') {
+                        const progress = Math.round(m.progress * 100);
+                        document.getElementById('fileLabel').innerHTML = `<i class="fas fa-file-image text-warning me-2"></i> ${file.name} <span class="badge bg-info ms-2">OCR Scanning: ${progress}%</span>`;
+                    }
+                }}
+            ).then(({ data: { text } }) => {
+                processExtractedText(text, 'Image Document (OCR)');
+            }).catch(err => {
+                console.error('OCR Error:', err);
+                alert('Could not extract text from image file.');
+            });
+        }
+
+        let selectedDates = ['<?php echo date('Y-m-d'); ?>'];
+        let lastExtractedText = '';
+        let lastSourceType = '';
+
+        function formatReasonDateJS(rawDate) {
+            if (!rawDate) return '';
+            const parts = rawDate.split('-');
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[1]}`;
+            }
+            return rawDate;
+        }
+
+        function renderSelectedDates() {
+            const container = document.getElementById('selectedDatesContainer');
+            if (!container) return;
+            container.innerHTML = '';
+            
+            if (selectedDates.length === 0) {
+                container.innerHTML = '<span class="text-muted small px-2">No dates selected. Click "+ Add Date" to add dates.</span>';
+                document.getElementById('selectedDatesJson').value = JSON.stringify([]);
+                document.getElementById('tpDate').value = '<?php echo date('Y-m-d'); ?>';
+                return;
+            }
+
+            selectedDates.forEach((d, idx) => {
+                const badge = document.createElement('span');
+                badge.className = 'badge bg-success text-white p-2 d-inline-flex align-items-center gap-2 rounded-pill font-monospace';
+                badge.style.fontSize = '0.85rem';
+                badge.innerHTML = `
+                    <i class="fas fa-calendar-day"></i> ${formatReasonDateJS(d)}
+                    <button type="button" onclick="removeSelectedDate(${idx})" class="btn-close btn-close-white" style="font-size:0.65rem;" aria-label="Remove"></button>
+                `;
+                container.appendChild(badge);
+            });
+
+            document.getElementById('selectedDatesJson').value = JSON.stringify(selectedDates);
+            document.getElementById('tpDate').value = selectedDates[0] || '<?php echo date('Y-m-d'); ?>';
+
+            if (lastExtractedText && lastSourceType) {
+                processExtractedText(lastExtractedText, lastSourceType);
+            }
+        }
+
+        function addSelectedDate() {
+            const input = document.getElementById('datePickerInput');
+            const val = input.value;
+            if (val && !selectedDates.includes(val)) {
+                selectedDates.push(val);
+                renderSelectedDates();
+            }
+        }
+
+        function removeSelectedDate(idx) {
+            selectedDates.splice(idx, 1);
+            renderSelectedDates();
+        }
+
+        function clearAllSelectedDates() {
+            selectedDates = [];
+            renderSelectedDates();
+        }
+
+        function addCollegeStandardDates() {
+            const sampleDates = ['2026-07-10', '2026-07-14', '2026-07-15', '2026-07-21', '2026-07-28'];
+            sampleDates.forEach(d => {
+                if (!selectedDates.includes(d)) {
+                    selectedDates.push(d);
+                }
+            });
+            renderSelectedDates();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSelectedDates();
+        });
+
+        function parseTextFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                processExtractedText(e.target.result || '', 'Text / CSV Document');
+            };
+            reader.readAsText(file);
+        }
+
+        function processExtractedText(text, sourceType) {
+            lastExtractedText = text;
+            lastSourceType = sourceType;
+            parsedRows = [];
+            if (!text || text.trim() === '') return;
+
+            const lines = text.split(/\r?\n/);
+            const regPattern = /\b([0-9]{2}[A-Z0-9]{8,10})\b/gi;
+            
+            const studentMap = {};
+            if (currentSectionStudents && currentSectionStudents.length > 0) {
+                currentSectionStudents.forEach(s => {
+                    studentMap[s.student_id.toUpperCase()] = s.name;
+                });
+            }
+
+            const tbody = document.getElementById('previewBody');
+            tbody.innerHTML = '';
+
+            const processedRegs = new Set();
+            const activeDates = (selectedDates && selectedDates.length > 0) ? selectedDates : ['<?php echo date('Y-m-d'); ?>'];
+
+            lines.forEach(line => {
+                const matches = line.match(regPattern);
+                if (matches) {
+                    matches.forEach(regNoRaw => {
+                        const regNo = regNoRaw.toUpperCase().trim().replace(/\s+/g, '');
+                        if (regNo.length < 5 || regNo.includes('HALLTICKET') || regNo.includes('SNO') || regNo.includes('ROLL')) {
+                            return;
+                        }
+
+                        const lineUpper = line.toUpperCase();
+                        let status = 'present';
+                        let actionBadge = '<span class="badge bg-success"><i class="fas fa-plus-circle me-1"></i> +1 Point Appreciation</span>';
+
+                        if (/\b(AB|ABSENT|A|FAIL|-1)\b/i.test(lineUpper)) {
+                            status = 'absent';
+                            actionBadge = '<span class="badge bg-danger"><i class="fas fa-minus-circle me-1"></i> -1 Penalty</span>';
+                        }
+
+                        const studentName = studentMap[regNo] || '';
+
+                        // Replicate entries for all selected dates!
+                        activeDates.forEach(dateStr => {
+                            const key = regNo + '_' + dateStr;
+                            if (processedRegs.has(key)) return;
+                            processedRegs.add(key);
+
+                            parsedRows.push({
+                                reg_no: regNo,
+                                name: studentName,
+                                status: status,
+                                date: dateStr
+                            });
+
+                            if (parsedRows.length <= 200) {
+                                const tr = document.createElement('tr');
+                                tr.innerHTML = `
+                                    <td>${parsedRows.length}</td>
+                                    <td class="fw-bold font-monospace">${regNo}</td>
+                                    <td>${studentName || '<em class="text-muted">Database student</em>'}</td>
+                                    <td><span class="badge bg-success border font-monospace"><i class="fas fa-calendar-day me-1"></i> ${formatReasonDateJS(dateStr)}</span></td>
+                                    <td><span class="badge bg-secondary">${sourceType}</span></td>
+                                    <td>${actionBadge}</td>
+                                `;
+                                tbody.appendChild(tr);
+                            }
+                        });
+                    });
+                }
+            });
+
+            document.getElementById('fileLabel').innerHTML = `<i class="fas fa-check-circle text-success me-2"></i> ${sourceType} Ready (${parsedRows.length} total entries across ${activeDates.length} date(s))`;
+            document.getElementById('rowCount').innerText = parsedRows.length;
+            document.getElementById('previewContainer').style.display = parsedRows.length > 0 ? 'block' : 'none';
+            document.getElementById('parsedRowsJson').value = JSON.stringify(parsedRows);
         }
 
         function processCollegeAttendanceJson(rows) {
             parsedRows = [];
             if (!rows || rows.length < 1) return;
 
-            // 1. Locate Header Row containing HallTicketNo / Reg / Htno (specifically exclude "STUDENT ROLL LIST" title row)
+            // 1. Locate Header Row containing HallTicketNo / Reg / Htno
             let headerRowIdx = -1;
             let regNoColIdx = -1;
             let nameColIdx = -1;
@@ -746,7 +1188,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                 if (headerRowIdx !== -1) break;
             }
 
-            // Fallback if header row not found
             if (headerRowIdx === -1) {
                 headerRowIdx = 0;
                 regNoColIdx = 1;
@@ -754,8 +1195,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
             }
 
             const headerRow = rows[headerRowIdx] || [];
-            
-            // 2. Locate Date Columns
             let dateCols = [];
             const startCol = Math.max(regNoColIdx, nameColIdx) + 1;
 
@@ -769,7 +1208,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                 }
             }
 
-            // Fallback to single date column if no header date columns found
             if (dateCols.length === 0) {
                 dateCols.push({
                     colIdx: regNoColIdx + 1,
@@ -780,12 +1218,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
             const tbody = document.getElementById('previewBody');
             tbody.innerHTML = '';
 
-            // 3. Process Student Rows
             for (let r = headerRowIdx + 1; r < rows.length; r++) {
                 const row = rows[r] || [];
                 const regNo = String(row[regNoColIdx] || '').trim().toUpperCase().replace(/\s+/g, '');
                 
-                // Skip invalid title/header rows
                 if (!regNo || regNo.length < 5 || regNo.includes('HALLTICKET') || regNo.includes('SNO') || regNo.includes('ROLL')) {
                     continue;
                 }
@@ -797,16 +1233,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                     const cellUpper = cellRaw.toUpperCase();
 
                     let status = 'present';
-                    let actionBadge = '<span class="badge bg-success"><i class="fas fa-plus-circle me-1"></i> +1 Appreciation</span>';
+                    let actionBadge = '<span class="badge bg-success"><i class="fas fa-plus-circle me-1"></i> +1 Point Appreciation</span>';
 
                     if (cellUpper === 'AB' || cellUpper === 'A' || cellUpper === 'ABSENT') {
                         status = 'absent';
                         actionBadge = '<span class="badge bg-danger"><i class="fas fa-minus-circle me-1"></i> -1 Penalty</span>';
                     } else if (cellUpper === '' || cellUpper === 'P' || cellUpper === 'PRESENT' || cellUpper === '1') {
                         status = 'present';
-                        actionBadge = '<span class="badge bg-success"><i class="fas fa-plus-circle me-1"></i> +1 Appreciation</span>';
+                        actionBadge = '<span class="badge bg-success"><i class="fas fa-plus-circle me-1"></i> +1 Point Appreciation</span>';
                     } else {
-                        // Ignore non-attendance text cells
                         continue;
                     }
 
@@ -821,7 +1256,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td>${parsedRows.length}</td>
-                            <td class="fw-bold">${regNo}</td>
+                            <td class="fw-bold font-monospace">${regNo}</td>
                             <td>${studentName || '-'}</td>
                             <td><span class="badge bg-light text-dark border">${dCol.dateStr || 'Default'}</span></td>
                             <td>${cellRaw ? `<span class="badge bg-danger">${cellRaw}</span>` : '<em class="text-success fw-bold">Blank (Present)</em>'}</td>
@@ -832,7 +1267,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['process_excel'])) {
                 }
             }
 
-            document.getElementById('fileLabel').innerHTML = `<i class="fas fa-file-excel text-success me-2"></i> Sheet Ready (${parsedRows.length} attendance entries detected)`;
+            document.getElementById('fileLabel').innerHTML = `<i class="fas fa-file-excel text-success me-2"></i> Excel Ready (${parsedRows.length} attendance entries detected)`;
             document.getElementById('rowCount').innerText = parsedRows.length;
             document.getElementById('previewContainer').style.display = parsedRows.length > 0 ? 'block' : 'none';
             document.getElementById('parsedRowsJson').value = JSON.stringify(parsedRows);

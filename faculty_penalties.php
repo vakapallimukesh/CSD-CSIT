@@ -252,7 +252,7 @@ if (empty($available_classes)) {
 
             <div class="text-end mb-4">
                 <a href="upload_tp_excel.php" class="btn btn-success me-2 fw-bold">
-                    <i class="fas fa-file-excel me-1"></i> Upload T&P Excel Sheet
+                    <i class="fas fa-file-upload me-1"></i> Upload Attendance Document
                 </a>
                 <a href="faculty_dashboard.php" class="btn btn-primary me-2">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
