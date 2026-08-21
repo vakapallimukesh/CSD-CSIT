@@ -3,3 +3,7 @@ cache/
 logs/
 uploads/
 assets/videos/*.mp4
+php.ini
+phpmyadmin/
+phpmyadmin_extract/
+

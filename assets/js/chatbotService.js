@@ -490,7 +490,7 @@ const ChatbotService = (function () {
         // --- DEPARTMENT HEROES & ACHIEVERS ---
         {
             id: 'person_pbs_kruti',
-            fullName: 'P.B.S Kruti',
+            fullName: 'P.B.S Kruthi',
             firstName: 'kruti',
             lastName: 'pbs',
             category: 'Department Hero & Cultural Winner',
@@ -500,7 +500,7 @@ const ChatbotService = (function () {
             branch: 'CSIT',
             regNo: '25B91A0789',
             achievements: '1st Prize Winner in Classical Dance Group Performance',
-            description: 'P.B.S Kruti is a celebrated classical dancer who won 1st Prize in Group Performance at SRKREC Annual Day.',
+            description: 'P.B.S Kruthi is a celebrated classical dancer who won 1st Prize in Group Performance at SRKREC Annual Day.',
             searchableAliases: ['kruti', 'pbs kruti', 'p.b.s kruti', 'kruti dance winner'],
             url: 'heroes_of_department.php',
             ctaText: 'View Department Heroes →'
@@ -1191,7 +1191,7 @@ Both programs are 4-Year B.Tech degrees (8 Semesters, 160 Credits) approved by A
             title: 'Heroes of the Department (Hall of Fame)',
             keywords: ['who are the department heroes', 'hall of fame', 'department heroes', 'heroes page', 'heroes list'],
             content: `Heroes of the Department (Hall of Fame):
-1. P.B.S Kruti (Reg: 25B91A0789) — 🥇 1st Prize Winner in Classical Dance at 45th SRKREC Annual Day.
+1. P.B.S Kruthi (Reg: 25B91A0789) — 🥇 1st Prize Winner in Classical Dance at 45th SRKREC Annual Day.
 2. R. Lakshmi Prasanna (Reg: 24B91A6245) — 🥈 2nd Prize Winner in Classical Dance at SRKREC Annual Day.
 3. D Pooja Sai Praveena (Reg: 24B91A6218) — 🥇 Gold Medalist Karate Champion & JNTUK Athlete.
 4. Preeti Avvula (Reg: 24B91A0701) — 🎙️ TEDx SRKR Core Organizer & Master Anchor.
@@ -1756,7 +1756,7 @@ Both programs are 4-Year B.Tech degrees (8 Semesters, 160 Credits) approved by A
                     category: 'Cultural Achievements',
                     title: 'Classical Dance Competition Winners',
                     content: `Classical Dance Winners at 45th SRKREC Annual Day:<br><br>
-1. 🥇 <strong>P.B.S Kruti</strong> (Reg: 25B91A0789) — 1st Prize Winner in Classical Dance Group Performance.<br>
+1. 🥇 <strong>P.B.S Kruthi</strong> (Reg: 25B91A0789) — 1st Prize Winner in Classical Dance Group Performance.<br>
 2. 🥈 <strong>R. Lakshmi Prasanna</strong> (Reg: 24B91A6245) — 2nd Prize Winner in Classical Dance Group Performance.`,
                     url: 'heroes_of_department.php',
                     ctaText: 'View Cultural Achievers →'
