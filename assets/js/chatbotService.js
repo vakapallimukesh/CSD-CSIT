@@ -2126,7 +2126,7 @@ Students compete in continuous hackathons, coding contests, sports, and cultural
                     content: `Placement Highlights & Statistics:<br><br>
 • <strong>Placement Rate:</strong> 66% Students Placed across CSD & CSIT.<br>
 • <strong>Highest Package:</strong> ₹12.0 LPA (Microsoft India).<br>
-• <strong>Average Package:</strong> ₹5.1 LPA.<br>
+• <strong>Average Package:</strong> ₹4.7 LPA.<br>
 • <strong>Top Recruiting Companies:</strong> Microsoft India, TCS, Infosys, Wipro, Cognizant, Accenture, Amazon, Capgemini, Tech Mahindra, Zennith Digital Tech LLP.<br><br>
 Ask "Show placement overview" or "Who got placed at Microsoft" to view details!`,
                     url: 'placements.php',
@@ -2217,7 +2217,7 @@ Ask "Show placement overview" or "Who got placed at Microsoft" to view details!`
 
             let contentText = `<strong>${filterLabel.trim() || 'Department'} Placement Overview & Recruiter Highlights:</strong><br><br>
 • <strong>Highest Package:</strong> ₹12.0 LPA (Microsoft India)<br>
-• <strong>Average Package:</strong> ₹5.1 LPA<br>
+• <strong>Average Package:</strong> ₹4.7 LPA<br>
 • <strong>Placement Rate:</strong> 66% Students Placed<br>
 • <strong>Top Recruiting Companies:</strong> Microsoft India, TCS, Infosys, Wipro, Cognizant, Accenture, Amazon, Capgemini, Tech Mahindra.<br><br>`;
 

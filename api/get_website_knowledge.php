@@ -672,7 +672,7 @@ $featuredInternships = [
 // Placement Overview Statistics from placements.php
 $placementStats = [
     'highestPackage' => '₹12.0 LPA (Microsoft India)',
-    'averagePackage' => '₹5.1 LPA',
+    'averagePackage' => '₹4.7 LPA',
     'placementRate' => '66% Students Placed',
     'topRecruiters' => ['Microsoft India', 'TCS', 'Infosys', 'Wipro', 'Cognizant', 'Accenture', 'Amazon', 'Capgemini', 'Tech Mahindra', 'Zennith Digital Tech LLP', 'EduSkills'],
     'batchGalleries' => ['2021-25 Batch Gallery', '2022-26 Batch Gallery']

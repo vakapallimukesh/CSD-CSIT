@@ -2237,7 +2237,7 @@ if (isset($conn) && $conn) {
                                         <div style="font-size: 0.85rem; color: #64748b; font-weight: 700;">Highest Pkg</div>
                                     </div>
                                     <div style="background: #fdfbf7; padding: 16px 28px; border-radius: 16px; border: 1px solid #f3eae1;">
-                                        <div style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 900; color: #d97706;">₹5.1 LPA</div>
+                                        <div style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; font-weight: 900; color: #d97706;">₹4.7 LPA</div>
                                         <div style="font-size: 0.85rem; color: #64748b; font-weight: 700;">Average CTC</div>
                                     </div>
                                 </div>
@@ -2267,7 +2267,7 @@ if (isset($conn) && $conn) {
                                         </div>
                                         <div class="text-end">
                                             <span style="font-size: 0.8rem; color: #64748b; font-weight: 600; display: block;">Average CTC</span>
-                                            <span style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 800; color: #6366f1;">₹5.1 LPA</span>
+                                            <span style="font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 800; color: #6366f1;">₹4.7 LPA</span>
                                         </div>
                                     </div>
                                 </div>
@@ -2977,7 +2977,7 @@ if (isset($conn) && $conn) {
                             <span class="placement-meta">Academics & Careers</span>
                             <h1 style="font-size: 3.2rem; font-weight: 800; color: #0f172a; line-height: 1.15; margin-bottom: 8px;">Exceptional Placement</h1>
                             <h2 style="font-size: 2.2rem; font-weight: 700; color: #475569; margin-bottom: 20px;">Record at CSD & CSIT</h2>
-                            <p style="font-size: 1rem; color: #64748b; line-height: 1.6; max-width: 480px; margin-bottom: 30px;">66% placement rate, 50+ students placed in top MNCs out of 70, and average CTC of ₹5.1L with highest reaching ₹12L.</p>
+                            <p style="font-size: 1rem; color: #64748b; line-height: 1.6; max-width: 480px; margin-bottom: 30px;">66% placement rate, 50+ students placed in top MNCs out of 70, and average CTC of ₹4.7L with highest reaching ₹12L.</p>
                         </div>
                         
                         <div class="placement-zoom-card-wrapper">
@@ -3018,7 +3018,7 @@ if (isset($conn) && $conn) {
                     <div class="col-lg-6 placement-right-col d-flex flex-column align-items-lg-end justify-content-center">
                         <div class="placement-metrics-reveal" style="width: 100%; max-width: 440px;">
                             <div class="revenue-display" style="text-align: right; margin-bottom: 40px;">
-                                <div class="revenue-amount" style="font-size: 110px; font-weight: 700; color: #000; line-height: 1; letter-spacing: -0.02em;">₹5.1L</div>
+                                <div class="revenue-amount" style="font-size: 110px; font-weight: 700; color: #000; line-height: 1; letter-spacing: -0.02em;">₹4.7L</div>
                                 <div class="revenue-label" style="font-size: 14px; color: #6b7280; margin-top: 5px; font-weight: 400;">Average CTC</div>
                             </div>
                             

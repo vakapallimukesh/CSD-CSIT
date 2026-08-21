@@ -393,7 +393,7 @@ body {
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="stat-card fade-in">
-                        <div class="stat-number">₹5.1L</div>
+                        <div class="stat-number">₹4.7L</div>
                         <div class="stat-label">Average Package</div>
                         <div class="stat-sublabel">Industry Leading</div>
                     </div>
