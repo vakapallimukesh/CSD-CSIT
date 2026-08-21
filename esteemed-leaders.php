@@ -340,7 +340,7 @@ body {
     border: 3.5px solid #f59e0b;
     box-shadow: 0 8px 20px rgba(217, 119, 6, 0.18);
     position: relative;
-    background: #1a0d06;
+    background: #fffbeb;
 }
 
 .leader-photo-right img {
@@ -740,7 +740,7 @@ body {
                                         <div class="leader-photo-right">
                                             <img src="<?php echo htmlspecialchars($leader['photo']); ?>" 
                                                  alt="<?php echo htmlspecialchars($leader['name']); ?>" 
-                                                 onerror="this.onerror=null; this.src='assets/images/logo2.png';"
+                                                 onerror="this.onerror=null; this.src='logo2.png';"
                                                  loading="lazy">
                                         </div>
                                     </div>
