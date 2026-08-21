@@ -780,16 +780,17 @@ const studentAchievements = [
         event: "45th Annual Day Celebrations of SRKREC",
         category: "sports",
         categoryName: "Cultural & Arts",
-        team: "P.B.S Kruti (1/4 CSIT)",
+        team: "P.B.S Kruthi (1/4 CSIT)",
         award: "🥇 1st Prize Winner",
         cashAward: "SRKREC Annual Day Honor",
         date: "45th Annual Day",
         stage: "Group Performance",
         department: "1/4 CSIT, Department of CSD & CSIT",
-        description: "“Celebrating talent and grace! ✨ Hearty congratulations to P.B.S Kruti from 1/4 CSIT for securing 1st Prize in Classical Dance Group Performance at the 45th Annual Day Celebrations of SRKREC! Her dedication, elegance, and mastery of classical arts are truly inspiring.”",
+        description: "My classical dance journey began in 2nd class when my love for music naturally led me to dance. Over the years, dance taught me discipline, patience, expression, and confidence, while giving me many opportunities to perform on different stages. Although hostel life brought a pause to my journey, my passion never faded. College gave me the opportunity to return to the stage, learn again, and continue doing what I love. Today, dance is more than a skill for me—it is a part of who I am, my happy place, and a journey I want to keep pursuing with every step.",
         images: [
             "assets/achievements/classical-dance-1st-kruti.jpg"
         ],
+        objectPosition: "50% 25%",
         isSquare: true,
         featured: true,
         badges: [
@@ -811,10 +812,11 @@ const studentAchievements = [
         date: "45th Annual Day",
         stage: "Group Performance",
         department: "2/4 CSD, Department of CSD & CSIT",
-        description: "“Congratulations to R. Lakshmi Prasanna from 2/4 CSD for winning 2nd Prize in Classical Dance Group Performance at the 45th Annual Day Celebrations of SRKREC! Her dedication, expression, and passion for Indian classical dance are truly inspiring.”",
+        description: "Rellu Lakshmi Prasanna, a final-year Computer Science and Design student, began her Kuchipudi journey in 5th class out of passion for classical dance. Under the guidance of Dr. Chinta Ravi Balakrishna Garu, she completed her Certificate Course and is pursuing her Diploma in Kuchipudi. She has performed on prestigious platforms, including the South Zone Youth Festival, and received several recognitions. In 2025, she founded Saraswathi Nrithyalaya to share her knowledge with young dancers and also works as a school dance teacher. Balancing academics, teaching, and dance, she continues to pursue her dream of becoming a professional Kuchipudi dancer and representing Indian classical dance on international platforms.",
         images: [
             "assets/achievements/classical-dance-2nd-lakshmi-prasanna.jpg"
         ],
+        objectPosition: "50% 38%",
         isSquare: true,
         featured: true,
         badges: [
@@ -875,18 +877,17 @@ function clearAllSlideshowTimers() {
 
 function renderCardHtml(item) {
     const frameClass = item.isSquare ? 'editorial-img-container square-frame' : 'editorial-img-container';
+    const imgStyle = item.objectPosition ? `style="object-position: ${item.objectPosition};"` : '';
     return `
         <div class="col-lg-4 col-md-6 col-12 d-flex">
             <div class="editorial-card w-100" id="card-${item.id}">
                 <!-- HD Media Container (Image or Video) -->
                 <div class="${frameClass}" id="imgBox-${item.id}">
-                    <span class="top-photo-badge">${item.award}</span>
-                    
                     ${item.isVideo ? `
                         <video src="${item.video}" autoplay loop muted playsinline preload="metadata" style="width:100%; height:100%; object-fit:cover; border-radius:14px; pointer-events:none;"></video>
                         <span class="bottom-photo-count"><i class="fas fa-video me-1 text-warning"></i> Promo Video</span>
                     ` : `
-                        <img id="activeMainImg-${item.id}" src="${item.images[0]}" alt="${item.title}" loading="lazy" onclick="openLightbox('${item.id}', getCurrentIdx('${item.id}'))">
+                        <img id="activeMainImg-${item.id}" src="${item.images[0]}" alt="${item.title}" ${imgStyle} loading="lazy" onclick="openLightbox('${item.id}', getCurrentIdx('${item.id}'))">
                         <div class="editorial-img-overlay">
                             <span class="btn btn-light rounded-pill px-3 py-1.5 fw-bold text-dark small shadow-sm">
                                 <i class="fas fa-search-plus me-1 text-warning"></i> View Photo

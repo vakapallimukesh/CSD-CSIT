@@ -1,1034 +1,1100 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    @session_start();
-}
-include './connect.php';
+if (session_status() === PHP_SESSION_NONE) session_start();
+include 'head.php';
 ?>
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en">
 <head>
-    <?php include "./head.php"; ?>
-    <title>Our Alumni - Department of CSD & CSIT | SRKR Engineering College</title>
-    
-    <!-- Google Fonts & FontAwesome -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Alumni - SRKR Engineering College (CSD & CSIT)</title>
+    <meta name="description" content="Official alumni portal of CSD & CSIT departments at SRKR Engineering College. Discover our graduates, placements, careers, and achievements.">
+    <link rel="icon" href="logo-bg.png">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --alumni-primary: #1a0d06;
-            --alumni-accent: #d97706;
-            --alumni-accent-hover: #b45309;
-            --alumni-gold: #f59e0b;
-            --alumni-bg-soft: #fffbf5;
-            --alumni-card-border: rgba(217, 119, 6, 0.18);
-            --alumni-text-main: #1e293b;
-            --alumni-text-muted: #64748b;
-            --font-display: 'Outfit', sans-serif;
-            --font-body: 'Inter', sans-serif;
-        }
 
-        body {
-            font-family: var(--font-body);
-            background-color: #f8fafc;
-            color: var(--alumni-text-main);
+    <!-- Scoped Light Theme Styles strictly for Alumni Page -->
+    <style>
+        .alumni-page-scope {
+            --alumni-bg-main: #F8F7F3;
+            --alumni-bg-soft: #F3F7FC;
+            --alumni-card-bg: #FFFFFF;
+            --alumni-primary: #315C8C;
+            --alumni-navy: #172B4D;
+            --alumni-gold: #C9A45C;
+            --alumni-body: #5F6B7A;
+            --alumni-border: #E5EAF0;
+
+            font-family: 'Inter', sans-serif;
+            background-color: var(--alumni-bg-main);
+            color: var(--alumni-body);
             overflow-x: hidden;
         }
 
-        /* Hero Section */
-        .alumni-hero {
-            background: linear-gradient(135deg, #1a0d06 0%, #2d160a 60%, #421e0d 100%);
+        .alumni-page-scope h1, 
+        .alumni-page-scope h2, 
+        .alumni-page-scope h3, 
+        .alumni-page-scope h4, 
+        .alumni-page-scope h5 {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: var(--alumni-navy);
+        }
+
+        /* ── Standardized Section Header ── */
+        .alumni-section-header {
+            text-align: center;
+            margin-bottom: 50px;
             position: relative;
-            padding: 85px 0 70px;
-            color: #ffffff;
-            overflow: hidden;
-            border-bottom: 3px solid var(--alumni-accent);
         }
 
-        .alumni-hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 700px;
-            height: 700px;
-            background: radial-gradient(circle, rgba(217, 119, 6, 0.18) 0%, rgba(0, 0, 0, 0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
+        .alumni-section-header .sub-tag {
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--alumni-primary);
+            margin-bottom: 8px;
+            display: block;
         }
 
-        .alumni-hero .hero-badge {
-            background: rgba(245, 158, 11, 0.15);
-            border: 1px solid rgba(245, 158, 11, 0.35);
-            color: #fcd34d;
+        .alumni-section-header h2 {
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: var(--alumni-navy);
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .gold-accent-line {
+            width: 60px;
+            height: 3.5px;
+            background: var(--alumni-gold);
+            margin: 0 auto 16px auto;
+            border-radius: 4px;
+        }
+
+        .alumni-section-header p {
+            color: var(--alumni-body);
+            font-size: 1.05rem;
+            max-width: 620px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* ── 2. Hero Section ── */
+        .alumni-hero-section {
+            background: linear-gradient(135deg, #F8F7F3 0%, #EEF5FC 100%);
+            padding: 90px 0 70px 0;
+            border-bottom: 1px solid var(--alumni-border);
+            position: relative;
+        }
+
+        .hero-tag-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(49, 92, 140, 0.08);
+            border: 1px solid rgba(49, 92, 140, 0.18);
+            color: var(--alumni-primary);
             padding: 6px 18px;
             border-radius: 50px;
             font-size: 0.82rem;
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
             margin-bottom: 18px;
-            backdrop-filter: blur(10px);
         }
 
-        .alumni-hero h1 {
-            font-family: var(--font-display);
-            font-weight: 900;
+        .hero-heading {
             font-size: 3.2rem;
-            line-height: 1.15;
-            color: #ffffff;
-            margin-bottom: 16px;
+            font-weight: 800;
+            color: var(--alumni-navy);
+            line-height: 1.2;
+            margin-bottom: 18px;
+            letter-spacing: -1px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: lightFadeUp 0.8s ease forwards 0.1s;
         }
 
-        .alumni-hero h1 span {
+        .hero-heading span {
             color: var(--alumni-gold);
-            background: linear-gradient(120deg, #f59e0b, #fbbf24);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
 
-        .alumni-hero p.subtitle {
-            font-size: 1.18rem;
-            color: #e2e8f0;
-            max-width: 720px;
-            font-weight: 400;
-            line-height: 1.6;
+        .hero-desc {
+            font-size: 1.15rem;
+            color: var(--alumni-body);
+            line-height: 1.75;
+            margin-bottom: 30px;
+            max-width: 640px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: lightFadeUp 0.8s ease forwards 0.3s;
         }
 
-        /* Introduction Box */
-        .intro-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 30px 35px;
-            border: 1px solid var(--alumni-card-border);
-            box-shadow: 0 10px 30px rgba(180, 83, 9, 0.06);
-            margin-top: -35px;
-            position: relative;
-            z-index: 10;
-        }
-
-        .intro-card p {
-            font-size: 1.05rem;
-            color: #334155;
-            line-height: 1.7;
-            margin: 0;
-        }
-
-        /* Stat Cards */
-        .alumni-stat-card {
-            background: #ffffff;
-            border-radius: 18px;
-            padding: 24px 20px;
-            border: 1px solid rgba(226, 232, 240, 0.8);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            text-align: center;
-            height: 100%;
-        }
-
-        .alumni-stat-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--alumni-accent);
-            box-shadow: 0 12px 30px rgba(217, 119, 6, 0.12);
-        }
-
-        .alumni-stat-icon {
-            width: 52px;
-            height: 52px;
-            border-radius: 14px;
-            background: rgba(217, 119, 6, 0.12);
-            color: var(--alumni-accent);
+        .hero-action-btn {
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.4rem;
-            margin-bottom: 12px;
+            gap: 10px;
+            background: var(--alumni-primary);
+            color: #FFFFFF;
+            padding: 13px 32px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.96rem;
+            text-decoration: none;
+            box-shadow: 0 10px 25px rgba(49, 92, 140, 0.25);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: lightFadeUp 0.8s ease forwards 0.5s;
         }
 
-        .alumni-stat-number {
-            font-family: var(--font-display);
-            font-size: 2.2rem;
+        .hero-action-btn:hover {
+            background: var(--alumni-navy);
+            color: #FFFFFF;
+            box-shadow: 0 15px 35px rgba(23, 43, 77, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .hero-img-box {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(23, 43, 77, 0.12);
+            border: 4px solid #FFFFFF;
+            opacity: 0;
+            transform: scale(0.96);
+            animation: lightScaleIn 0.9s ease forwards 0.4s;
+        }
+
+        .hero-img-box img {
+            width: 100%;
+            height: 380px;
+            object-fit: cover;
+            display: block;
+        }
+
+        @keyframes lightFadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes lightScaleIn {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ── 3. Alumni Statistics Cards ── */
+        .stats-cards-wrapper {
+            margin-top: 50px;
+        }
+
+        .stat-card-white {
+            background: #FFFFFF;
+            border: 1px solid var(--alumni-border);
+            border-radius: 20px;
+            padding: 26px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(23, 43, 77, 0.04);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card-white:hover {
+            transform: translateY(-4px);
+        }
+
+        .stat-num-navy {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 2.3rem;
             font-weight: 800;
-            color: var(--alumni-primary);
-            line-height: 1;
-            margin-bottom: 4px;
+            color: var(--alumni-navy);
+            line-height: 1.1;
         }
 
-        .alumni-stat-label {
+        .stat-num-navy span {
+            color: var(--alumni-gold);
+        }
+
+        .stat-lbl-gray {
             font-size: 0.88rem;
             font-weight: 600;
-            color: var(--alumni-text-muted);
+            color: var(--alumni-body);
+            margin-top: 6px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
         }
 
-        /* Search & Filter Bar */
-        .filter-wrapper {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 24px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.04);
-            margin-bottom: 40px;
+        /* ── 4. Our Batches Section & Group Photo Cards ── */
+        .batches-light-section {
+            background-color: var(--alumni-bg-main);
+            padding: 90px 0;
         }
 
-        .filter-wrapper .form-control,
-        .filter-wrapper .form-select {
-            border-radius: 12px;
-            border: 1.5px solid #cbd5e1;
-            padding: 11px 16px;
-            font-size: 0.92rem;
-            color: #1e293b;
-            transition: all 0.25s ease;
-        }
-
-        .filter-wrapper .form-control:focus,
-        .filter-wrapper .form-select:focus {
-            border-color: var(--alumni-accent);
-            box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
-        }
-
-        /* Section Titles */
-        .section-header-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--alumni-accent);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-
-        .section-main-title {
-            font-family: var(--font-display);
-            font-size: 2.1rem;
-            font-weight: 800;
-            color: var(--alumni-primary);
-            margin-bottom: 25px;
-        }
-
-        /* Alumni Cards */
-        .alumni-card {
-            background: #ffffff;
-            border-radius: 20px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+        .batch-photo-card {
+            background: #FFFFFF;
+            border: 1px solid var(--alumni-border);
+            border-radius: 24px;
             overflow: hidden;
-            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-            height: 100%;
-            display: flex;
-            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(23, 43, 77, 0.06);
+            transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+            cursor: pointer;
             position: relative;
         }
 
-        .alumni-card:hover {
-            transform: translateY(-7px);
-            border-color: rgba(217, 119, 6, 0.4);
-            box-shadow: 0 16px 36px rgba(217, 119, 6, 0.12);
+        .batch-photo-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 45px rgba(23, 43, 77, 0.12);
+            border-color: var(--alumni-gold);
         }
 
-        .alumni-card-header {
-            padding: 22px 22px 12px;
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-        }
-
-        .alumni-avatar-box {
-            width: 72px;
-            height: 72px;
-            border-radius: 18px;
+        .batch-img-wrapper {
+            position: relative;
+            height: 260px;
             overflow: hidden;
-            background: linear-gradient(135deg, #1a0d06, #d97706);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ffffff;
-            font-family: var(--font-display);
-            font-size: 1.6rem;
-            font-weight: 800;
-            flex-shrink: 0;
-            border: 2px solid #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .alumni-avatar-box img {
+        .batch-img-wrapper img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.6s ease;
         }
 
-        .alumni-meta-info h5 {
-            font-family: var(--font-display);
-            font-weight: 800;
-            font-size: 1.18rem;
-            color: var(--alumni-primary);
-            margin: 0 0 4px 0;
+        .batch-photo-card:hover .batch-img-wrapper img {
+            transform: scale(1.05);
         }
 
-        .alumni-meta-info .role-text {
-            font-size: 0.9rem;
+        .batch-card-body {
+            padding: 28px;
+            background: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .batch-tag-name {
+            font-size: 0.78rem;
             font-weight: 700;
-            color: var(--alumni-accent);
+            color: var(--alumni-gold);
+            text-transform: uppercase;
+            letter-spacing: 1px;
             margin-bottom: 4px;
         }
 
-        .alumni-meta-info .company-text {
-            font-size: 0.85rem;
-            color: var(--alumni-text-muted);
-            font-weight: 600;
+        .batch-card-title {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--alumni-navy);
+            margin: 0;
+        }
+
+        .batch-count-pill {
+            background: var(--alumni-bg-soft);
+            color: var(--alumni-primary);
+            font-weight: 700;
+            font-size: 0.88rem;
+            padding: 6px 14px;
+            border-radius: 30px;
+            margin-top: 6px;
+            display: inline-block;
+        }
+
+        .explore-batch-link {
+            font-weight: 700;
+            font-size: 0.94rem;
+            color: var(--alumni-primary);
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            transition: gap 0.3s ease, color 0.3s ease;
         }
 
-        .alumni-card-body {
-            padding: 12px 22px 20px;
-            flex-grow: 1;
+        .batch-photo-card:hover .explore-batch-link {
+            color: var(--alumni-gold);
+            gap: 12px;
+        }
+
+        /* ── 5. Directory Modal & Profile Grid Cards ── */
+        .light-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: rgba(23, 43, 77, 0.6);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .light-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .light-modal-dialog {
+            background: #FFFFFF;
+            border: 1px solid var(--alumni-border);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 1100px;
+            max-height: 90vh;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .alumni-tag-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 14px;
-        }
-
-        .alumni-tag {
-            background: #f1f5f9;
-            color: #475569;
-            font-size: 0.76rem;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 50px;
-            border: 1px solid #e2e8f0;
-        }
-
-        .alumni-tag.tag-batch {
-            background: #fffbeb;
-            color: #b45309;
-            border-color: #fde68a;
-        }
-
-        .alumni-tag.tag-branch {
-            background: #eff6ff;
-            color: #1d4ed8;
-            border-color: #bfdbfe;
-        }
-
-        .alumni-desc {
-            font-size: 0.88rem;
-            color: #475569;
-            line-height: 1.5;
-            margin-bottom: 16px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+            box-shadow: 0 25px 60px rgba(23, 43, 77, 0.2);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
             overflow: hidden;
         }
 
-        .alumni-card-footer {
-            padding-top: 12px;
-            border-top: 1px solid #f1f5f9;
+        .light-modal.active .light-modal-dialog {
+            transform: scale(1);
+        }
+
+        .light-modal-header {
+            padding: 24px 32px;
+            background: var(--alumni-bg-soft);
+            border-bottom: 1px solid var(--alumni-border);
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
-        .btn-view-profile {
-            background: rgba(217, 119, 6, 0.1);
-            color: var(--alumni-accent);
-            border: none;
-            border-radius: 12px;
-            padding: 8px 16px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            transition: all 0.25s ease;
+        .light-modal-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--alumni-navy);
+            margin: 0;
         }
 
-        .btn-view-profile:hover {
-            background: var(--alumni-accent);
-            color: #ffffff;
-        }
-
-        .social-link-btn {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
-            background: #f1f5f9;
-            color: #0077b5;
-            display: inline-flex;
+        .light-modal-close {
+            background: #FFFFFF;
+            border: 1px solid var(--alumni-border);
+            color: var(--alumni-body);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.95rem;
-            transition: all 0.25s ease;
-            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
         }
 
-        .social-link-btn:hover {
-            background: #0077b5;
-            color: #ffffff;
+        .light-modal-close:hover {
+            background: #Fee2e2;
+            color: #ef4444;
+            border-color: #fca5a5;
         }
 
-        /* Notable Alumni Spotlight Cards */
-        .notable-card {
-            background: linear-gradient(135deg, #ffffff 0%, #fffbf5 100%);
-            border: 2px solid #fde68a;
-            border-radius: 22px;
-            padding: 24px;
-            box-shadow: 0 10px 28px rgba(217, 119, 6, 0.08);
+        .light-search-container {
+            padding: 18px 32px;
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--alumni-border);
+        }
+
+        .light-search-box {
             position: relative;
         }
 
-        .notable-badge {
+        .light-search-box i {
             position: absolute;
-            top: 16px;
-            right: 16px;
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-            color: #ffffff;
-            font-size: 0.72rem;
-            font-weight: 800;
-            padding: 4px 12px;
-            border-radius: 50px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 10px rgba(180, 83, 9, 0.25);
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            font-size: 1rem;
         }
 
-        /* Testimonials / Success Stories */
-        .story-card {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 26px;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+        .light-search-input {
+            width: 100%;
+            background: var(--alumni-bg-main);
+            border: 1px solid var(--alumni-border);
+            padding: 12px 20px 12px 48px;
+            border-radius: 12px;
+            color: var(--alumni-navy);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .light-search-input:focus {
+            border-color: var(--alumni-primary);
+            background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(49, 92, 140, 0.12);
+        }
+
+        .light-modal-body {
+            padding: 30px 32px;
+            overflow-y: auto;
+            flex: 1;
+            background: var(--alumni-bg-main);
+        }
+
+        /* Profile Cards Grid */
+        .profile-card-item {
+            background: #FFFFFF;
+            border: 1px solid var(--alumni-border);
+            border-radius: 18px;
+            padding: 22px;
+            text-align: center;
+            box-shadow: 0 6px 20px rgba(23, 43, 77, 0.04);
+            transition: all 0.3s ease;
             height: 100%;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
-        .story-quote {
-            font-size: 0.95rem;
-            color: #334155;
-            font-style: italic;
-            line-height: 1.6;
-            margin-bottom: 20px;
+        .profile-card-item:hover {
+            transform: translateY(-4px);
+            border-color: var(--alumni-gold);
+            box-shadow: 0 12px 30px rgba(23, 43, 77, 0.09);
         }
 
-        .story-author {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .profile-card-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 14px auto;
+            border: 2px solid var(--alumni-gold);
         }
 
-        /* CTA Section */
-        .alumni-cta {
-            background: linear-gradient(135deg, #1a0d06 0%, #2a150a 100%);
-            border-radius: 26px;
-            padding: 55px 40px;
-            color: #ffffff;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            border: 2px solid var(--alumni-accent);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-            margin-top: 50px;
-            margin-bottom: 60px;
+        .profile-card-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--alumni-navy);
+            margin-bottom: 4px;
         }
 
-        .alumni-cta h2 {
-            font-family: var(--font-display);
-            font-weight: 900;
-            font-size: 2.3rem;
-            color: #ffffff;
+        .profile-card-reg {
+            font-family: monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--alumni-primary);
+            background: var(--alumni-bg-soft);
+            padding: 2px 10px;
+            border-radius: 6px;
+            display: inline-block;
             margin-bottom: 12px;
         }
 
-        .alumni-cta p {
-            color: #e2e8f0;
-            font-size: 1.08rem;
-            max-width: 650px;
-            margin: 0 auto 28px;
+        .profile-card-view-btn {
+            background: transparent;
+            border: 1px solid var(--alumni-border);
+            color: var(--alumni-primary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 8px 18px;
+            border-radius: 30px;
+            transition: all 0.25s ease;
+            width: 100%;
+            margin-top: 10px;
         }
 
-        .btn-cta-primary {
-            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-            color: #ffffff;
-            border: none;
-            border-radius: 50px;
-            padding: 12px 32px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            box-shadow: 0 6px 20px rgba(217, 119, 6, 0.4);
+        .profile-card-item:hover .profile-card-view-btn {
+            background: var(--alumni-primary);
+            color: #FFFFFF;
+            border-color: var(--alumni-primary);
+        }
+
+        /* ── 6. Separate Placements Section ── */
+        .placements-light-section {
+            background-color: var(--alumni-bg-soft);
+            padding: 90px 0;
+            border-top: 1px solid var(--alumni-border);
+            border-bottom: 1px solid var(--alumni-border);
+        }
+
+        .placement-pill-filters {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .light-pill {
+            background: #FFFFFF;
+            border: 1px solid var(--alumni-border);
+            color: var(--alumni-body);
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .btn-cta-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(217, 119, 6, 0.5);
-            color: #ffffff;
+        .light-pill.active, .light-pill:hover {
+            background: var(--alumni-primary);
+            color: #FFFFFF;
+            border-color: var(--alumni-primary);
+            box-shadow: 0 4px 15px rgba(49, 92, 140, 0.2);
         }
 
-        .btn-cta-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 50px;
-            padding: 12px 28px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            backdrop-filter: blur(10px);
+        .placement-white-card {
+            background: #FFFFFF;
+            border: 1px solid var(--alumni-border);
+            border-radius: 20px;
+            padding: 26px;
+            box-shadow: 0 8px 25px rgba(23, 43, 77, 0.04);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             transition: all 0.3s ease;
         }
 
-        .btn-cta-secondary:hover {
-            background: rgba(255, 255, 255, 0.2);
-            color: #ffffff;
+        .placement-white-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--alumni-gold);
+            box-shadow: 0 15px 35px rgba(23, 43, 77, 0.09);
         }
 
-        /* Profile Modal */
-        .modal-header-custom {
-            background: linear-gradient(135deg, #1a0d06 0%, #2d160a 100%);
-            color: #ffffff;
-            padding: 25px 30px;
-            border-radius: 20px 20px 0 0;
+        .placement-card-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
         }
 
-        .modal-body-custom {
-            padding: 30px;
+        .comp-tag {
+            background: var(--alumni-bg-soft);
+            border: 1px solid var(--alumni-border);
+            color: var(--alumni-navy);
+            font-weight: 700;
+            font-size: 0.85rem;
+            padding: 5px 12px;
+            border-radius: 8px;
+        }
+
+        .pkg-tag {
+            background: rgba(201, 164, 92, 0.15);
+            color: #927027;
+            border: 1px solid rgba(201, 164, 92, 0.4);
+            font-weight: 800;
+            font-size: 0.85rem;
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .placement-student-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 15px;
+        }
+
+        .placement-student-img {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--alumni-gold);
+        }
+
+        .placement-student-name {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--alumni-navy);
+            margin: 0;
+        }
+
+        .placement-student-roll {
+            font-size: 0.82rem;
+            color: var(--alumni-body);
+            margin: 0;
+        }
+
+        /* ── 7. Where Are They Now Section ── */
+        .where-light-section {
+            background-color: var(--alumni-bg-main);
+            padding: 90px 0;
+        }
+
+        .where-white-card {
+            background: #FFFFFF;
+            border: 1px solid var(--alumni-border);
+            border-radius: 20px;
+            padding: 26px;
+            box-shadow: 0 6px 20px rgba(23, 43, 77, 0.04);
+            height: 100%;
+            transition: transform 0.3s ease;
+        }
+
+        .where-white-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--alumni-primary);
+        }
+
+        .where-icon-box {
+            width: 48px;
+            height: 48px;
+            background: var(--alumni-bg-soft);
+            color: var(--alumni-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+        }
+
+        .where-white-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--alumni-navy);
+            margin-bottom: 8px;
+        }
+
+        .where-white-card p {
+            font-size: 0.9rem;
+            color: var(--alumni-body);
+            line-height: 1.55;
+            margin: 0;
+        }
+
+        /* ── 8. Alumni Achievements ── */
+        .achievements-light-section {
+            background-color: var(--alumni-bg-soft);
+            padding: 90px 0;
+            border-top: 1px solid var(--alumni-border);
+        }
+
+        /* ── 9. Final CTA Section ── */
+        .cta-light-section {
+            background: linear-gradient(135deg, #EEF5FC 0%, #F8F7F3 100%);
+            padding: 80px 0;
+            text-align: center;
+            border-top: 1px solid var(--alumni-border);
+        }
+
+        .cta-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--alumni-navy);
+            margin-bottom: 12px;
+        }
+
+        .cta-subtitle {
+            font-size: 1.05rem;
+            color: var(--alumni-body);
+            margin-bottom: 28px;
+        }
+
+        /* ── Individual Profile Modal ── */
+        .profile-light-body {
+            padding: 35px;
+            text-align: center;
+        }
+
+        .profile-light-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--alumni-gold);
+            margin: 0 auto 16px auto;
+            box-shadow: 0 8px 25px rgba(23, 43, 77, 0.12);
+        }
+
+        .profile-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            text-align: left;
+            margin-top: 22px;
+            background: var(--alumni-bg-soft);
+            padding: 18px;
+            border-radius: 14px;
+            border: 1px solid var(--alumni-border);
+        }
+
+        .profile-info-box label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #94a3b8;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .profile-info-box span {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--alumni-navy);
+        }
+
+        @media (max-width: 768px) {
+            .hero-heading { font-size: 2.3rem; }
+            .batch-img-wrapper { height: 200px; }
+            .light-modal-dialog { max-height: 95vh; }
+            .light-modal-header, .light-search-container, .light-modal-body { padding: 18px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, ::before, ::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
-<body>
+<body class="alumni-page-scope">
 
-    <!-- Include Navbar -->
-    <?php include "./nav.php"; ?>
+    <?php include 'nav.php'; ?>
 
-    <!-- HERO SECTION -->
-    <section class="alumni-hero text-center text-lg-start">
+    <!-- 2. Alumni Hero Section -->
+    <section class="alumni-hero-section">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-8">
-                    <div class="hero-badge">
-                        <i class="fas fa-graduation-cap"></i> Department Alumni Network
-                    </div>
-                    <h1>Our <span>Alumni</span></h1>
-                    <p class="subtitle">
-                        Celebrating our graduates and their inspiring journeys across global technology leaders, research institutions, and innovative startups.
-                    </p>
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <div class="hero-tag-badge"><i class="fa-solid fa-graduation-cap"></i> SRKR CSD & CSIT</div>
+                    <h1 class="hero-heading">OUR <span>ALUMNI</span></h1>
+                    <p class="hero-desc">Celebrating the journey, achievements, and success of our graduates. Explore our alumni community, their careers, achievements, and the journeys they continue to build beyond graduation.</p>
+                    <a href="#batches" class="hero-action-btn">Explore Alumni <i class="fa-solid fa-arrow-right"></i></a>
                 </div>
-                <div class="col-lg-4 text-center d-none d-lg-block">
-                    <div style="width: 160px; height: 160px; border-radius: 36px; background: rgba(245, 158, 11, 0.12); border: 2px dashed rgba(245, 158, 11, 0.4); display: inline-flex; align-items: center; justify-content: center; color: var(--alumni-gold); font-size: 4.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                        <i class="fas fa-award"></i>
+                <div class="col-lg-6">
+                    <div class="hero-img-box">
+                        <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=900&auto=format&fit=crop&q=80" alt="Batch 2025 Group Photo">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Alumni Statistics -->
+            <div class="row g-4 stats-cards-wrapper">
+                <div class="col-md-4">
+                    <div class="stat-card-white">
+                        <div class="stat-num-navy">136<span>+</span></div>
+                        <div class="stat-lbl-gray">Official Alumni</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card-white">
+                        <div class="stat-num-navy">2</div>
+                        <div class="stat-lbl-gray">Graduating Batches</div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stat-card-white">
+                        <div class="stat-num-navy">2024–2025</div>
+                        <div class="stat-lbl-gray">Batches</div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <div class="container mb-5">
-        <!-- INTRODUCTION CARD -->
-        <div class="intro-card mb-5">
-            <div class="d-flex align-items-start gap-3">
-                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(217, 119, 6, 0.15); color: var(--alumni-accent); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; margin-top: 2px;">
-                    <i class="fas fa-quote-left"></i>
-                </div>
-                <p>
-                    Our alumni are an integral part of our department community. They continue to make meaningful contributions across technology, research, industry, entrepreneurship, and higher education worldwide. Through mentorship, industry collaborations, and technical innovation, our graduates inspire current batches to reach peak professional excellence.
-                </p>
+    <!-- 4. Our Batches Section -->
+    <section class="batches-light-section" id="batches">
+        <div class="container">
+            <div class="alumni-section-header">
+                <span class="sub-tag">COMMUNITY</span>
+                <h2>OUR BATCHES</h2>
+                <div class="gold-accent-line"></div>
+                <p>Two batches, one shared legacy.</p>
             </div>
-        </div>
 
-        <!-- ALUMNI STATISTICS GRID -->
-        <div class="row g-4 mb-5" id="statsGrid">
-            <div class="col-6 col-md-3">
-                <div class="alumni-stat-card">
-                    <div class="alumni-stat-icon">
-                        <i class="fas fa-user-graduate"></i>
+            <!-- 5. Two Separate Group Photo Cards -->
+            <div class="row g-4 justify-content-center">
+                <!-- BATCH 2024 CARD -->
+                <div class="col-md-6 col-lg-5">
+                    <div class="batch-photo-card" onclick="openBatchModal('2024')">
+                        <div class="batch-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80" alt="Batch 2024 Group Photo">
+                        </div>
+                        <div class="batch-card-body">
+                            <div>
+                                <div class="batch-tag-name">CLASS OF 2024</div>
+                                <h3 class="batch-card-title">BATCH 2024</h3>
+                                <div class="batch-count-pill"><i class="fa-solid fa-users me-1"></i> 69 Alumni</div>
+                            </div>
+                            <span class="explore-batch-link">Explore Batch <i class="fa-solid fa-arrow-right"></i></span>
+                        </div>
                     </div>
-                    <div class="alumni-stat-number" id="statTotalAlumni">500+</div>
-                    <div class="alumni-stat-label">Total Alumni</div>
                 </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="alumni-stat-card">
-                    <div class="alumni-stat-icon">
-                        <i class="fas fa-building"></i>
+
+                <!-- BATCH 2025 CARD -->
+                <div class="col-md-6 col-lg-5">
+                    <div class="batch-photo-card" onclick="openBatchModal('2025')">
+                        <div class="batch-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&auto=format&fit=crop&q=80" alt="Batch 2025 Group Photo">
+                        </div>
+                        <div class="batch-card-body">
+                            <div>
+                                <div class="batch-tag-name">CLASS OF 2025</div>
+                                <h3 class="batch-card-title">BATCH 2025</h3>
+                                <div class="batch-count-pill"><i class="fa-solid fa-users me-1"></i> 67 Alumni</div>
+                            </div>
+                            <span class="explore-batch-link">Explore Batch <i class="fa-solid fa-arrow-right"></i></span>
+                        </div>
                     </div>
-                    <div class="alumni-stat-number" id="statIndustries">15+</div>
-                    <div class="alumni-stat-label">Industry Sectors</div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="alumni-stat-card">
-                    <div class="alumni-stat-icon">
-                        <i class="fas fa-university"></i>
-                    </div>
-                    <div class="alumni-stat-number" id="statHigherStudies">45+</div>
-                    <div class="alumni-stat-label">Higher Studies</div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="alumni-stat-card">
-                    <div class="alumni-stat-icon">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <div class="alumni-stat-number" id="statEntrepreneurs">12+</div>
-                    <div class="alumni-stat-label">Entrepreneurs</div>
                 </div>
             </div>
         </div>
+    </section>
 
-        <!-- SEARCH AND FILTER BAR -->
-        <div class="filter-wrapper">
-            <div class="row g-3 align-items-center">
-                <div class="col-lg-4 col-md-6">
-                    <label class="form-label small fw-bold text-muted mb-1"><i class="fas fa-search me-1"></i> Search Alumni</label>
-                    <div class="input-group">
-                        <input type="text" id="searchInput" class="form-control" placeholder="Search by name, company, role...">
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label small fw-bold text-muted mb-1"><i class="fas fa-calendar-alt me-1"></i> Graduation Batch</label>
-                    <select id="batchFilter" class="form-select">
-                        <option value="all">All Batches</option>
-                        <option value="2025">Batch 2025</option>
-                        <option value="2024">Batch 2024</option>
-                        <option value="2023">Batch 2023</option>
-                        <option value="2022">Batch 2022</option>
-                        <option value="2021">Batch 2021</option>
-                    </select>
-                </div>
-                <div class="col-lg-2 col-md-6">
-                    <label class="form-label small fw-bold text-muted mb-1"><i class="fas fa-code-branch me-1"></i> Branch</label>
-                    <select id="branchFilter" class="form-select">
-                        <option value="ALL">All Branches</option>
-                        <option value="CSD">CSD</option>
-                        <option value="CSIT">CSIT</option>
-                    </select>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <label class="form-label small fw-bold text-muted mb-1"><i class="fas fa-industry me-1"></i> Industry Sector</label>
-                    <select id="industryFilter" class="form-select">
-                        <option value="all">All Industries</option>
-                        <option value="Software & Tech">Software & Tech</option>
-                        <option value="AI & Machine Learning">AI & Machine Learning</option>
-                        <option value="Higher Studies">Higher Studies</option>
-                        <option value="Entrepreneurship">Entrepreneurship</option>
-                        <option value="Core Engineering">Core Engineering</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <!-- NOTABLE ALUMNI SECTION -->
-        <div class="mb-5" id="notableSection">
-            <div class="section-header-badge"><i class="fas fa-star text-warning"></i> Hall of Fame</div>
-            <h2 class="section-main-title">Notable Alumni</h2>
-            <div class="row g-4" id="notableContainer">
-                <!-- Dynamically populated -->
-            </div>
-        </div>
-
-        <!-- ALL ALUMNI DIRECTORY SECTION -->
-        <div class="mb-5">
-            <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+    <!-- 7 & 8. Batch Directory Modal & Alumni Cards Grid -->
+    <div class="light-modal" id="batchModal">
+        <div class="light-modal-dialog">
+            <div class="light-modal-header">
                 <div>
-                    <div class="section-header-badge"><i class="fas fa-users"></i> Directory</div>
-                    <h2 class="section-main-title mb-0">Alumni Directory</h2>
+                    <h3 class="light-modal-title" id="modalBatchTitle">BATCH 2024</h3>
+                    <div style="font-size: 0.88rem; color: var(--alumni-body); margin-top: 2px;" id="modalBatchSubtitle">Meet the alumni of the 2024 graduating batch.</div>
                 </div>
-                <span class="badge bg-dark text-warning fs-6 px-3 py-2 rounded-pill" id="resultCountBadge">Showing Alumni</span>
+                <button class="light-modal-close" onclick="closeBatchModal()"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <div class="row g-4" id="alumniGrid">
-                <!-- Dynamically populated -->
-            </div>
-
-            <div id="noResultsState" class="text-center py-5 d-none">
-                <i class="fas fa-user-slash text-muted" style="font-size: 3.5rem;"></i>
-                <h4 class="mt-3 fw-bold">No Matching Alumni Found</h4>
-                <p class="text-muted">Try broadening your search keyword or clearing the filters.</p>
-                <button class="btn btn-outline-warning rounded-pill px-4" onclick="clearAllFilters()">Reset Filters</button>
-            </div>
-        </div>
-
-        <!-- ALUMNI SUCCESS STORIES SECTION -->
-        <div class="mb-5">
-            <div class="section-header-badge"><i class="fas fa-comment-dots"></i> Testimonials</div>
-            <h2 class="section-main-title">Alumni Success Stories</h2>
-            <div class="row g-4" id="testimonialsContainer">
-                <!-- Dynamically populated -->
-            </div>
-        </div>
-
-        <!-- STAY CONNECTED CTA -->
-        <div class="alumni-cta">
-            <div class="badge bg-warning text-dark font-weight-bold px-3 py-1 rounded-pill mb-3" style="font-size: 0.8rem; letter-spacing: 0.5px; display: inline-block;">
-                <i class="fas fa-handshake me-1"></i> Join Our Community
-            </div>
-            <h2>Stay Connected With Your Department</h2>
-            <p>
-                Whether you are building the future of technology, pursuing research, or launching startups, we welcome you to stay connected and mentor the next generation.
-            </p>
-            <div class="d-flex justify-content-center flex-wrap gap-3">
-                <button class="btn btn-cta-primary" onclick="openNetworkModal('join')">
-                    <i class="fas fa-user-plus me-2"></i> Join Alumni Network
-                </button>
-                <button class="btn btn-cta-secondary" onclick="openNetworkModal('update')">
-                    <i class="fas fa-sync me-2"></i> Update Your Details
-                </button>
-                <a href="mailto:csd.csit@srkrec.ac.in" class="btn btn-cta-secondary">
-                    <i class="fas fa-envelope me-2"></i> Contact Department
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- ALUMNI PROFILE DETAILS MODAL -->
-    <div class="modal fade" id="alumniProfileModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden">
-                <div class="modal-header-custom d-flex align-items-center justify-content-between">
-                    <div class="d-flex align-items-center gap-3">
-                        <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(245,158,11,0.2); color: #f59e0b; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
-                            <i class="fas fa-id-card"></i>
-                        </div>
-                        <div>
-                            <h5 class="mb-0 fw-bold text-white" id="modalName">Alumni Details</h5>
-                            <small class="text-warning fw-semibold" id="modalCompanyRole">Role @ Company</small>
-                        </div>
-                    </div>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            <!-- 10. Search Box -->
+            <div class="light-search-container">
+                <div class="light-search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="directorySearchInput" class="light-search-input" placeholder="Search by Name or Registration Number..." onkeyup="filterDirectoryCards()">
                 </div>
-                <div class="modal-body-custom">
-                    <div class="row g-4 align-items-center mb-4 pb-3 border-bottom">
-                        <div class="col-md-3 text-center">
-                            <div id="modalAvatarBox" class="alumni-avatar-box mx-auto" style="width: 100px; height: 100px; font-size: 2.2rem; border-radius: 24px;">
-                                <!-- Image or Initial -->
-                            </div>
-                        </div>
-                        <div class="col-md-9">
-                            <h3 class="fw-bold mb-1" id="modalFullName">Full Name</h3>
-                            <p class="text-primary fw-bold mb-2" id="modalDesignation">Designation</p>
-                            <div class="d-flex flex-wrap gap-2 mb-3">
-                                <span class="badge bg-warning text-dark px-3 py-1 rounded-pill" id="modalBatchTag">Batch 2022</span>
-                                <span class="badge bg-primary px-3 py-1 rounded-pill" id="modalBranchTag">CSD</span>
-                                <span class="badge bg-secondary px-3 py-1 rounded-pill" id="modalIndustryTag">Software</span>
-                            </div>
-                            <p class="text-muted small mb-0"><i class="fas fa-map-marker-alt text-danger me-1"></i> <span id="modalLocation">Location</span></p>
-                        </div>
-                    </div>
+            </div>
 
-                    <div class="mb-4">
-                        <h6 class="fw-bold text-dark text-uppercase small letter-spacing-1 mb-2"><i class="fas fa-briefcase text-warning me-2"></i> Professional Journey</h6>
-                        <p class="text-secondary" id="modalDescription">Description details...</p>
-                    </div>
-
-                    <div class="mb-4">
-                        <h6 class="fw-bold text-dark text-uppercase small letter-spacing-1 mb-2"><i class="fas fa-trophy text-warning me-2"></i> Key Achievements & Highlights</h6>
-                        <div class="p-3 bg-light rounded-3 text-dark font-weight-500" id="modalAchievements">Achievements details...</div>
-                    </div>
-
-                    <div class="d-flex justify-content-end gap-2 pt-2">
-                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Close</button>
-                        <a id="modalLinkedInBtn" href="#" target="_blank" class="btn btn-primary rounded-pill px-4">
-                            <i class="fab fa-linkedin me-1"></i> Connect on LinkedIn
-                        </a>
-                    </div>
+            <!-- 9. Alumni Directory UI (Grid Cards) -->
+            <div class="light-modal-body">
+                <div class="row g-3" id="profileCardsGrid">
+                    <!-- Profile cards rendered via JavaScript -->
+                </div>
+                <div class="text-center py-5" id="emptyStateMsg" style="display: none;">
+                    <i class="fa-solid fa-user-slash text-muted mb-3" style="font-size: 2.5rem;"></i>
+                    <h5 style="color: var(--alumni-navy); font-weight: 700;">No alumni found</h5>
+                    <p style="color: var(--alumni-body);">Try another name or registration number.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- NETWORK / UPDATE MODAL -->
-    <div class="modal fade" id="networkActionModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 rounded-4 shadow-lg">
-                <div class="modal-header bg-dark text-white rounded-top-4">
-                    <h5 class="modal-title fw-bold text-warning" id="networkModalTitle"><i class="fas fa-user-plus me-2"></i> Join Alumni Network</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <!-- 12. Separate Placements Section -->
+    <section class="placements-light-section" id="placements">
+        <div class="container">
+            <div class="alumni-section-header">
+                <span class="sub-tag">CAREER OFFERS</span>
+                <h2>ALUMNI PLACEMENTS</h2>
+                <div class="gold-accent-line"></div>
+                <p>Our alumni are building successful careers across diverse organizations and industries.</p>
+            </div>
+
+
+            <div class="row g-4" id="placementsGrid">
+                <!-- Placements rendered via JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 14. Alumni Achievements -->
+    <section class="achievements-light-section">
+        <div class="container">
+            <div class="alumni-section-header">
+                <span class="sub-tag">HONORS</span>
+                <h2>ALUMNI ACHIEVEMENTS</h2>
+                <div class="gold-accent-line"></div>
+                <p>Celebrating awards, publications, and entrepreneurship milestones achieved by our graduates.</p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="where-white-card" style="border-top: 3px solid var(--alumni-gold);">
+                        <div class="where-icon-box" style="color: var(--alumni-gold);"><i class="fa-solid fa-trophy"></i></div>
+                        <h3>Industry Excellence Awards</h3>
+                        <p>Recognized for outstanding technical contributions and fast-track engineering promotions.</p>
+                    </div>
                 </div>
-                <div class="modal-body p-4">
-                    <form id="networkForm" onsubmit="handleNetworkSubmit(event)">
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">Full Name</label>
-                            <input type="text" class="form-control" required placeholder="Enter full name">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">Email Address</label>
-                            <input type="email" class="form-control" required placeholder="name@domain.com">
-                        </div>
-                        <div class="row g-2 mb-3">
-                            <div class="col-6">
-                                <label class="form-label small fw-bold">Graduation Year</label>
-                                <input type="number" class="form-control" required placeholder="e.g. 2023">
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label small fw-bold">Branch</label>
-                                <select class="form-select" required>
-                                    <option value="CSD">CSD</option>
-                                    <option value="CSIT">CSIT</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">Current Company & Designation</label>
-                            <input type="text" class="form-control" required placeholder="e.g. SDE II @ Amazon">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">LinkedIn Profile URL</label>
-                            <input type="url" class="form-control" placeholder="https://linkedin.com/in/yourprofile">
-                        </div>
-                        <button type="submit" class="btn btn-warning w-100 fw-bold rounded-pill py-2">Submit Details</button>
-                    </form>
+                <div class="col-md-6 col-lg-4">
+                    <div class="where-white-card" style="border-top: 3px solid var(--alumni-gold);">
+                        <div class="where-icon-box" style="color: var(--alumni-gold);"><i class="fa-solid fa-file-contract"></i></div>
+                        <h3>Research & Patents</h3>
+                        <p>Co-authoring international technical whitepapers and patented algorithms in cloud co-design.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 15. Final Alumni CTA -->
+    <section class="cta-light-section">
+        <div class="container">
+            <h2 class="cta-title">THE JOURNEY CONTINUES</h2>
+            <p class="cta-subtitle">Once a student, always a part of our community.</p>
+            <a href="#batches" class="hero-action-btn">Explore Our Alumni <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+    </section>
+
+    <!-- 11. Individual Alumni Profile Modal -->
+    <div class="light-modal" id="individualProfileModal">
+        <div class="light-modal-dialog" style="max-width: 580px;">
+            <div class="light-modal-header">
+                <h4 style="margin:0; font-weight:800; color: var(--alumni-navy);">Alumni Profile</h4>
+                <button class="light-modal-close" onclick="closeIndividualModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="profile-light-body">
+                <img src="" id="indivAvatar" class="profile-light-avatar" alt="Student Photo">
+                <h3 id="indivName" style="font-size: 1.4rem; font-weight: 800; color: var(--alumni-navy); margin-bottom: 2px;">Student Name</h3>
+                <div id="indivRole" style="color: var(--alumni-gold); font-weight: 700; font-size: 0.92rem; margin-bottom: 15px;">CSD Alumnus</div>
+
+                <div class="profile-info-grid">
+                    <div class="profile-info-box"><label>Registration No</label><span id="indivReg">21B91A6201</span></div>
+                    <div class="profile-info-box"><label>Batch</label><span id="indivBatch">Batch 2024</span></div>
+                    <div class="profile-info-box"><label>Department</label><span id="indivDept">CSD</span></div>
+                    <div class="profile-info-box"><label>Location</label><span id="indivLoc">Bhimavaram, India</span></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Include Footer -->
-    <?php include "./footer.php"; ?>
+    <?php include 'footer.php'; ?>
 
-    <!-- JavaScript logic -->
+    <!-- Scoped JS Operations -->
     <script>
-        let globalAlumniData = [];
+        let batchDataStore = { '2024': [], '2025': [] };
+        let placementsStore = [];
+        let activeBatchModal = '2024';
 
-        document.addEventListener('DOMContentLoaded', function() {
-            fetchAlumniData();
-
-            // Bind live filters
-            document.getElementById('searchInput').addEventListener('input', applyFilters);
-            document.getElementById('batchFilter').addEventListener('change', applyFilters);
-            document.getElementById('branchFilter').addEventListener('change', applyFilters);
-            document.getElementById('industryFilter').addEventListener('change', applyFilters);
-        });
-
-        function fetchAlumniData() {
+        document.addEventListener("DOMContentLoaded", () => {
             fetch('get_alumni.php')
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        globalAlumniData = data.alumni || [];
-                        updateStats(data.stats);
-                        renderNotableAlumni(data.notable_alumni || []);
-                        renderTestimonials(data.testimonials || []);
-                        applyFilters();
+                        batchDataStore['2024'] = data.batches['2024'].alumni;
+                        batchDataStore['2025'] = data.batches['2025'].alumni;
+                        placementsStore = data.placements;
+
+                        renderPlacements('all');
                     }
                 })
-                .catch(err => {
-                    console.error('Error fetching alumni:', err);
-                });
+                .catch(err => console.error("Error fetching alumni:", err));
+        });
+
+        // Open Batch Modal
+        function openBatchModal(batchYear) {
+            activeBatchModal = batchYear;
+            document.getElementById('modalBatchTitle').innerText = `BATCH ${batchYear}`;
+            document.getElementById('modalBatchSubtitle').innerText = `Meet the alumni of the ${batchYear} graduating batch.`;
+            document.getElementById('directorySearchInput').value = '';
+
+            const list = batchDataStore[batchYear] || [];
+            renderProfileCards(list);
+            document.getElementById('batchModal').classList.add('active');
         }
 
-        function updateStats(stats) {
-            if (!stats) return;
-            if (document.getElementById('statTotalAlumni')) document.getElementById('statTotalAlumni').textContent = stats.total_alumni + '+';
-            if (document.getElementById('statIndustries')) document.getElementById('statIndustries').textContent = stats.total_industries + '+';
-            if (document.getElementById('statHigherStudies')) document.getElementById('statHigherStudies').textContent = stats.higher_studies + '+';
-            if (document.getElementById('statEntrepreneurs')) document.getElementById('statEntrepreneurs').textContent = stats.entrepreneurs + '+';
+        function closeBatchModal() {
+            document.getElementById('batchModal').classList.remove('active');
         }
 
-        function renderNotableAlumni(list) {
-            const container = document.getElementById('notableContainer');
-            if (!container) return;
-            if (!list || list.length === 0) {
-                document.getElementById('notableSection').classList.add('d-none');
+        // Render Profile Cards Grid (3-4 columns desktop, 2 tablet, 1 mobile)
+        function renderProfileCards(list) {
+            const grid = document.getElementById('profileCardsGrid');
+            const emptyState = document.getElementById('emptyStateMsg');
+            grid.innerHTML = '';
+
+            if (list.length === 0) {
+                emptyState.style.display = 'block';
                 return;
             }
 
-            container.innerHTML = list.map(item => `
-                <div class="col-md-6 col-lg-4">
-                    <div class="notable-card h-100">
-                        <span class="notable-badge"><i class="fas fa-star me-1"></i> Notable</span>
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="alumni-avatar-box">
-                                ${item.photo ? `<img src="${item.photo}" alt="${item.name}">` : `<span>${getInitials(item.name)}</span>`}
-                            </div>
-                            <div>
-                                <h5 class="fw-bold mb-1 text-dark">${item.name}</h5>
-                                <div class="text-warning fw-bold small">${item.designation}</div>
-                                <div class="text-muted small fw-semibold"><i class="fas fa-building me-1"></i> ${item.company}</div>
-                            </div>
+            emptyState.style.display = 'none';
+
+            list.forEach(item => {
+                const col = document.createElement('div');
+                col.className = 'col-sm-6 col-md-4 col-lg-3';
+                col.innerHTML = `
+                    <div class="profile-card-item">
+                        <div>
+                            <img src="${item.photo}" class="profile-card-avatar" alt="${item.name}">
+                            <div class="profile-card-name">${item.name}</div>
+                            <div class="profile-card-reg">${item.registration_number}</div>
+                            <div style="font-size: 0.8rem; color: var(--alumni-body); font-weight: 600;">${item.department}</div>
                         </div>
-                        <p class="alumni-desc mb-3">${item.description}</p>
-                        <div class="d-flex align-items-center justify-content-between">
-                            <span class="badge bg-warning text-dark rounded-pill">Batch ${item.batch} | ${item.branch}</span>
-                            <button class="btn btn-view-profile" onclick="openProfileModal('${item.id}')">View Profile</button>
-                        </div>
+                        <button class="profile-card-view-btn" onclick='openIndividualModal(${JSON.stringify(item)})'>View Profile <i class="fa-solid fa-arrow-right ms-1"></i></button>
                     </div>
-                </div>
-            `).join('');
+                `;
+                grid.appendChild(col);
+            });
         }
 
-        function renderTestimonials(list) {
-            const container = document.getElementById('testimonialsContainer');
-            if (!container || !list) return;
+        // Live Search Filter for Active Batch Only
+        function filterDirectoryCards() {
+            const query = document.getElementById('directorySearchInput').value.toLowerCase().trim();
+            const list = batchDataStore[activeBatchModal] || [];
 
-            container.innerHTML = list.map(item => `
-                <div class="col-md-6 col-lg-3">
-                    <div class="story-card">
-                        <div class="story-quote">
-                            "${item.quote}"
-                        </div>
-                        <div class="story-author">
-                            <div class="alumni-avatar-box" style="width: 46px; height: 46px; font-size: 1.1rem; border-radius: 12px;">
-                                ${item.photo ? `<img src="${item.photo}" alt="${item.name}">` : `<span>${getInitials(item.name)}</span>`}
-                            </div>
-                            <div>
-                                <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.95rem;">${item.name}</h6>
-                                <small class="text-muted d-block" style="font-size: 0.78rem;">${item.role}</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function applyFilters() {
-            const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
-            const batchVal = document.getElementById('batchFilter').value;
-            const branchVal = document.getElementById('branchFilter').value;
-            const industryVal = document.getElementById('industryFilter').value.toLowerCase();
-
-            const filtered = globalAlumniData.filter(item => {
-                if (searchVal) {
-                    const haystack = (item.name + ' ' + item.company + ' ' + item.designation + ' ' + item.branch).toLowerCase();
-                    if (!haystack.includes(searchVal)) return false;
-                }
-                if (batchVal !== 'all' && item.batch !== batchVal) return false;
-                if (branchVal !== 'ALL' && item.branch !== branchVal) return false;
-                if (industryVal !== 'all' && item.industry.toLowerCase() !== industryVal) return false;
-                return true;
+            const filtered = list.filter(item => {
+                const searchStr = `${item.name} ${item.registration_number}`.toLowerCase();
+                return searchStr.includes(query);
             });
 
-            renderAlumniGrid(filtered);
+            renderProfileCards(filtered);
         }
 
-        function renderAlumniGrid(list) {
-            const grid = document.getElementById('alumniGrid');
-            const emptyState = document.getElementById('noResultsState');
-            const badge = document.getElementById('resultCountBadge');
+        // Render Placements
+        function renderPlacements(filterBatch) {
+            const grid = document.getElementById('placementsGrid');
+            grid.innerHTML = '';
 
-            if (badge) badge.textContent = `Showing ${list.length} Alumni`;
-
-            if (!list || list.length === 0) {
-                grid.innerHTML = '';
-                emptyState.classList.remove('d-none');
-                return;
+            let list = placementsStore;
+            if (filterBatch !== 'all') {
+                list = placementsStore.filter(p => p.batch === filterBatch || p.placement_year === filterBatch);
             }
 
-            emptyState.classList.add('d-none');
-            grid.innerHTML = list.map(item => `
-                <div class="col-md-6 col-lg-3">
-                    <div class="alumni-card">
-                        <div class="alumni-card-header">
-                            <div class="alumni-avatar-box">
-                                ${item.photo ? `<img src="${item.photo}" alt="${item.name}">` : `<span>${getInitials(item.name)}</span>`}
+            list.forEach(p => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 col-lg-4';
+                col.innerHTML = `
+                    <div class="placement-white-card">
+                        <div>
+                            <div class="placement-card-top">
+                                <span class="comp-tag"><i class="fa-solid fa-building me-1"></i> ${p.company}</span>
+                                ${p.package ? `<span class="pkg-tag">${p.package}</span>` : ''}
                             </div>
-                            <div class="alumni-meta-info">
-                                <h5>${item.name}</h5>
-                                <div class="role-text">${item.designation}</div>
-                                <div class="company-text"><i class="fas fa-building"></i> ${item.company}</div>
-                            </div>
+                            <div style="font-size: 0.95rem; font-weight: 700; color: var(--alumni-primary); margin-top: 10px;">${p.job_role}</div>
                         </div>
-                        <div class="alumni-card-body">
-                            <div class="alumni-tag-group">
-                                <span class="alumni-tag tag-batch">Batch ${item.batch}</span>
-                                <span class="alumni-tag tag-branch">${item.branch}</span>
-                                <span class="alumni-tag"><i class="fas fa-map-marker-alt me-1"></i> ${item.location}</span>
-                            </div>
-                            <p class="alumni-desc">${item.description}</p>
-                            <div class="alumni-card-footer">
-                                <button class="btn-view-profile" onclick="openProfileModal('${item.id}')">
-                                    <i class="fas fa-user-circle me-1"></i> Details
-                                </button>
-                                ${item.linkedin ? `<a href="${item.linkedin}" target="_blank" class="social-link-btn" title="LinkedIn Profile"><i class="fab fa-linkedin-in"></i></a>` : ''}
+
+                        <div class="placement-student-row">
+                            <img src="${p.photo}" class="placement-student-img" alt="${p.student_name}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(p.student_name)}&background=d97706&color=ffffff&bold=true'">
+                            <div>
+                                <h4 class="placement-student-name">${p.student_name}</h4>
+                                <p class="placement-student-roll">Roll No: ${p.student_id}</p>
                             </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+                grid.appendChild(col);
+            });
         }
 
-        function openProfileModal(id) {
-            const item = globalAlumniData.find(a => a.id === id || a.student_id === id);
-            if (!item) return;
-
-            document.getElementById('modalName').textContent = item.name;
-            document.getElementById('modalCompanyRole').textContent = item.designation + ' @ ' + item.company;
-            document.getElementById('modalFullName').textContent = item.name;
-            document.getElementById('modalDesignation').textContent = item.designation + ' — ' + item.company;
-            document.getElementById('modalBatchTag').textContent = 'Batch ' + item.batch;
-            document.getElementById('modalBranchTag').textContent = 'Department of ' + item.branch;
-            document.getElementById('modalIndustryTag').textContent = item.industry;
-            document.getElementById('modalLocation').textContent = item.location;
-            document.getElementById('modalDescription').textContent = item.description;
-            document.getElementById('modalAchievements').textContent = item.achievements || 'Distinguished CSD & CSIT Department Graduate.';
-
-            const avatarBox = document.getElementById('modalAvatarBox');
-            if (item.photo) {
-                avatarBox.innerHTML = `<img src="${item.photo}" alt="${item.name}">`;
-            } else {
-                avatarBox.innerHTML = `<span>${getInitials(item.name)}</span>`;
-            }
-
-            const linkedinBtn = document.getElementById('modalLinkedInBtn');
-            if (item.linkedin) {
-                linkedinBtn.href = item.linkedin;
-                linkedinBtn.classList.remove('d-none');
-            } else {
-                linkedinBtn.classList.add('d-none');
-            }
-
-            const modal = new bootstrap.Modal(document.getElementById('alumniProfileModal'));
-            modal.show();
+        function filterPlacements(batch, btn) {
+            document.querySelectorAll('.placement-pill-filters .light-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderPlacements(batch);
         }
 
-        function openNetworkModal(type) {
-            const title = document.getElementById('networkModalTitle');
-            if (type === 'update') {
-                title.innerHTML = '<i class="fas fa-sync me-2"></i> Update Your Details';
-            } else {
-                title.innerHTML = '<i class="fas fa-user-plus me-2"></i> Join Alumni Network';
-            }
-            const modal = new bootstrap.Modal(document.getElementById('networkActionModal'));
-            modal.show();
+        // Open Individual Profile Modal
+        function openIndividualModal(item) {
+            document.getElementById('indivAvatar').src = item.photo;
+            document.getElementById('indivName').innerText = item.name;
+            document.getElementById('indivRole').innerText = `${item.current_role} @ ${item.company}`;
+            document.getElementById('indivReg').innerText = item.registration_number;
+            document.getElementById('indivBatch').innerText = `Batch ${item.batch}`;
+            document.getElementById('indivDept').innerText = item.department;
+            document.getElementById('indivLoc').innerText = item.location || 'Bhimavaram, India';
+
+            document.getElementById('individualProfileModal').classList.add('active');
         }
 
-        function handleNetworkSubmit(e) {
-            e.preventDefault();
-            alert('Thank you! Your details have been submitted successfully. The department network team will connect with you soon.');
-            const modalEl = document.getElementById('networkActionModal');
-            const modal = bootstrap.Modal.getInstance(modalEl);
-            if (modal) modal.hide();
-        }
-
-        function clearAllFilters() {
-            document.getElementById('searchInput').value = '';
-            document.getElementById('batchFilter').value = 'all';
-            document.getElementById('branchFilter').value = 'ALL';
-            document.getElementById('industryFilter').value = 'all';
-            applyFilters();
-        }
-
-        function getInitials(name) {
-            if (!name) return 'A';
-            const parts = name.trim().split(' ');
-            if (parts.length >= 2) {
-                return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-            }
-            return parts[0].substring(0, 2).toUpperCase();
+        function closeIndividualModal() {
+            document.getElementById('individualProfileModal').classList.remove('active');
         }
     </script>
 </body>

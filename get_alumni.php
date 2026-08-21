@@ -2,261 +2,259 @@
 header('Content-Type: application/json');
 include './connect.php';
 
-// Comprehensive Fallback Alumni Dataset
-$default_alumni = [
-    [
-        'id' => '21B91A6201',
-        'student_id' => '21B91A6201',
-        'name' => 'Rahul Kumar',
-        'photo' => 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
-        'batch' => '2022',
-        'program' => 'B.Tech',
-        'department' => 'CSD',
-        'branch' => 'CSD',
-        'designation' => 'Senior Software Engineer',
-        'company' => 'Google',
-        'location' => 'Bengaluru, India',
-        'industry' => 'Software & Tech',
-        'description' => 'Architecting scalable cloud microservices & distributed computer vision pipelines.',
-        'achievements' => 'Led 3 patents in cloud optimization, Keynote speaker at Google I/O extended.',
-        'is_notable' => 1,
-        'linkedin' => 'https://linkedin.com/in/rahul-kumar-alumni',
-        'testimonial' => 'The solid foundation in algorithms and software engineering at CSD prepared me to handle large-scale global software systems at Google.'
-    ],
-    [
-        'id' => '21B91A6202',
-        'student_id' => '21B91A6202',
-        'name' => 'Sneha Verma',
-        'photo' => 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80',
-        'batch' => '2023',
-        'program' => 'B.Tech',
-        'department' => 'CSIT',
-        'branch' => 'CSIT',
-        'designation' => 'AI Research Engineer',
-        'company' => 'Microsoft',
-        'location' => 'Hyderabad, India',
-        'industry' => 'AI & Machine Learning',
-        'description' => 'Developing generative AI models and natural language processing pipelines for Azure AI services.',
-        'achievements' => 'Published 2 research papers in IEEE AI conferences, Microsoft Innovator Excellence Award 2024.',
-        'is_notable' => 1,
-        'linkedin' => 'https://linkedin.com/in/sneha-verma-ai',
-        'testimonial' => 'Mentorship from department professors and hands-on lab practicals ignited my passion for Artificial Intelligence.'
-    ],
-    [
-        'id' => '20B91A6203',
-        'student_id' => '20B91A6203',
-        'name' => 'Vikramaditya Raju',
-        'photo' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80',
-        'batch' => '2021',
-        'program' => 'B.Tech',
-        'department' => 'CSIT',
-        'branch' => 'CSIT',
-        'designation' => 'Co-Founder & CTO',
-        'company' => 'NexGen Robotics & AI Labs',
-        'location' => 'Bengaluru, India',
-        'industry' => 'Entrepreneurship',
-        'description' => 'Building autonomous warehouse robotics systems backed by top tech venture funds.',
-        'achievements' => 'Raised $2.5M Series-A funding, Featured in Forbes 30 Under 30 Tech Entrepreneurs.',
-        'is_notable' => 1,
-        'linkedin' => 'https://linkedin.com/in/vikram-raju-robotics',
-        'testimonial' => 'Starting our project in the department Startup Club gave us the confidence to build a tech startup that now employs over 40 engineers.'
-    ],
-    [
-        'id' => '21B91A6204',
-        'student_id' => '21B91A6204',
-        'name' => 'Pooja Varma',
-        'photo' => 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&auto=format&fit=crop&q=80',
-        'batch' => '2023',
-        'program' => 'B.Tech',
-        'department' => 'CSD',
-        'branch' => 'CSD',
-        'designation' => 'MS / PhD Research Scholar',
-        'company' => 'Carnegie Mellon University',
-        'location' => 'Pittsburgh, USA',
-        'industry' => 'Higher Studies',
-        'description' => 'Conducting cutting-edge research on privacy-preserving machine learning and federated intelligence.',
-        'achievements' => 'Full Graduate Fellowship Scholar at CMU, Published in NeurIPS Workshop 2024.',
-        'is_notable' => 1,
-        'linkedin' => 'https://linkedin.com/in/pooja-varma-cmu',
-        'testimonial' => 'The rigorous research exposure during my final year project empowered me to secure direct admission into CMU.'
-    ],
-    [
-        'id' => '22B91A6205',
-        'student_id' => '22B91A6205',
-        'name' => 'Aditya Sharma',
-        'photo' => 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80',
-        'batch' => '2024',
-        'program' => 'B.Tech',
-        'department' => 'CSIT',
-        'branch' => 'CSIT',
-        'designation' => 'SDE II (AWS Cloud)',
-        'company' => 'Amazon',
-        'location' => 'Seattle, USA',
-        'industry' => 'Software & Tech',
-        'description' => 'Optimizing storage layer throughput and low-latency API handlers for AWS S3 infrastructure.',
-        'achievements' => 'Fast-tracked promotion at AWS within 18 months, Amazon Star Developer Award.',
-        'is_notable' => 0,
-        'linkedin' => 'https://linkedin.com/in/aditya-sharma-aws',
-        'testimonial' => 'Peer learning in department clubs and hackathons built the problem-solving mindset I use daily at Amazon AWS.'
-    ],
-    [
-        'id' => '22B91A6206',
-        'student_id' => '22B91A6206',
-        'name' => 'Ananya Roy',
-        'photo' => 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&auto=format&fit=crop&q=80',
-        'batch' => '2024',
-        'program' => 'B.Tech',
-        'department' => 'CSD',
-        'branch' => 'CSD',
-        'designation' => 'Embedded AI Engineer',
-        'company' => 'Qualcomm',
-        'location' => 'Hyderabad, India',
-        'industry' => 'Core Engineering',
-        'description' => 'Designing edge AI inference kernels for Snapdragon mobile & NPU processors.',
-        'achievements' => 'Co-authored Qualcomm Technical Whitepaper on low-power neural networks.',
-        'is_notable' => 0,
-        'linkedin' => 'https://linkedin.com/in/ananya-roy-qualcomm',
-        'testimonial' => 'The hardware-software co-design modules taught in CSIT provided me a clear edge in embedded Systems & AI chip design.'
-    ],
-    [
-        'id' => '20B91A6207',
-        'student_id' => '20B91A6207',
-        'name' => 'Ketan Reddy',
-        'photo' => 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=400&auto=format&fit=crop&q=80',
-        'batch' => '2021',
-        'program' => 'B.Tech',
-        'department' => 'CSIT',
-        'branch' => 'CSIT',
-        'designation' => 'Staff Product Manager',
-        'company' => 'Meta (Facebook)',
-        'location' => 'London, UK',
-        'industry' => 'Software & Tech',
-        'description' => 'Leading product strategy and creator monetization tools for Instagram Reels platform.',
-        'achievements' => 'Launched creator monetization features scaled to 500M+ active users globally.',
-        'is_notable' => 1,
-        'linkedin' => 'https://linkedin.com/in/ketan-reddy-meta',
-        'testimonial' => 'Department technical leadership roles helped me transition from software engineering into high-impact product management.'
-    ],
-    [
-        'id' => '23B91A6208',
-        'student_id' => '23B91A6208',
-        'name' => 'Divya Sri Penmetsa',
-        'photo' => 'https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?w=400&auto=format&fit=crop&q=80',
-        'batch' => '2025',
-        'program' => 'B.Tech',
-        'department' => 'CSD',
-        'branch' => 'CSD',
-        'designation' => 'Research Engineer',
-        'company' => 'TCS Innovation Labs',
-        'location' => 'Pune, India',
-        'industry' => 'AI & Machine Learning',
-        'description' => 'Working on autonomous anomaly detection and predictive maintenance for industrial IoT.',
-        'achievements' => 'Best B.Tech Project Award winner 2025.',
-        'is_notable' => 0,
-        'linkedin' => 'https://linkedin.com/in/divya-penmetsa-tcs',
-        'testimonial' => 'Faculty support for national coding competitions prepared me for high-value R&D roles straight out of campus.'
-    ]
+// Helper for avatar URL using student name
+function getStudentAvatar($name) {
+    return 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&background=d97706&color=ffffff&bold=true&size=256';
+}
+
+// BATCH 2024: Official 69 Student Class List (from Class List Document)
+$batch_2024_raw = [
+    ["21B91A6201", "ACHANTA SREE GREESHMA"],
+    ["21B91A6202", "BAIRISETTI SAI GANGADHAR"],
+    ["21B91A6203", "BHOKASKEDE BHAGAVATH"],
+    ["21B91A6204", "BODAPATI YASWANTH RAJ"],
+    ["21B91A6205", "BYRI ROHIT"],
+    ["21B91A6206", "CH RAVI KUMAR SATYA SAI"],
+    ["21B91A6207", "CHENNAMSETTI ANUSHA"],
+    ["21B91A6208", "CHITTURI KARTHIK"],
+    ["21B91A6209", "DANDU RAMA SIVA NAGA"],
+    ["21B91A6210", "D VIVEK HARI BHASKAR"],
+    ["21B91A6211", "DEVADA LAVANYA"],
+    ["21B91A6212", "LAVANYA DUDDUKURI"],
+    ["21B91A6213", "GADIRAJU JANAKI RITHVIK"],
+    ["21B91A6214", "GOLVE YASWANTH SAI"],
+    ["21B91A6215", "GUDAPATI YAKSHINE"],
+    ["21B91A6216", "GUNTURU UDAY KIRAN"],
+    ["21B91A6217", "JALLELLA RAM SUMA"],
+    ["21B91A6218", "JAVVADI BHARGAVI"],
+    ["21B91A6219", "KATARI SAI GANESH"],
+    ["21B91A6220", "KATURI SANJU"],
+    ["21B91A6221", "KEDHARISETTI SURYA"],
+    ["21B91A6222", "KOMALI LAKSHMI PURNA"],
+    ["21B91A6223", "KONAKALA VASANTHI"],
+    ["21B91A6224", "KOYYE SASANK"],
+    ["21B91A6226", "KUNCHANAPALLI"],
+    ["21B91A6227", "MALLADI TEJASRI"],
+    ["21B91A6228", "MALLIPUDI RAJESH"],
+    ["21B91A6229", "MANEPALLI KALKI NAGA"],
+    ["21B91A6230", "VENKATA NAGA"],
+    ["21B91A6231", "MARISETTI BHANU"],
+    ["21B91A6232", "MUDUNURI PRUDHVI SAI"],
+    ["21B91A6233", "MUNSHI ABDUL RAHEEM"],
+    ["21B91A6234", "N J NAGA VENKATA SATYA"],
+    ["21B91A6235", "NETALA SRUJANA SRI"],
+    ["21B91A6236", "PADAVALA YOGITHA"],
+    ["21B91A6237", "PAGOLLU GRACY"],
+    ["21B91A6238", "PATHIWADA REVATTHI"],
+    ["21B91A6239", "P SRI VENKATA SIVA"],
+    ["21B91A6240", "PUDI CHAITANYA SRUJANA"],
+    ["21B91A6241", "RAMAGANI MALLESWARI"],
+    ["21B91A6242", "RAVURI UMA SUBHASHINI"],
+    ["21B91A6243", "REDDI MADHAVI"],
+    ["21B91A6244", "REDDI SAHITHI PALLAVI"],
+    ["21B91A6245", "SADANALA MANASANTHI"],
+    ["21B91A6246", "S N BHAGAVATI VIGHNESH"],
+    ["21B91A6247", "SHAIK ABDUL AZIZ"],
+    ["21B91A6248", "SHAIK ABDUL LATHIF"],
+    ["21B91A6249", "SIDAGAM VINAY PRASAD"],
+    ["21B91A6250", "T HARSHA KUMARI"],
+    ["21B91A6251", "TANNEERU VASANTH"],
+    ["21B91A6252", "THATTULOLLA SIVA"],
+    ["21B91A6253", "UNNAMTLA NAVEEN RAHUL"],
+    ["21B91A6254", "UTADA LAKSHMI TULASI"],
+    ["21B91A6255", "V ANJANI NAGA SARANYA"],
+    ["21B91A6256", "VANAPALLI SAI SIVAMANI"],
+    ["21B91A6257", "VANGAPANDU ROHITH"],
+    ["21B91A6258", "V H VARDHAN KRISHNA SAI"],
+    ["21B91A6259", "VEERVALLI PUNEETH"],
+    ["21B91A6260", "VEMULA VARUN SURYA"],
+    ["21B91A6261", "V NAGA MANIKANTA RAMA"],
+    ["21B91A6262", "YALAKALA GANESH"],
+    ["21B91A6263", "YELETI NOGYA"],
+    ["22B95A6201", "GULLAPUDI NAGA"],
+    ["22B95A6202", "KOYINANA PRANATHI SREE"],
+    ["22B95A6203", "M M VENKATA SATYA"],
+    ["22B95A6204", "PAGOTI MADHUVARDHAN"],
+    ["22B95A6205", "PANDAY TARUNO DAY"],
+    ["22B95A6206", "SIVAKAVI SOMESWAR"],
+    ["22B95A6207", "VASAMSETTI SATISH"]
 ];
 
-// Query parameters
-$search = isset($_GET['search']) ? strtolower(trim($_GET['search'])) : '';
-$batch = isset($_GET['batch']) ? trim($_GET['batch']) : '';
-$branch = isset($_GET['branch']) ? strtoupper(trim($_GET['branch'])) : '';
-$industry = isset($_GET['industry']) ? trim($_GET['industry']) : '';
+$batch_2024_list = [];
+foreach ($batch_2024_raw as $item) {
+    $batch_2024_list[] = [
+        'id' => $item[0],
+        'student_id' => $item[0],
+        'registration_number' => $item[0],
+        'name' => ucwords(strtolower($item[1])),
+        'batch' => '2024',
+        'department' => 'CSD',
+        'branch' => 'CSD',
+        'current_role' => 'Graduate Alumnus',
+        'company' => 'CSD Department',
+        'location' => 'Bhimavaram, India',
+        'industry' => 'Software & Tech',
+        'photo' => getStudentAvatar(ucwords(strtolower($item[1]))),
+        'linkedin' => '#'
+    ];
+}
 
-$alumni_list = [];
+// BATCH 2025: Official 67 Student Class List (from Class List Document)
+$batch_2025_raw = [
+    ["22B91A6201", "ARNEPALLI MEGANA"],
+    ["22B91A6202", "BAYYE JOSEPH KUMAR"],
+    ["22B91A6203", "BHAVANAM LAKSHMAN KUMAR REDDY"],
+    ["22B91A6204", "BORRA AVINASH"],
+    ["22B91A6205", "BORRA HIMA SRI"],
+    ["22B91A6206", "BUDDE VENKATA SATYA TEJESH"],
+    ["22B91A6207", "CHIKILE RAJESH"],
+    ["22B91A6208", "CHILAKALAPUDI ABHIRAAMA PHANINDRA"],
+    ["22B91A6209", "CHIMAKURTHI TEJA RUPAK"],
+    ["22B91A6210", "DAKKUMALLA VARSHA"],
+    ["22B91A6211", "DONAVALLI REVATHI"],
+    ["22B91A6212", "GEDELA SAI ABHINAY"],
+    ["22B91A6213", "GOTTUMUKKALA BHARGAVI"],
+    ["22B91A6214", "INUMARTHI SRINAVYA"],
+    ["22B91A6215", "JADDU JYOTHIRMAI INDIRA PRIYADARSINI DEVI"],
+    ["22B91A6216", "JAKKAMSETTI SANJANI"],
+    ["22B91A6217", "JOGI PAVAN TEJA"],
+    ["22B91A6218", "KAMBHAMPATI SHALANI SINDHUSRI"],
+    ["22B91A6219", "KANUMURI RISHITHA VARMA"],
+    ["22B91A6220", "KAPUDASI SNIGDHA"],
+    ["22B91A6221", "KARUMURI TEJA SIDDARDHA PAVAN KUMAR"],
+    ["22B91A6222", "KETHA SURYAPRAKASH"],
+    ["22B91A6223", "KOLAYESWANTH"],
+    ["22B91A6224", "KOLATI STEPHEN SOUDH"],
+    ["22B91A6225", "KOLLABATHULA SHYAMBABU"],
+    ["22B91A6226", "KOLLATI VISHNU TEJA"],
+    ["22B91A6227", "KOPPARTI HONEY NAGASANDEEP"],
+    ["22B91A6228", "LAKSHMI VENKATA NIKHITHA"],
+    ["22B91A6229", "MADDI AKSHAYASRI"],
+    ["22B91A6230", "MANDANGI MOUNIKA"],
+    ["22B91A6231", "MANGENA JAHNAVI"],
+    ["22B91A6232", "MANGINETI MOHAN SATYA SIVA ROHITH KUMAR"],
+    ["22B91A6233", "MATTA BALA VEERRAJU"],
+    ["22B91A6234", "MOTURI SANDILYA"],
+    ["22B91A6235", "MUDUNURI MANOJ SAI ASWANTH VARMA"],
+    ["22B91A6236", "NALLAM HEMASAI SRI LAKSHMI"],
+    ["22B91A6237", "PAILA NIKHIL"],
+    ["22B91A6238", "PANAKALA RAMA NAGESWARA RAO"],
+    ["22B91A6239", "PEPETI GANESH"],
+    ["22B91A6240", "PERABATHULA SOMESWARA RAO"],
+    ["22B91A6241", "PIPPALLA RUSHI GUNA SHANMUKH"],
+    ["22B91A6242", "POSIMSETTY SRI VISWA BHARATH"],
+    ["22B91A6243", "POTHAMSETTI KODANDA RAMA NAGA GANESH"],
+    ["22B91A6244", "POTTURI GAYATRI"],
+    ["22B91A6245", "PULI DURGA BHAVANI"],
+    ["22B91A6246", "PULLURU KRISHNA VAMSI"],
+    ["22B91A6247", "PUTHINIDI JNANESWARI"],
+    ["22B91A6248", "RAAVI CHARWAK"],
+    ["22B91A6249", "SETTI NARENDRA KUMAR"],
+    ["22B91A6250", "SHAIK AHMED"],
+    ["22B91A6251", "SHAIK KARMUNNISA"],
+    ["22B91A6252", "TELLAKULA VEERA RAGHAVA"],
+    ["22B91A6253", "UNDAPALLI DIVYA"],
+    ["22B91A6254", "UNDURTHI MANOJ"],
+    ["22B91A6255", "VAKAPALLI H V SAI SURYA SWAPANTH"],
+    ["22B91A6256", "VATAPALLI GNANA SEKHAR"],
+    ["22B91A6257", "VEERAVALLI SATYA VENKATA SRINADH"],
+    ["22B91A6258", "VEGESNA PRADEEPTHI"],
+    ["22B91A6259", "VILLURI MOHINI MANGALAKSHMI MANASA"],
+    ["23B95A6201", "ANDENAGA SATYA SAI VAMSIKIRAN"],
+    ["23B95A6202", "GUTTULA TEJASWI"],
+    ["23B95A6203", "KEELACHAKRA VAMSI"],
+    ["23B95A6204", "MOHAMMED SIKINDAR KHAN"],
+    ["23B95A6205", "NAKKINA GANESH"],
+    ["23B95A6206", "MIDDOLLA AKASH NAGENDRA SAI PAVAN"],
+    ["23B95A6207", "TANGUTURI SIVA VENKATA NAGA PAVANSAI"],
+    ["23B95A6208", "THOTA SUJAY BABU"]
+];
 
+$batch_2025_list = [];
+foreach ($batch_2025_raw as $item) {
+    // Check if custom face photo exists from extracted posters
+    $custom_photo = 'images/placements/' . $item[0] . '.jpg';
+    $photo_url = file_exists('./' . $custom_photo) ? $custom_photo : getStudentAvatar(ucwords(strtolower($item[1])));
+
+    $batch_2025_list[] = [
+        'id' => $item[0],
+        'student_id' => $item[0],
+        'registration_number' => $item[0],
+        'name' => ucwords(strtolower($item[1])),
+        'batch' => '2025',
+        'department' => 'CSD',
+        'branch' => 'CSD',
+        'current_role' => 'Graduate Alumnus',
+        'company' => 'CSD Department',
+        'location' => 'Bhimavaram, India',
+        'industry' => 'Software & Tech',
+        'photo' => $photo_url,
+        'linkedin' => '#'
+    ];
+}
+
+// 18 Student Placements & Internships from Posters
+$placements = [];
 if ($conn) {
-    $sql = "SELECT s.student_id, s.name, s.email, s.branch, s.profile_picture,
-                   e.company_name, e.designation, e.location, e.industry, e.description
-            FROM students s
-            LEFT JOIN alumni_employment_history e ON s.student_id = e.student_id
-            WHERE s.is_alumni = 1
-            ORDER BY s.created_at DESC";
-    $res = @mysqli_query($conn, $sql);
-    if ($res && mysqli_num_rows($res) > 0) {
-        while ($row = mysqli_fetch_assoc($res)) {
-            $alumni_list[] = [
-                'id' => $row['student_id'],
+    $res_p = @mysqli_query($conn, "SELECT * FROM alumni_placements ORDER BY id ASC");
+    if ($res_p && mysqli_num_rows($res_p) > 0) {
+        while ($row = mysqli_fetch_assoc($res_p)) {
+            $placements[] = [
+                'id' => $row['id'],
                 'student_id' => $row['student_id'],
-                'name' => $row['name'],
-                'photo' => !empty($row['profile_picture']) ? $row['profile_picture'] : null,
-                'batch' => (strpos($row['student_id'], '21') === 0) ? '2022' : ((strpos($row['student_id'], '20') === 0) ? '2021' : ((strpos($row['student_id'], '22') === 0) ? '2024' : '2023')),
-                'program' => 'B.Tech',
-                'department' => !empty($row['branch']) ? $row['branch'] : 'CSD',
-                'branch' => !empty($row['branch']) ? $row['branch'] : 'CSD',
-                'designation' => !empty($row['designation']) ? $row['designation'] : 'Software Engineer',
-                'company' => !empty($row['company_name']) ? $row['company_name'] : 'Tech Corp',
-                'location' => !empty($row['location']) ? $row['location'] : 'India',
-                'industry' => !empty($row['industry']) ? $row['industry'] : 'Software & Tech',
-                'description' => !empty($row['description']) ? $row['description'] : 'Engineering graduate contributing to technology solutions.',
-                'achievements' => 'Distinguished CSD/CSIT Department Graduate.',
-                'is_notable' => (in_array($row['company_name'], ['Google', 'Microsoft', 'Carnegie Mellon University', 'NexGen Robotics & AI Labs', 'Meta (Facebook)'])) ? 1 : 0,
-                'linkedin' => 'https://linkedin.com/in/' . strtolower(str_replace(' ', '-', $row['name']))
+                'student_name' => $row['student_name'],
+                'company' => $row['company'],
+                'job_role' => $row['job_role'],
+                'package' => $row['package'],
+                'placement_year' => $row['placement_year'],
+                'batch' => $row['batch'],
+                'photo' => !empty($row['photo']) ? $row['photo'] : 'images/placements/' . $row['student_id'] . '.jpg'
             ];
         }
     }
 }
 
-// Fallback if DB list is empty
-if (empty($alumni_list)) {
-    $alumni_list = $default_alumni;
+// Query parameters
+$search = isset($_GET['search']) ? strtolower(trim($_GET['search'])) : '';
+$batch_param = isset($_GET['batch']) ? trim($_GET['batch']) : '';
+
+if (!empty($batch_param) && $batch_param === '2024') {
+    $filtered_alumni = $batch_2024_list;
+} elseif (!empty($batch_param) && $batch_param === '2025') {
+    $filtered_alumni = $batch_2025_list;
+} else {
+    $filtered_alumni = array_merge($batch_2024_list, $batch_2025_list);
 }
 
-// Filter dataset
-$filtered = array_filter($alumni_list, function($item) use ($search, $batch, $branch, $industry) {
-    if (!empty($search)) {
-        $searchable = strtolower($item['name'] . ' ' . $item['company'] . ' ' . $item['designation'] . ' ' . $item['department']);
-        if (strpos($searchable, $search) === false) {
-            return false;
-        }
-    }
-    if (!empty($batch) && $batch !== 'all' && $item['batch'] !== $batch) {
-        return false;
-    }
-    if (!empty($branch) && $branch !== 'ALL' && $item['branch'] !== $branch) {
-        return false;
-    }
-    if (!empty($industry) && $industry !== 'all' && strtolower($item['industry']) !== strtolower($industry)) {
-        return false;
-    }
-    return true;
-});
-
-$filtered = array_values($filtered);
-
-// Compute Stats
-$total_alumni = count($alumni_list);
-$industries_map = [];
-$higher_studies = 0;
-$entrepreneurs = 0;
-
-foreach ($alumni_list as $item) {
-    $ind = $item['industry'];
-    $industries_map[$ind] = true;
-    if ($ind === 'Higher Studies') $higher_studies++;
-    if ($ind === 'Entrepreneurship') $entrepreneurs++;
+if (!empty($search)) {
+    $filtered_alumni = array_values(array_filter($filtered_alumni, function($item) use ($search) {
+        $haystack = strtolower($item['name'] . ' ' . $item['registration_number']);
+        return strpos($haystack, $search) !== false;
+    }));
 }
 
 $response = [
     'status' => 'success',
     'stats' => [
-        'total_alumni' => $total_alumni > 0 ? $total_alumni : 500,
-        'total_industries' => count($industries_map) > 0 ? count($industries_map) : 15,
-        'higher_studies' => $higher_studies > 0 ? $higher_studies : 45,
-        'entrepreneurs' => $entrepreneurs > 0 ? $entrepreneurs : 12
+        'total_alumni' => count($batch_2024_list) + count($batch_2025_list),
+        'total_batches' => 2,
+        'batch_2024_count' => count($batch_2024_list),
+        'batch_2025_count' => count($batch_2025_list),
+        'total_placements' => count($placements)
     ],
-    'notable_alumni' => array_values(array_filter($alumni_list, function($a) { return $a['is_notable'] == 1; })),
-    'alumni' => $filtered,
-    'testimonials' => array_map(function($a) {
-        return [
-            'name' => $a['name'],
-            'photo' => $a['photo'],
-            'batch' => $a['batch'],
-            'role' => $a['designation'] . ' @ ' . $a['company'],
-            'quote' => !empty($a['testimonial']) ? $a['testimonial'] : 'My journey in the department laid a rock-solid base for technical excellence and leadership in industry.'
-        ];
-    }, array_slice($default_alumni, 0, 4))
+    'batches' => [
+        '2024' => [
+            'count' => count($batch_2024_list),
+            'alumni' => $batch_2024_list
+        ],
+        '2025' => [
+            'count' => count($batch_2025_list),
+            'alumni' => $batch_2025_list
+        ]
+    ],
+    'placements' => $placements,
+    'achievements' => [],
+    'alumni' => $filtered_alumni
 ];
 
 echo json_encode($response, JSON_PRETTY_PRINT);

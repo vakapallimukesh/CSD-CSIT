@@ -258,18 +258,15 @@ include "connect.php";
         </div>
 
         <div class="row g-4 justify-content-center">
-            <!-- Hero Card 1: P.B.S Kruti -->
+            <!-- Hero Card 1: P.B.S Kruthi -->
             <div class="col-12 col-md-6 col-lg-4 d-flex">
                 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden w-100 d-flex flex-column" style="background: #ffffff; border: 1px solid #e2e8f0; transition: all 0.3s ease;">
                     <div style="position: relative; height: 260px; overflow: hidden; background: #0f172a;">
-                        <img src="assets/achievements/classical-dance-1st-kruti.jpg" alt="P.B.S Kruti" style="width: 100%; height: 100%; object-fit: cover; image-rendering: -webkit-optimize-contrast;">
-                        <span class="position-absolute top-0 end-0 bg-warning text-dark px-3 py-1 m-3 rounded-pill fw-bold small shadow-sm">
-                            🥇 1st Prize Classical Dance
-                        </span>
+                        <img src="assets/achievements/classical-dance-1st-kruti.jpg" alt="P.B.S Kruthi" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; image-rendering: -webkit-optimize-contrast;">
                     </div>
                     <div class="card-body p-4 d-flex flex-column text-start">
                         <!-- Row 1: Name -->
-                        <h3 class="fw-extrabold text-dark font-outfit mb-1" style="font-size: 1.35rem; letter-spacing: -0.3px;">P.B.S Kruti</h3>
+                        <h3 class="fw-extrabold text-dark font-outfit mb-1" style="font-size: 1.35rem; letter-spacing: -0.3px;">P.B.S Kruthi</h3>
                         
                         <!-- Row 2: Register No -->
                         <div class="mb-3">
@@ -280,7 +277,7 @@ include "connect.php";
 
                         <!-- Row 3: 4 to 5 Line Context -->
                         <p class="text-secondary small mb-0 flex-grow-1" style="line-height: 1.6; font-size: 0.86rem; text-align: justify;">
-                            P.B.S Kruti is an exceptional classical dancer who secured 1st Prize in Classical Dance Group Performance at the 45th Annual Day Celebrations of SRKREC. Renowned for her mesmerizing expressions, mudras, and devotion to traditional Indian arts, she balances academics with cultural leadership. Her artistic excellence and talent bring immense honor to our department. She stands as a proud cultural hero inspiring students across campus.
+                            My classical dance journey began in 2nd class when my love for music naturally led me to dance. Over the years, dance taught me discipline, patience, expression, and confidence, while giving me many opportunities to perform on different stages. Although hostel life brought a pause to my journey, my passion never faded. College gave me the opportunity to return to the stage, learn again, and continue doing what I love. Today, dance is more than a skill for me—it is a part of who I am, my happy place, and a journey I want to keep pursuing with every step.
                         </p>
                     </div>
                 </div>
@@ -290,10 +287,7 @@ include "connect.php";
             <div class="col-12 col-md-6 col-lg-4 d-flex">
                 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden w-100 d-flex flex-column" style="background: #ffffff; border: 1px solid #e2e8f0; transition: all 0.3s ease;">
                     <div style="position: relative; height: 260px; overflow: hidden; background: #0f172a;">
-                        <img src="assets/achievements/classical-dance-2nd-lakshmi-prasanna.jpg" alt="R. Lakshmi Prasanna" style="width: 100%; height: 100%; object-fit: cover; image-rendering: -webkit-optimize-contrast;">
-                        <span class="position-absolute top-0 end-0 bg-secondary text-white px-3 py-1 m-3 rounded-pill fw-bold small shadow-sm">
-                            🥈 2nd Prize Classical Dance
-                        </span>
+                        <img src="assets/achievements/classical-dance-2nd-lakshmi-prasanna.jpg" alt="R. Lakshmi Prasanna" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 38%; image-rendering: -webkit-optimize-contrast;">
                     </div>
                     <div class="card-body p-4 d-flex flex-column text-start">
                         <!-- Row 1: Name -->
@@ -308,7 +302,7 @@ include "connect.php";
 
                         <!-- Row 3: 4 to 5 Line Context -->
                         <p class="text-secondary small mb-0 flex-grow-1" style="line-height: 1.6; font-size: 0.86rem; text-align: justify;">
-                            R. Lakshmi Prasanna is a passionate performing artist who won 2nd Prize in Classical Dance Group Performance at the 45th Annual Day Celebrations of SRKREC. Celebrated for her technical precision, graceful stage presence, and expressive mudras, she illuminates every cultural event. She represents the department with immense pride, elegance, and artistic enthusiasm. Lakshmi Prasanna demonstrates that cutting-edge technology, design, and classical arts go hand in hand.
+                            Rellu Lakshmi Prasanna, a final-year Computer Science and Design student, began her Kuchipudi journey in 5th class out of passion for classical dance. Under the guidance of Dr. Chinta Ravi Balakrishna Garu, she completed her Certificate Course and is pursuing her Diploma in Kuchipudi. She has performed on prestigious platforms, including the South Zone Youth Festival, and received several recognitions. In 2025, she founded Saraswathi Nrithyalaya to share her knowledge with young dancers and also works as a school dance teacher. Balancing academics, teaching, and dance, she continues to pursue her dream of becoming a professional Kuchipudi dancer and representing Indian classical dance on international platforms.
                         </p>
                     </div>
                 </div>
@@ -319,9 +313,6 @@ include "connect.php";
                 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden w-100 d-flex flex-column" style="background: #ffffff; border: 1px solid #e2e8f0; transition: all 0.3s ease;">
                     <div style="position: relative; height: 260px; overflow: hidden; background: #0f172a;">
                         <img src="assets/achievements/karate-gold-pooja-sai-praveena.jpg" alt="D Pooja Sai Praveena" style="width: 100%; height: 100%; object-fit: cover; image-rendering: -webkit-optimize-contrast;">
-                        <span class="position-absolute top-0 end-0 bg-danger text-white px-3 py-1 m-3 rounded-pill fw-bold small shadow-sm">
-                            🥇 Gold Medalist Karate
-                        </span>
                     </div>
                     <div class="card-body p-4 d-flex flex-column text-start">
                         <!-- Row 1: Name -->
@@ -347,9 +338,6 @@ include "connect.php";
                 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden w-100 d-flex flex-column" style="background: #ffffff; border: 1px solid #e2e8f0; transition: all 0.3s ease;">
                     <div style="position: relative; height: 260px; overflow: hidden; background: #0f172a;">
                         <img src="assets/images/heroes/preeti-avvula.jpg" alt="Preethi Avula" style="width: 100%; height: 100%; object-fit: cover; object-position: top center; image-rendering: -webkit-optimize-contrast;">
-                        <span class="position-absolute top-0 end-0 bg-dark text-white border border-secondary px-3 py-1 m-3 rounded-pill fw-bold small shadow-sm">
-                            🎙️ TEDx Organizer & Anchor
-                        </span>
                     </div>
                     <div class="card-body p-4 d-flex flex-column text-start">
                         <!-- Row 1: Name -->
@@ -375,9 +363,6 @@ include "connect.php";
                 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden w-100 d-flex flex-column" style="background: #ffffff; border: 1px solid #e2e8f0; transition: all 0.3s ease;">
                     <div style="position: relative; height: 260px; overflow: hidden; background: #0f172a;">
                         <img src="assets/images/heroes/mullu-srinu.jpg" alt="Mullu Srinu" style="width: 100%; height: 100%; object-fit: cover; object-position: center center; image-rendering: -webkit-optimize-contrast;">
-                        <span class="position-absolute top-0 end-0 bg-success text-white border border-light px-3 py-1 m-3 rounded-pill fw-bold small shadow-sm">
-                            🇮🇳 NSS Coordinator
-                        </span>
                     </div>
                     <div class="card-body p-4 d-flex flex-column text-start">
                         <!-- Row 1: Name -->
