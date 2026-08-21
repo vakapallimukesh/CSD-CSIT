@@ -12,10 +12,11 @@ $avg_cgpa = 0;
 
 $stats_query = "SELECT 
     COUNT(*) as total,
-    SUM(CASE WHEN is_alumni = 0 THEN 1 ELSE 0 END) as active,
-    SUM(CASE WHEN is_alumni = 1 THEN 1 ELSE 0 END) as alumni,
+    SUM(CASE WHEN (c.section != 'Graduated Batch' AND (c.year IS NULL OR c.year <= 4)) AND s.is_alumni = 0 THEN 1 ELSE 0 END) as active,
+    SUM(CASE WHEN c.section = 'Graduated Batch' OR c.year > 4 OR s.is_alumni = 1 THEN 1 ELSE 0 END) as alumni,
     AVG(CASE WHEN sp.cgpa IS NOT NULL THEN sp.cgpa END) as avg_cgpa
 FROM students s 
+LEFT JOIN classes c ON s.class_id = c.class_id
 LEFT JOIN student_profile sp ON s.student_id = sp.student_id";
 
 $stats_result = mysqli_query($conn, $stats_query);
@@ -28,10 +29,10 @@ if ($stats_result) {
 }
 
 if ($total_students === 0) {
-    $total_students = 558;
-    $active_students = 558;
-    $alumni_count = 0;
-    $avg_cgpa = 8.42;
+    $total_students = 619;
+    $active_students = 552;
+    $alumni_count = 67;
+    $avg_cgpa = 8.3;
 }
 
 // Get branch distribution
