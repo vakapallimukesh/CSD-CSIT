@@ -745,13 +745,30 @@ body {
             ]
         ];
 
-        // Flat Array of all leaders for JS modal lookup
+        function getLeaderPhotoSrc($photoPath) {
+            if (!empty($photoPath)) {
+                $localPath = __DIR__ . '/' . ltrim($photoPath, '/');
+                if (file_exists($localPath)) {
+                    $ext = strtolower(pathinfo($localPath, PATHINFO_EXTENSION));
+                    $mime = ($ext === 'png') ? 'image/png' : (($ext === 'jpg' || $ext === 'jpeg') ? 'image/jpeg' : 'image/jpeg');
+                    $content = @file_get_contents($localPath);
+                    if ($content !== false) {
+                        return 'data:' . $mime . ';base64,' . base64_encode($content);
+                    }
+                }
+            }
+            return $photoPath;
+        }
+
+        // Flat Array & Base64 Photo Processing for JS modal and 100% reliable InfinityFree image loading
         $all_leaders_flat = [];
-        foreach ($leader_rows as $row) {
-            foreach ($row['leaders'] as $leader) {
-                $all_leaders_flat[] = $leader;
+        foreach ($leader_rows as $row_key => &$row_data_ref) {
+            foreach ($row_data_ref['leaders'] as &$leader_ref) {
+                $leader_ref['photo_src'] = getLeaderPhotoSrc($leader_ref['photo']);
+                $all_leaders_flat[] = $leader_ref;
             }
         }
+        unset($row_data_ref, $leader_ref);
         ?>
 
         <!-- Render Governing Body Sections -->
@@ -779,9 +796,9 @@ body {
                                     <!-- Right Photo Container -->
                                     <div class="leader-photo-right-container">
                                         <div class="leader-photo-right">
-                                            <img src="<?php echo htmlspecialchars($leader['photo']); ?>" 
+                                            <img src="<?php echo htmlspecialchars($leader['photo_src'] ?? $leader['photo']); ?>" 
                                                  alt="<?php echo htmlspecialchars($leader['name']); ?>" 
-                                                 onerror="if(this.src.indexOf('images/leaders')===-1){this.src='images/leaders/<?php echo basename($leader['photo']); ?>';}else{this.src='logo2.png';}"
+                                                 onerror="this.onerror=null; this.src='logo2.png';"
                                                  loading="lazy">
                                         </div>
                                     </div>
@@ -846,7 +863,7 @@ function openLeaderModal(leaderId) {
     document.getElementById('modalLeaderStatement').textContent = leader.full_statement;
 
     const modalImg = document.getElementById('modalLeaderImg');
-    modalImg.src = leader.photo;
+    modalImg.src = leader.photo_src || leader.photo;
 
     const achievementsContainer = document.getElementById('modalLeaderAchievements');
     achievementsContainer.innerHTML = '';
