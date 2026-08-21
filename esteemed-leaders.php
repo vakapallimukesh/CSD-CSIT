@@ -740,6 +740,7 @@ body {
                                         <div class="leader-photo-right">
                                             <img src="<?php echo htmlspecialchars($leader['photo']); ?>" 
                                                  alt="<?php echo htmlspecialchars($leader['name']); ?>" 
+                                                 onerror="this.onerror=null; this.src='assets/images/logo2.png';"
                                                  loading="lazy">
                                         </div>
                                     </div>
