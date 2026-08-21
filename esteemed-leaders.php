@@ -327,48 +327,39 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     flex-shrink: 0;
     width: 175px;
+    max-width: 175px;
 }
 
-.leader-grid-card {
-    background: #ffffff;
-    border-radius: 12px;
-    border: 1px solid #e2e8f0;
+.leader-photo-right {
+    width: 175px;
+    height: 195px;
+    max-width: 175px;
+    max-height: 195px;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    height: 100%;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-}
-
-.leader-grid-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1);
-    border-color: #d97706;
-}
-
-.leader-photo-box {
-    width: 100%;
-    height: 255px;
-    background: #f1f5f9;
-    overflow: hidden;
+    border: 3.5px solid #f59e0b;
+    box-shadow: 0 8px 20px rgba(217, 119, 6, 0.18);
     position: relative;
+    background: #fffbeb;
+    flex-shrink: 0;
 }
 
-.leader-photo-box img {
+.leader-photo-right img {
     width: 100%;
     height: 100%;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: cover;
     object-position: center top;
     transition: transform 0.4s ease;
 }
 
-.leader-grid-card:hover .leader-photo-box img {
-    transform: scale(1.05);
+.leader-line-card:hover .leader-photo-right img {
+    transform: scale(1.06);
 }
 
 .leader-info-box {
