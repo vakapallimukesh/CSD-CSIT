@@ -1351,9 +1351,9 @@ if ($class_result) {
                         'subtext' => 'Graduated Batches'
                     ],
                     [
-                        'title' => 'Average CGPA',
-                        'value' => $avg_cgpa ?: 'N/A',
-                        'subtext' => 'Academic Average'
+                        'title' => 'Average Package',
+                        'value' => '₹4.7L',
+                        'subtext' => 'Placement Average'
                     ]
                 ];
                 ?>
@@ -2074,8 +2074,8 @@ if ($class_result) {
                         <div class="detail-icon" style="background: #f5ebe6; color: #6d4c41;">
                             <i class="fas fa-star"></i>
                         </div>
-                        <div class="detail-value">${avgCgpa}</div>
-                        <div class="detail-label">Average CGPA</div>
+                        <div class="detail-value">₹4.7L</div>
+                        <div class="detail-label">Average Package</div>
                     </div>
                 </div>
 
