@@ -552,7 +552,147 @@ body {
             </p>
         </div>
 
-        <!-- Featured Announcement Banner -->
+        <!-- Featured Announcement Banner 1: Bluconnect Ai India Pvt Ltd -->
+        <div class="company-announcement-card mb-5" style="background: linear-gradient(135deg, #1a0d06 0%, #361a0c 50%, #522710 100%); border-radius: 24px; padding: 32px; border: 1.5px solid rgba(245, 158, 11, 0.4); box-shadow: 0 15px 40px rgba(0,0,0,0.15);">
+            <div class="row align-items-center g-4">
+                <div class="col-lg-7 text-center text-lg-start">
+                    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start gap-2 mb-3">
+                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold" style="font-size: 0.85rem;"><i class="fas fa-crown me-1"></i> SELECTION ANNOUNCEMENT</span>
+                        <span class="badge bg-danger text-white px-3 py-2 rounded-pill fw-bold" style="font-size: 0.85rem;"><i class="fas fa-bolt me-1"></i> 7.8 LPA PACKAGE</span>
+                        <span class="badge bg-success text-white px-3 py-2 rounded-pill fw-bold" style="font-size: 0.85rem;"><i class="fas fa-users me-1"></i> 8 STUDENTS SELECTED</span>
+                    </div>
+                    <h3 class="fw-bold mb-2" style="font-family: 'Outfit', sans-serif; font-size: 2.3rem; color: #ffffff;">Bluconnect Ai India Pvt Ltd</h3>
+                    <p class="mb-3" style="color: #e5d5c5; font-size: 1.12rem; line-height: 1.6;">
+                        Hearty Congratulations and Best Wishes to our <strong>IV-B.Tech CSD & CSE Students</strong> for getting selected at <strong>Bluconnect Ai India Pvt Ltd</strong> as <strong>Software Development Engineers</strong> at <strong>7.8 LPA</strong>!
+                    </p>
+                    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start gap-3">
+                        <button type="button" class="btn btn-warning fw-bold px-4 py-2" style="border-radius: 50px; font-size: 0.95rem; color: #1a0d06;" onclick="openLightbox('images/bluconnect_poster.jpg', 'Bluconnect Ai Selection Poster - 7.8 LPA', 'Congratulations to 8 Selected CSD & CSE Students')">
+                            <i class="fas fa-search-plus me-2"></i> View Official Banner Poster
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-5 text-center">
+                    <div class="position-relative overflow-hidden rounded-4 shadow-lg border border-warning border-opacity-50" style="cursor: pointer;" onclick="openLightbox('images/bluconnect_poster.jpg', 'Bluconnect Ai Selection Poster - 7.8 LPA', 'Congratulations to 8 Selected CSD & CSE Students')">
+                        <img src="images/bluconnect_poster.jpg" alt="Bluconnect Ai Selection Poster 7.8 LPA" style="width: 100%; max-height: 280px; object-fit: cover; border-radius: 16px; transition: transform 0.4s ease;" onmouseover="this.style.transform='scale(1.03)'" onmouseout="this.style.transform='scale(1)'">
+                        <div class="position-absolute bottom-0 start-0 end-0 p-2 text-center text-white font-weight-bold" style="background: rgba(26, 13, 6, 0.85); font-size: 0.85rem;">
+                            <i class="fas fa-expand me-1"></i> Click to Zoom High-Res Poster
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bluconnect Ai Selected Students Grid -->
+        <h4 class="fw-bold mb-4 text-center text-md-start" style="font-family: 'Outfit', sans-serif; color: #1a0d06;">
+            <i class="fas fa-award text-warning me-2"></i> Bluconnect Ai India Pvt Ltd — 8 Selected Engineers (7.8 LPA)
+        </h4>
+        <div class="row g-4 justify-content-center mb-5">
+            <!-- Student 1 -->
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="student-card text-center p-3" style="border: 1.5px solid #f3eae1; border-radius: 20px; background: #ffffff; box-shadow: 0 8px 24px rgba(180, 83, 9, 0.06);">
+                    <div class="student-photo-wrapper mx-auto mb-3" style="width: 85px; height: 85px; border-radius: 50%; background: linear-gradient(135deg, #d97706, #f59e0b); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 800;">
+                        V
+                    </div>
+                    <h5 class="student-name" style="font-size: 1.05rem; font-weight: 800; color: #1a0d06; margin-bottom: 2px;">V M M LAKSHMI MANASA</h5>
+                    <div class="student-roll" style="font-size: 0.85rem; font-weight: 700; color: #d97706;">22B91A6259</div>
+                    <div class="student-class" style="font-size: 0.8rem; color: #6f5f54;">4/4 CSD</div>
+                    <div class="mt-2"><span class="badge bg-success text-white rounded-pill px-3 py-1" style="font-size: 0.75rem;">SDE • 7.8 LPA</span></div>
+                </div>
+            </div>
+
+            <!-- Student 2 -->
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="student-card text-center p-3" style="border: 1.5px solid #f3eae1; border-radius: 20px; background: #ffffff; box-shadow: 0 8px 24px rgba(180, 83, 9, 0.06);">
+                    <div class="student-photo-wrapper mx-auto mb-3" style="width: 85px; height: 85px; border-radius: 50%; background: linear-gradient(135deg, #d97706, #f59e0b); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 800;">
+                        B
+                    </div>
+                    <h5 class="student-name" style="font-size: 1.05rem; font-weight: 800; color: #1a0d06; margin-bottom: 2px;">B V SATYA TEJESH</h5>
+                    <div class="student-roll" style="font-size: 0.85rem; font-weight: 700; color: #d97706;">22B91A6206</div>
+                    <div class="student-class" style="font-size: 0.8rem; color: #6f5f54;">4/4 CSD</div>
+                    <div class="mt-2"><span class="badge bg-success text-white rounded-pill px-3 py-1" style="font-size: 0.75rem;">SDE • 7.8 LPA</span></div>
+                </div>
+            </div>
+
+            <!-- Student 3 -->
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="student-card text-center p-3" style="border: 1.5px solid #f3eae1; border-radius: 20px; background: #ffffff; box-shadow: 0 8px 24px rgba(180, 83, 9, 0.06);">
+                    <div class="student-photo-wrapper mx-auto mb-3" style="width: 85px; height: 85px; border-radius: 50%; background: linear-gradient(135deg, #d97706, #f59e0b); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 800;">
+                        K
+                    </div>
+                    <h5 class="student-name" style="font-size: 1.05rem; font-weight: 800; color: #1a0d06; margin-bottom: 2px;">KRISHNA VAMSI</h5>
+                    <div class="student-roll" style="font-size: 0.85rem; font-weight: 700; color: #d97706;">22B91A05P2</div>
+                    <div class="student-class" style="font-size: 0.8rem; color: #6f5f54;">4/4 CSE</div>
+                    <div class="mt-2"><span class="badge bg-success text-white rounded-pill px-3 py-1" style="font-size: 0.75rem;">SDE • 7.8 LPA</span></div>
+                </div>
+            </div>
+
+            <!-- Student 4 -->
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="student-card text-center p-3" style="border: 1.5px solid #f3eae1; border-radius: 20px; background: #ffffff; box-shadow: 0 8px 24px rgba(180, 83, 9, 0.06);">
+                    <div class="student-photo-wrapper mx-auto mb-3" style="width: 85px; height: 85px; border-radius: 50%; background: linear-gradient(135deg, #d97706, #f59e0b); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 800;">
+                        B
+                    </div>
+                    <h5 class="student-name" style="font-size: 1.05rem; font-weight: 800; color: #1a0d06; margin-bottom: 2px;">B LAKSHMAN KUMAR REDDY</h5>
+                    <div class="student-roll" style="font-size: 0.85rem; font-weight: 700; color: #d97706;">22B91A6203</div>
+                    <div class="student-class" style="font-size: 0.8rem; color: #6f5f54;">4/4 CSD</div>
+                    <div class="mt-2"><span class="badge bg-success text-white rounded-pill px-3 py-1" style="font-size: 0.75rem;">SDE • 7.8 LPA</span></div>
+                </div>
+            </div>
+
+            <!-- Student 5 -->
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="student-card text-center p-3" style="border: 1.5px solid #f3eae1; border-radius: 20px; background: #ffffff; box-shadow: 0 8px 24px rgba(180, 83, 9, 0.06);">
+                    <div class="student-photo-wrapper mx-auto mb-3" style="width: 85px; height: 85px; border-radius: 50%; background: linear-gradient(135deg, #d97706, #f59e0b); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 800;">
+                        V
+                    </div>
+                    <h5 class="student-name" style="font-size: 1.05rem; font-weight: 800; color: #1a0d06; margin-bottom: 2px;">V H V S SURYA SWAPANTH</h5>
+                    <div class="student-roll" style="font-size: 0.85rem; font-weight: 700; color: #d97706;">22B91A6255</div>
+                    <div class="student-class" style="font-size: 0.8rem; color: #6f5f54;">4/4 CSD</div>
+                    <div class="mt-2"><span class="badge bg-success text-white rounded-pill px-3 py-1" style="font-size: 0.75rem;">SDE • 7.8 LPA</span></div>
+                </div>
+            </div>
+
+            <!-- Student 6 -->
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="student-card text-center p-3" style="border: 1.5px solid #f3eae1; border-radius: 20px; background: #ffffff; box-shadow: 0 8px 24px rgba(180, 83, 9, 0.06);">
+                    <div class="student-photo-wrapper mx-auto mb-3" style="width: 85px; height: 85px; border-radius: 50%; background: linear-gradient(135deg, #d97706, #f59e0b); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 800;">
+                        P
+                    </div>
+                    <h5 class="student-name" style="font-size: 1.05rem; font-weight: 800; color: #1a0d06; margin-bottom: 2px;">P NIKHIL</h5>
+                    <div class="student-roll" style="font-size: 0.85rem; font-weight: 700; color: #d97706;">22B91A6237</div>
+                    <div class="student-class" style="font-size: 0.8rem; color: #6f5f54;">4/4 CSD</div>
+                    <div class="mt-2"><span class="badge bg-success text-white rounded-pill px-3 py-1" style="font-size: 0.75rem;">SDE • 7.8 LPA</span></div>
+                </div>
+            </div>
+
+            <!-- Student 7 -->
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="student-card text-center p-3" style="border: 1.5px solid #f3eae1; border-radius: 20px; background: #ffffff; box-shadow: 0 8px 24px rgba(180, 83, 9, 0.06);">
+                    <div class="student-photo-wrapper mx-auto mb-3" style="width: 85px; height: 85px; border-radius: 50%; background: linear-gradient(135deg, #d97706, #f59e0b); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 800;">
+                        G
+                    </div>
+                    <h5 class="student-name" style="font-size: 1.05rem; font-weight: 800; color: #1a0d06; margin-bottom: 2px;">G SAI ABHINAY</h5>
+                    <div class="student-roll" style="font-size: 0.85rem; font-weight: 700; color: #d97706;">22B91A6212</div>
+                    <div class="student-class" style="font-size: 0.8rem; color: #6f5f54;">4/4 CSD</div>
+                    <div class="mt-2"><span class="badge bg-success text-white rounded-pill px-3 py-1" style="font-size: 0.75rem;">SDE • 7.8 LPA</span></div>
+                </div>
+            </div>
+
+            <!-- Student 8 -->
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="student-card text-center p-3" style="border: 1.5px solid #f3eae1; border-radius: 20px; background: #ffffff; box-shadow: 0 8px 24px rgba(180, 83, 9, 0.06);">
+                    <div class="student-photo-wrapper mx-auto mb-3" style="width: 85px; height: 85px; border-radius: 50%; background: linear-gradient(135deg, #d97706, #f59e0b); color: white; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: 800;">
+                        M
+                    </div>
+                    <h5 class="student-name" style="font-size: 1.05rem; font-weight: 800; color: #1a0d06; margin-bottom: 2px;">M SANDILYA</h5>
+                    <div class="student-roll" style="font-size: 0.85rem; font-weight: 700; color: #d97706;">22B91A6234</div>
+                    <div class="student-class" style="font-size: 0.8rem; color: #6f5f54;">4/4 CSD</div>
+                    <div class="mt-2"><span class="badge bg-success text-white rounded-pill px-3 py-1" style="font-size: 0.75rem;">SDE • 7.8 LPA</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Announcement Banner 2: Zennith Digital Tech -->
         <div class="company-announcement-card">
             <div class="row align-items-center">
                 <div class="col-12 text-center text-md-start">
@@ -663,6 +803,30 @@ body {
 
         <!-- Dynamic Photo Cards Grid -->
         <div class="row g-4" id="photoGrid">
+
+            <!-- FEATURED POSTER CARD: Bluconnect Ai India Pvt Ltd (7.8 LPA) -->
+            <div class="col-md-6 col-lg-4 gallery-item" data-category="internships">
+                <div class="photo-card" style="border: 2px solid #f59e0b; box-shadow: 0 12px 30px rgba(245, 158, 11, 0.15);">
+                    <div class="photo-thumb-wrap" onclick="openLightbox('images/bluconnect_poster.jpg', 'Bluconnect Ai Selection Banner - 7.8 LPA', 'Congratulations to 8 Selected CSD & CSE Students')">
+                        <img src="images/bluconnect_poster.jpg" alt="Bluconnect Ai Selection Banner - 7.8 LPA" loading="lazy">
+                        <div class="photo-overlay">
+                            <span class="zoom-badge" style="background: #f59e0b; color: #1a0d06;"><i class="fas fa-crown me-1"></i> Featured Selection</span>
+                        </div>
+                    </div>
+                    <div class="photo-info">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <span class="photo-category-tag" style="color: #d97706;"><i class="fas fa-award me-1"></i> Selection Banner</span>
+                            <span class="badge bg-danger text-white rounded-pill px-2 py-1" style="font-size: 0.75rem;">7.8 LPA</span>
+                        </div>
+                        <h4 class="photo-title">Bluconnect Ai India Pvt Ltd Selection Drive</h4>
+                        <p class="small text-muted mb-2">8 IV-B.Tech Students Selected as Software Development Engineer</p>
+                        <div class="mt-auto pt-2 d-flex justify-content-between align-items-center border-top">
+                            <small class="text-warning fw-bold"><i class="fas fa-users me-1"></i> 8 Placed Students</small>
+                            <span class="text-warning fw-bold small"><i class="fas fa-expand me-1"></i> Click to Zoom</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- INTERNSHIPS SLIDES -->
             <?php 
