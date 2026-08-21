@@ -541,14 +541,34 @@ body {
     </div>
 </section>
 
-<!-- Currently Working on Internship Section -->
+<!-- Top Corporate Internship Partners & Recruiters Section (Moved to Top) -->
+<section class="recruiters-section" style="background: #fdfbf7; padding: 60px 0 30px; border-bottom: 1px solid #f3eae1;">
+    <div class="container">
+        <div class="text-center mb-4">
+            <span class="hero-tag" style="background: rgba(217, 119, 6, 0.08); color: #d97706; border-color: rgba(217, 119, 6, 0.2);">
+                <i class="fas fa-building me-2"></i> Corporate Ecosystem
+            </span>
+            <h2 class="section-title mb-2" style="color: #1a0d06; font-family: 'Outfit', sans-serif; font-size: 2.8rem; font-weight: 900; text-align: center;">
+                Top Internship <span style="color: #d97706;">Partners & Recruiters</span>
+            </h2>
+            <p style="color: #6f5f54; font-size: 1.05rem; max-width: 650px; margin: 0 auto; text-align: center;">
+                Leading tech MNCs, innovation hubs, and enterprise partners hiring CSD & CSIT students for paid industrial internships and pre-placement offers.
+            </p>
+        </div>
+
+        <!-- ReactBits Interactive 3D Circular Gallery for Internship Partners -->
+        <div id="internshipCompaniesCircularGallery" style="height: 520px; width: 100%; position: relative; overflow: hidden; background: #ffffff; border-radius: 24px; border: 1px solid #f3eae1; box-shadow: 0 15px 40px rgba(0,0,0,0.07); margin-top: 20px; margin-bottom: 10px;"></div>
+    </div>
+</section>
+
+<!-- Currently Working on Internship Section (Active Batch) -->
 <section class="active-internship-section">
     <div class="container">
         <div class="text-center mb-5">
             <span class="hero-tag" style="background: rgba(217, 119, 6, 0.08); color: #d97706; border-color: rgba(217, 119, 6, 0.2);">ACTIVE INTERNSHIPS</span>
             <h2 class="section-title">Currently Working on <span style="color: #d97706;">Internships</span></h2>
             <p style="color: #6f5f54; font-size: 1.08rem; max-width: 650px; margin: 0 auto;">
-                Hearty congratulations to our CSD & CSIT students selected for prestigious industrial internships.
+                Hearty congratulations to our CSD & CSE students selected for prestigious industrial internships.
             </p>
         </div>
 
@@ -586,7 +606,7 @@ body {
         <h4 class="fw-bold mb-4 text-center text-md-start" style="font-family: 'Outfit', sans-serif; color: #1a0d06;">
             <i class="fas fa-award text-warning me-2"></i> Bluconnect Ai India Pvt Ltd — 8 Selected Engineers (7.8 LPA)
         </h4>
-        <div class="row g-4 justify-content-center mb-5">
+        <div class="row g-4 justify-content-center mb-4">
             <!-- Student 1 -->
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="student-card text-center p-3" style="border: 1.5px solid #f3eae1; border-radius: 20px; background: #ffffff; box-shadow: 0 8px 24px rgba(180, 83, 9, 0.06);">
@@ -688,87 +708,6 @@ body {
                     <div class="student-roll" style="font-size: 0.85rem; font-weight: 700; color: #d97706;">22B91A6234</div>
                     <div class="student-class" style="font-size: 0.8rem; color: #6f5f54;">4/4 CSD</div>
                     <div class="mt-2"><span class="badge bg-success text-white rounded-pill px-3 py-1" style="font-size: 0.75rem;">SDE • 7.8 LPA</span></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Featured Announcement Banner 2: Zennith Digital Tech -->
-        <div class="company-announcement-card">
-            <div class="row align-items-center">
-                <div class="col-12 text-center text-md-start">
-                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3" style="font-size: 0.85rem;">SELECTION ANNOUNCEMENT</span>
-                    <h3 class="fw-bold mb-2" style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; color: #ffffff;">Zennith Digital Tech LLP</h3>
-                    <p class="mb-0" style="color: #e5d5c5; font-size: 1.15rem; line-height: 1.6;">
-                        Best Wishes to our students for getting selected by <strong>Zennith Digital Tech LLP</strong> as <strong>Software Engineering Interns</strong>.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Individual Student Cards Grid -->
-        <div class="row g-4 justify-content-center">
-            <!-- Student 1 -->
-            <div class="col-lg-4 col-md-6">
-                <div class="student-card">
-                    <div class="student-photo-wrapper">
-                        <img src="assets/images/internships/student_leela_madhav.jpg" alt="N. Leela Madhav Rao" class="student-photo">
-                    </div>
-                    <h4 class="student-name">N. Leela Madhav Rao</h4>
-                    <div class="student-roll">23B91A0738</div>
-                    <div class="student-class">3/4 CSIT</div>
-                    <div class="student-role-tag"><i class="fas fa-check-circle me-1"></i> Software Engineering Intern</div>
-                </div>
-            </div>
-
-            <!-- Student 2 -->
-            <div class="col-lg-4 col-md-6">
-                <div class="student-card">
-                    <div class="student-photo-wrapper">
-                        <img src="assets/images/internships/student_sriram_charan.jpg" alt="K. S. Sriram Charan Teja" class="student-photo">
-                    </div>
-                    <h4 class="student-name">K. S. Sriram Charan Teja</h4>
-                    <div class="student-roll">23B91A0727</div>
-                    <div class="student-class">3/4 CSIT</div>
-                    <div class="student-role-tag"><i class="fas fa-check-circle me-1"></i> Software Engineering Intern</div>
-                </div>
-            </div>
-
-            <!-- Student 3 -->
-            <div class="col-lg-4 col-md-6">
-                <div class="student-card">
-                    <div class="student-photo-wrapper">
-                        <img src="assets/images/internships/student_nikhila_valli.jpg" alt="G. Nikhila Valli" class="student-photo">
-                    </div>
-                    <h4 class="student-name">G. Nikhila Valli</h4>
-                    <div class="student-roll">23B91A0714</div>
-                    <div class="student-class">3/4 CSIT</div>
-                    <div class="student-role-tag"><i class="fas fa-check-circle me-1"></i> Software Engineering Intern</div>
-                </div>
-            </div>
-
-            <!-- Student 4 -->
-            <div class="col-lg-4 col-md-6">
-                <div class="student-card">
-                    <div class="student-photo-wrapper">
-                        <img src="assets/images/internships/student_manoj_kumar.jpg" alt="G. Manoj Kumar" class="student-photo">
-                    </div>
-                    <h4 class="student-name">G. Manoj Kumar</h4>
-                    <div class="student-roll">23B91A6219</div>
-                    <div class="student-class">3/4 CSD</div>
-                    <div class="student-role-tag"><i class="fas fa-check-circle me-1"></i> Software Engineering Intern</div>
-                </div>
-            </div>
-
-            <!-- Student 5 -->
-            <div class="col-lg-4 col-md-6">
-                <div class="student-card">
-                    <div class="student-photo-wrapper">
-                        <img src="assets/images/internships/student_uma_sai_pavan.jpg" alt="T. Uma Sai Pavan" class="student-photo">
-                    </div>
-                    <h4 class="student-name">T. Uma Sai Pavan</h4>
-                    <div class="student-roll">24B95A6207</div>
-                    <div class="student-class">3/4 CSD</div>
-                    <div class="student-role-tag"><i class="fas fa-check-circle me-1"></i> Software Engineering Intern</div>
                 </div>
             </div>
         </div>
@@ -902,23 +841,97 @@ body {
     </div>
 </section>
 
-<!-- Top Corporate Internship Partners & Recruiters Section -->
-<section class="recruiters-section" style="background: #fdfbf7; padding: 75px 0; border-top: 1px solid #f3eae1;">
+<!-- Graduated Batches & Alumni Internships Section (Placed at the Last) -->
+<section class="alumni-internships-section" style="background: #fdfbf7; padding: 65px 0; border-top: 1px solid #f3eae1;">
     <div class="container">
-        <div class="text-center mb-4">
-            <span class="hero-tag" style="background: rgba(217, 119, 6, 0.08); color: #d97706; border-color: rgba(217, 119, 6, 0.2);">
-                <i class="fas fa-building me-2"></i> Corporate Ecosystem
-            </span>
-            <h2 class="section-title mb-2" style="color: #1a0d06; font-family: 'Outfit', sans-serif; font-size: 2.8rem; font-weight: 900; text-align: center;">
-                Top Internship <span style="color: #d97706;">Partners & Recruiters</span>
-            </h2>
-            <p style="color: #6f5f54; font-size: 1.05rem; max-width: 650px; margin: 0 auto; text-align: center;">
-                Leading tech MNCs, innovation hubs, and enterprise partners hiring CSD & CSIT students for paid industrial internships and pre-placement offers.
+        <div class="text-center mb-5">
+            <span class="hero-tag" style="background: rgba(217, 119, 6, 0.08); color: #d97706; border-color: rgba(217, 119, 6, 0.2);">GRADUATED BATCH & ALUMNI</span>
+            <h2 class="section-title">Graduated Batches & <span style="color: #d97706;">Alumni Internships</span></h2>
+            <p style="color: #6f5f54; font-size: 1.08rem; max-width: 650px; margin: 0 auto;">
+                Historical industrial selections, software engineering internships, and career placements of graduated alumni batches.
             </p>
         </div>
 
-        <!-- ReactBits Interactive 3D Circular Gallery for Internship Partners -->
-        <div id="internshipCompaniesCircularGallery" style="height: 520px; width: 100%; position: relative; overflow: hidden; background: #ffffff; border-radius: 24px; border: 1px solid #f3eae1; box-shadow: 0 15px 40px rgba(0,0,0,0.07); margin-top: 20px; margin-bottom: 10px;"></div>
+        <!-- Featured Announcement Banner: Zennith Digital Tech -->
+        <div class="company-announcement-card mb-5">
+            <div class="row align-items-center">
+                <div class="col-12 text-center text-md-start">
+                    <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold mb-3" style="font-size: 0.85rem;">GRADUATED BATCH SELECTION</span>
+                    <h3 class="fw-bold mb-2" style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; color: #ffffff;">Zennith Digital Tech LLP</h3>
+                    <p class="mb-0" style="color: #e5d5c5; font-size: 1.15rem; line-height: 1.6;">
+                        Best Wishes to our graduated batch students for getting selected by <strong>Zennith Digital Tech LLP</strong> as <strong>Software Engineering Interns</strong>.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Individual Student Cards Grid for Graduated Batch -->
+        <div class="row g-4 justify-content-center">
+            <!-- Student 1 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="student-card">
+                    <div class="student-photo-wrapper">
+                        <img src="assets/images/internships/student_leela_madhav.jpg" alt="N. Leela Madhav Rao" class="student-photo">
+                    </div>
+                    <h4 class="student-name">N. Leela Madhav Rao</h4>
+                    <div class="student-roll">23B91A0738</div>
+                    <div class="student-class">Graduated CSIT Batch</div>
+                    <div class="student-role-tag"><i class="fas fa-check-circle me-1"></i> Software Engineering Intern</div>
+                </div>
+            </div>
+
+            <!-- Student 2 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="student-card">
+                    <div class="student-photo-wrapper">
+                        <img src="assets/images/internships/student_sriram_charan.jpg" alt="K. S. Sriram Charan Teja" class="student-photo">
+                    </div>
+                    <h4 class="student-name">K. S. Sriram Charan Teja</h4>
+                    <div class="student-roll">23B91A0727</div>
+                    <div class="student-class">Graduated CSIT Batch</div>
+                    <div class="student-role-tag"><i class="fas fa-check-circle me-1"></i> Software Engineering Intern</div>
+                </div>
+            </div>
+
+            <!-- Student 3 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="student-card">
+                    <div class="student-photo-wrapper">
+                        <img src="assets/images/internships/student_nikhila_valli.jpg" alt="G. Nikhila Valli" class="student-photo">
+                    </div>
+                    <h4 class="student-name">G. Nikhila Valli</h4>
+                    <div class="student-roll">23B91A0714</div>
+                    <div class="student-class">Graduated CSIT Batch</div>
+                    <div class="student-role-tag"><i class="fas fa-check-circle me-1"></i> Software Engineering Intern</div>
+                </div>
+            </div>
+
+            <!-- Student 4 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="student-card">
+                    <div class="student-photo-wrapper">
+                        <img src="assets/images/internships/student_manoj_kumar.jpg" alt="G. Manoj Kumar" class="student-photo">
+                    </div>
+                    <h4 class="student-name">G. Manoj Kumar</h4>
+                    <div class="student-roll">23B91A6219</div>
+                    <div class="student-class">Graduated CSD Batch</div>
+                    <div class="student-role-tag"><i class="fas fa-check-circle me-1"></i> Software Engineering Intern</div>
+                </div>
+            </div>
+
+            <!-- Student 5 -->
+            <div class="col-lg-4 col-md-6">
+                <div class="student-card">
+                    <div class="student-photo-wrapper">
+                        <img src="assets/images/internships/student_uma_sai_pavan.jpg" alt="T. Uma Sai Pavan" class="student-photo">
+                    </div>
+                    <h4 class="student-name">T. Uma Sai Pavan</h4>
+                    <div class="student-roll">24B95A6207</div>
+                    <div class="student-class">Graduated CSD Batch</div>
+                    <div class="student-role-tag"><i class="fas fa-check-circle me-1"></i> Software Engineering Intern</div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
