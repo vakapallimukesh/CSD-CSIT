@@ -761,30 +761,19 @@ body {
                     <h3 class="row-category-title"><i class="<?php echo $row_data['icon']; ?> me-2" style="color: <?php echo $row_data['color']; ?>;"></i> <?php echo htmlspecialchars($row_data['title']); ?></h3>
                     <span class="row-category-badge"><?php echo htmlspecialchars($row_data['badge']); ?></span>
                 </div>
-                <div class="row g-4 justify-content-center">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                     <?php foreach ($row_data['leaders'] as $leader): ?>
-                        <div class="col-12 leader-item" data-category="<?php echo $leader['category']; ?>">
-                            <div class="leader-line-card" onclick="openLeaderModal('<?php echo $leader['id']; ?>')" style="cursor: pointer;">
-                                <div class="card-inner-flex">
-                                    <!-- Left Details -->
-                                    <div class="leader-details-left">
-                                        <div class="header-meta">
-                                            <span class="hod-badge"><i class="fas fa-award"></i> <?php echo htmlspecialchars($leader['badge']); ?></span>
-                                        </div>
-                                        <h3 class="leader-name"><?php echo htmlspecialchars($leader['name']); ?></h3>
-                                        <div class="leader-designation"><?php echo htmlspecialchars($leader['designation']); ?></div>
-                                        <p class="leader-about-text"><?php echo htmlspecialchars($leader['bio']); ?></p>
-                                    </div>
-
-                                    <!-- Right Photo Container -->
-                                    <div class="leader-photo-right-container">
-                                        <div class="leader-photo-right">
-                                            <img src="<?php echo htmlspecialchars($leader['photo']); ?>" 
-                                                 alt="<?php echo htmlspecialchars($leader['name']); ?>" 
-                                                 onerror="if(this.src.indexOf('images/leaders')===-1){this.src='images/leaders/<?php echo basename($leader['photo']); ?>';}else{this.src='logo2.png';}"
-                                                 loading="lazy">
-                                        </div>
-                                    </div>
+                        <div class="col leader-item" data-category="<?php echo $leader['category']; ?>">
+                            <div class="leader-grid-card" onclick="openLeaderModal('<?php echo $leader['id']; ?>')">
+                                <div class="leader-photo-box">
+                                    <img src="<?php echo htmlspecialchars($leader['photo']); ?>" 
+                                         alt="<?php echo htmlspecialchars($leader['name']); ?>" 
+                                         onerror="this.onerror=null; this.src='logo2.png';"
+                                         loading="lazy">
+                                </div>
+                                <div class="leader-info-box">
+                                    <h5 class="leader-name-title"><?php echo htmlspecialchars($leader['name']); ?></h5>
+                                    <p class="leader-designation-subtitle"><?php echo htmlspecialchars($leader['designation']); ?></p>
                                 </div>
                             </div>
                         </div>
