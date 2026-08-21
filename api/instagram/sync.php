@@ -41,6 +41,8 @@ function write_sync_log($message) {
     @file_put_contents($log_file, "[{$timestamp}] {$message}\n", FILE_APPEND);
 }
 
+
+
 // ============================================================
 //  TABLE SETUP (runs once per request)
 // ============================================================
@@ -171,6 +173,7 @@ function fetch_via_graphql_api($username) {
         return [];
     }
 
+
     $edges = $data['data']['user']['edge_owner_to_timeline_media']['edges'] ?? [];
     return parse_instagram_edges($edges, $username);
 }
@@ -202,6 +205,7 @@ function fetch_via_html_scrape($username) {
         return [];
     }
 
+
     $items = [];
 
     // Method 1: Try to extract JSON data from <script type="application/ld+json">
@@ -220,6 +224,7 @@ function fetch_via_html_scrape($username) {
         if ($shared_data) {
             $user_data = $shared_data['entry_data']['ProfilePage'][0]['graphql']['user'] ?? null;
             if ($user_data) {
+
                 $edges = $user_data['edge_owner_to_timeline_media']['edges'] ?? [];
                 $items = parse_instagram_edges($edges, $username);
                 write_sync_log("[FALLBACK] Extracted " . count($items) . " posts from _sharedData for @{$username}");

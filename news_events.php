@@ -66,10 +66,15 @@ body {
     font-weight: 900;
     line-height: 1.15;
     margin-bottom: 18px;
+    background: linear-gradient(135deg, #ffffff 0%, #f5ebe6 35%, #e6c280 70%, #d49b59 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .hero-title span {
-    color: #f59e0b;
+    background: inherit;
+    -webkit-background-clip: inherit;
+    -webkit-text-fill-color: inherit;
 }
 
 .insta-badge-banner {
@@ -291,37 +296,7 @@ body {
     </div>
 </div>
 
-<!-- Stats Highlight -->
-<section class="py-5">
-    <div class="container">
-        <div class="row g-4">
-            <div class="col-6 col-md-3">
-                <div class="stat-card">
-                    <div class="stat-number">452</div>
-                    <div class="stat-label">Instagram Posts</div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-card">
-                    <div class="stat-number">784+</div>
-                    <div class="stat-label">Student Followers</div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-card">
-                    <div class="stat-number">294</div>
-                    <div class="stat-label">Following</div>
-                </div>
-            </div>
-            <div class="col-6 col-md-3">
-                <div class="stat-card">
-                    <div class="stat-number">100%</div>
-                    <div class="stat-label">Official Page</div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+
 
 <!-- SECTION 1: Events Organised by CSD & CSIT -->
 <section class="py-5" style="background: #ffffff; border-top: 1px solid #f3eae1; border-bottom: 1px solid #f3eae1;">
@@ -355,7 +330,10 @@ body {
                     <h3 class="fw-bold text-dark mb-2" style="font-family: 'Outfit', sans-serif; font-size: 1.35rem;">Potluck Event</h3>
                     <p class="text-secondary small mb-4">A joyful community celebration featuring delicious homemade food, fun activities, and memorable bonding moments.</p>
 
-                    <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between">
+                    <div class="mt-auto mb-2 d-flex align-items-center" style="font-size: 0.85rem; color: #6f5f54; font-weight: 600;">
+                        <i class="far fa-calendar-alt me-1" style="color: #dc2743;"></i> 28 August 2024
+                    </div>
+                    <div class="pt-3 border-top d-flex align-items-center justify-content-between">
                         <span class="small text-muted fw-semibold"><i class="far fa-heart me-1" style="color: #dc2743;"></i> 1,850 Likes</span>
                         <a href="https://www.instagram.com/reel/C_VGop-ydyj/?igsh=MWZvdWozeGZ5a2pjag==" target="_blank" rel="noopener noreferrer" class="direct-post-btn" style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff !important;">
                             <i class="fab fa-instagram me-1"></i> Watch Insta Reel <i class="fas fa-external-link-alt ms-1"></i>
@@ -386,7 +364,10 @@ body {
                     <h3 class="fw-bold text-dark mb-2" style="font-family: 'Outfit', sans-serif; font-size: 1.35rem;">Alumni Talk & Interaction</h3>
                     <p class="text-secondary small mb-4">An inspiring interactive session with distinguished department alumni sharing industry insights, career guidance, and success stories.</p>
 
-                    <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between">
+                    <div class="mt-auto mb-2 d-flex align-items-center" style="font-size: 0.85rem; color: #6f5f54; font-weight: 600;">
+                        <i class="far fa-calendar-alt me-1" style="color: #dc2743;"></i> 10/07/2026
+                    </div>
+                    <div class="pt-3 border-top d-flex align-items-center justify-content-between">
                         <span class="small text-muted fw-semibold"><i class="far fa-heart me-1" style="color: #dc2743;"></i> 1,940 Likes</span>
                         <a href="https://www.instagram.com/reel/Dawv3OfIiKO/?igsh=MWY5OXBjMGxhcTFkcw==" target="_blank" rel="noopener noreferrer" class="direct-post-btn" style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff !important;">
                             <i class="fab fa-instagram me-1"></i> Watch Insta Reel <i class="fas fa-external-link-alt ms-1"></i>
@@ -417,7 +398,10 @@ body {
                     <h3 class="fw-bold text-dark mb-2" style="font-family: 'Outfit', sans-serif; font-size: 1.35rem;">Startup Meet & Summit</h3>
                     <p class="text-secondary small mb-4">An energetic startup summit bringing student entrepreneurs, founders, and industry leaders together to showcase innovative ideas.</p>
 
-                    <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between">
+                    <div class="mt-auto mb-2 d-flex align-items-center" style="font-size: 0.85rem; color: #6f5f54; font-weight: 600;">
+                        <i class="far fa-calendar-alt me-1" style="color: #dc2743;"></i> Year 2025
+                    </div>
+                    <div class="pt-3 border-top d-flex align-items-center justify-content-between">
                         <span class="small text-muted fw-semibold"><i class="far fa-heart me-1" style="color: #dc2743;"></i> 2,150 Likes</span>
                         <a href="https://www.instagram.com/reel/DPOt9iCDHDm/?utm_source=ig_web_button_share_sheet" target="_blank" rel="noopener noreferrer" class="direct-post-btn" style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff !important;">
                             <i class="fab fa-instagram me-1"></i> Watch Insta Reel <i class="fas fa-external-link-alt ms-1"></i>
@@ -448,7 +432,10 @@ body {
                     <h3 class="fw-bold text-dark mb-2" style="font-family: 'Outfit', sans-serif; font-size: 1.35rem;">NextGen Labs Showcase</h3>
                     <p class="text-secondary small mb-4">NextGen research labs showcase featuring cutting-edge artificial intelligence, robotics, high-performance computing, and student project prototypes.</p>
 
-                    <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between">
+                    <div class="mt-auto mb-2 d-flex align-items-center" style="font-size: 0.85rem; color: #6f5f54; font-weight: 600;">
+                        <i class="far fa-calendar-alt me-1" style="color: #dc2743;"></i> 5 August 2025
+                    </div>
+                    <div class="pt-3 border-top d-flex align-items-center justify-content-between">
                         <span class="small text-muted fw-semibold"><i class="far fa-heart me-1" style="color: #dc2743;"></i> 2,420 Likes</span>
                         <a href="https://www.instagram.com/reel/DNik1_yK1K1/?utm_source=ig_web_button_share_sheet" target="_blank" rel="noopener noreferrer" class="direct-post-btn" style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff !important;">
                             <i class="fab fa-instagram me-1"></i> Watch Insta Reel <i class="fas fa-external-link-alt ms-1"></i>
@@ -481,9 +468,6 @@ body {
 
                     <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between">
                         <span class="small text-muted fw-semibold"><i class="far fa-heart me-1" style="color: #dc2743;"></i> 2,890 Likes</span>
-                        <a href="https://www.instagram.com/reel/Cxz_7RyMhDM/?igsh=djhubnJwZzAyenpm" target="_blank" rel="noopener noreferrer" class="direct-post-btn" style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff !important;">
-                            <i class="fab fa-instagram me-1"></i> Watch Insta Reel <i class="fas fa-external-link-alt ms-1"></i>
-                        </a>
                     </div>
                 </div>
             </div>
@@ -510,7 +494,10 @@ body {
                     <h3 class="fw-bold text-dark mb-2" style="font-family: 'Outfit', sans-serif; font-size: 1.35rem;">CSD & CSIT Freshers Welcome</h3>
                     <p class="text-secondary small mb-4">Grand welcoming event for incoming CSD & CSIT batches with exciting performances, fun icebreakers, and student celebrations.</p>
 
-                    <div class="mt-auto pt-3 border-top d-flex align-items-center justify-content-between">
+                    <div class="mt-auto mb-2 d-flex align-items-center" style="font-size: 0.85rem; color: #6f5f54; font-weight: 600;">
+                        <i class="far fa-calendar-alt me-1" style="color: #dc2743;"></i> Year 2023
+                    </div>
+                    <div class="pt-3 border-top d-flex align-items-center justify-content-between">
                         <span class="small text-muted fw-semibold"><i class="far fa-heart me-1" style="color: #dc2743;"></i> 3,120 Likes</span>
                         <a href="https://www.instagram.com/reel/CxDklpPxovv/?igsh=MXY1a3Z5dGxibTJhYg==" target="_blank" rel="noopener noreferrer" class="direct-post-btn" style="background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); color: #ffffff !important;">
                             <i class="fab fa-instagram me-1"></i> Watch Insta Reel <i class="fas fa-external-link-alt ms-1"></i>

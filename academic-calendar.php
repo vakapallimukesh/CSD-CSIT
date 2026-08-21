@@ -128,13 +128,40 @@ body {
     </section>
 
     <main class="main-content container py-4">
-        <div class="d-flex justify-content-between align-items-center mb-5">
-            <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #1a0d06; margin: 0;">2025-26 Downloads</h2>
-            <a href="syllabus.php" class="btn btn-warning px-4 py-2" style="border-radius: 14px; font-weight: 700; background: #d97706; border-color: #d97706; color: white;">
-                <i class="fas fa-clipboard-list me-2"></i>Go to Syllabus
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <h2 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #1a0d06; margin: 0;">Academic Calendar (2026–2027)</h2>
+            <a href="academics.php" class="btn btn-warning px-4 py-2" style="border-radius: 14px; font-weight: 700; background: #d97706; border-color: #d97706; color: white;">
+                <i class="fas fa-graduation-cap me-2"></i>All Academics Overview
             </a>
         </div>
 
+        <!-- ACADEMIC CALENDAR DECK CARDS (CURRENT 2026-27 AT TOP) -->
+        <div class="row g-4 mb-5">
+            <!-- FEATURED DECK: Academic Calendar (2026–2027) -->
+            <div class="col-12">
+                <div style="background: linear-gradient(135deg, #ffffff 0%, #fffbf5 100%); border-radius: 20px; padding: 26px 30px; border: 2px solid #e6c280; box-shadow: 0 10px 30px rgba(180, 83, 9, 0.1); display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width: 58px; height: 58px; border-radius: 18px; background: linear-gradient(135deg, #d97706 0%, #b45309 100%); color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; flex-shrink: 0; box-shadow: 0 6px 16px rgba(180, 83, 9, 0.25);">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div>
+                            <span style="background: #1a0d06; color: #f59e0b; font-size: 0.75rem; font-weight: 800; padding: 3px 12px; border-radius: 50px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; margin-bottom: 4px;">
+                                <i class="fas fa-star me-1"></i> Current Academic Year 2026–2027
+                            </span>
+                            <h4 style="font-family: 'Outfit', sans-serif; font-weight: 900; color: #1a0d06; margin: 0 0 2px 0; font-size: 1.4rem;">Academic Calendar (2026–2027)</h4>
+                            <span style="font-size: 0.9rem; color: #6f5f54; font-weight: 500;">Official II B.Tech (CSD & CSIT) semester schedules, mid-term dates, marks deadlines & holiday list</span>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="files/II_B.Tech_Academic_Calendar_2026-27.pdf" class="download-btn" target="_blank" style="padding: 10px 20px; font-size: 0.88rem;">
+                            <i class="fas fa-download me-1"></i> Download PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #1a0d06; margin-bottom: 20px;">PDF Schedule Downloads</h3>
         <div class="row">
             <div class="col-12">
                 <div class="calendar-card">
@@ -143,11 +170,11 @@ body {
                             <i class="fas fa-file-pdf"></i>
                         </div>
                         <div>
-                            <h5 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #1a0d06; margin: 0;">II &amp; III B.Tech Academic Calendar 2025-26</h5>
-                            <span style="font-size: 0.88rem; color: #6f5f54;">Official schedule for 2nd and 3rd year students</span>
+                            <h5 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #1a0d06; margin: 0;">2026-2027 Academic Calendar for 2nd Years</h5>
+                            <span style="font-size: 0.88rem; color: #6f5f54;">Official schedule &amp; holiday list for II B.Tech (2026-27)</span>
                         </div>
                     </div>
-                    <a href="files/II_III_B.Tech_Academic_Calendar_2025-26.pdf" class="download-btn" target="_blank">
+                    <a href="files/II_B.Tech_Academic_Calendar_2026-27.pdf" class="download-btn" target="_blank">
                         <i class="fas fa-download"></i> Download PDF
                     </a>
                 </div>
@@ -160,28 +187,11 @@ body {
                             <i class="fas fa-file-pdf"></i>
                         </div>
                         <div>
-                            <h5 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #1a0d06; margin: 0;">IV B.Tech Academic Calendar 2025-26</h5>
-                            <span style="font-size: 0.88rem; color: #6f5f54;">Official schedule for final year students</span>
+                            <h5 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #1a0d06; margin: 0;">III &amp; IV B.Tech Academic Calendar 2025-26</h5>
+                            <span style="font-size: 0.88rem; color: #6f5f54;">Official schedule for 3rd and 4th year students</span>
                         </div>
                     </div>
                     <a href="files/IV_B.Tech_Academic_Calendar_2025-26.pdf" class="download-btn" target="_blank">
-                        <i class="fas fa-download"></i> Download PDF
-                    </a>
-                </div>
-            </div>
-
-            <div class="col-12">
-                <div class="calendar-card">
-                    <div class="d-flex align-items-center gap-3">
-                        <div style="width: 50px; height: 50px; border-radius: 16px; background: rgba(217, 119, 6, 0.12); color: #d97706; display: flex; align-items: center; justify-content: center; font-size: 1.4rem;">
-                            <i class="fas fa-file-pdf"></i>
-                        </div>
-                        <div>
-                            <h5 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #1a0d06; margin: 0;">1st Year Academic Calendar 2025-26</h5>
-                            <span style="font-size: 0.88rem; color: #6f5f54;">Official schedule for 1st year students</span>
-                        </div>
-                    </div>
-                    <a href="files/1_btech_ac.pdf" class="download-btn" target="_blank">
                         <i class="fas fa-download"></i> Download PDF
                     </a>
                 </div>
