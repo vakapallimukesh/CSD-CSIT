@@ -332,18 +332,34 @@ body {
     width: 175px;
 }
 
-.leader-photo-right {
-    width: 100%;
-    height: 195px;
-    border-radius: 18px;
+.leader-grid-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
     overflow: hidden;
-    border: 3.5px solid #f59e0b;
-    box-shadow: 0 8px 20px rgba(217, 119, 6, 0.18);
-    position: relative;
-    background: #fffbeb;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    height: 100%;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
 }
 
-.leader-photo-right img {
+.leader-grid-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1);
+    border-color: #d97706;
+}
+
+.leader-photo-box {
+    width: 100%;
+    height: 255px;
+    background: #f1f5f9;
+    overflow: hidden;
+    position: relative;
+}
+
+.leader-photo-box img {
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -351,8 +367,33 @@ body {
     transition: transform 0.4s ease;
 }
 
-.leader-line-card:hover .leader-photo-right img {
-    transform: scale(1.06);
+.leader-grid-card:hover .leader-photo-box img {
+    transform: scale(1.05);
+}
+
+.leader-info-box {
+    padding: 16px 14px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-top: 1px solid #f1f5f9;
+}
+
+.leader-name-title {
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 6px;
+    line-height: 1.3;
+}
+
+.leader-designation-subtitle {
+    font-size: 0.84rem;
+    color: #64748b;
+    margin-bottom: 0;
+    line-height: 1.4;
+    font-weight: 500;
 }
 
 .statement-btn-right {
@@ -720,30 +761,19 @@ body {
                     <h3 class="row-category-title"><i class="<?php echo $row_data['icon']; ?> me-2" style="color: <?php echo $row_data['color']; ?>;"></i> <?php echo htmlspecialchars($row_data['title']); ?></h3>
                     <span class="row-category-badge"><?php echo htmlspecialchars($row_data['badge']); ?></span>
                 </div>
-                <div class="row g-4 justify-content-center">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
                     <?php foreach ($row_data['leaders'] as $leader): ?>
-                        <div class="col-12 leader-item" data-category="<?php echo $leader['category']; ?>">
-                            <div class="leader-line-card" onclick="openLeaderModal('<?php echo $leader['id']; ?>')" style="cursor: pointer;">
-                                <div class="card-inner-flex">
-                                    <!-- Left Details -->
-                                    <div class="leader-details-left">
-                                        <div class="header-meta">
-                                            <span class="hod-badge"><i class="fas fa-award"></i> <?php echo htmlspecialchars($leader['badge']); ?></span>
-                                        </div>
-                                        <h3 class="leader-name"><?php echo htmlspecialchars($leader['name']); ?></h3>
-                                        <div class="leader-designation"><?php echo htmlspecialchars($leader['designation']); ?></div>
-                                        <p class="leader-about-text"><?php echo htmlspecialchars($leader['bio']); ?></p>
-                                    </div>
-
-                                    <!-- Right Photo Container -->
-                                    <div class="leader-photo-right-container">
-                                        <div class="leader-photo-right">
-                                            <img src="<?php echo htmlspecialchars($leader['photo']); ?>" 
-                                                 alt="<?php echo htmlspecialchars($leader['name']); ?>" 
-                                                 onerror="this.onerror=null; this.src='logo2.png';"
-                                                 loading="lazy">
-                                        </div>
-                                    </div>
+                        <div class="col leader-item" data-category="<?php echo $leader['category']; ?>">
+                            <div class="leader-grid-card" onclick="openLeaderModal('<?php echo $leader['id']; ?>')">
+                                <div class="leader-photo-box">
+                                    <img src="<?php echo htmlspecialchars($leader['photo']); ?>" 
+                                         alt="<?php echo htmlspecialchars($leader['name']); ?>" 
+                                         onerror="this.onerror=null; this.src='logo2.png';"
+                                         loading="lazy">
+                                </div>
+                                <div class="leader-info-box">
+                                    <h5 class="leader-name-title"><?php echo htmlspecialchars($leader['name']); ?></h5>
+                                    <p class="leader-designation-subtitle"><?php echo htmlspecialchars($leader['designation']); ?></p>
                                 </div>
                             </div>
                         </div>
