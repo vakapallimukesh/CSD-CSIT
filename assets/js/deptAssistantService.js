@@ -2423,6 +2423,101 @@ Ask "Show placement overview" or "Who got placed at Microsoft" to view details!`
 
     /**
      * =========================================================================
+     * GENERIC ATTRIBUTE & ROLE FILTER ENGINE
+     * Filter any entity roster by dynamic roles, designations, qualifications,
+     * specializations, subjects, departments, or houses without hardcoded rules.
+     * =========================================================================
+     */
+    function executeGenericAttributeFilter(rawQuery, entityRoster) {
+        if (!rawQuery || !Array.isArray(entityRoster) || entityRoster.length === 0) return null;
+
+        const q = rawQuery.toLowerCase().trim();
+
+        // Check if query is an explicit broad/unfiltered directory listing request
+        const isBroadListQuery = /^(who are the (faculty|faculties|teachers|professors|students)|faculty members|faculty directory|list of faculty|all faculty|show faculty|faculty list|faculty team|our team|department team|teaching staff)$/i.test(q);
+        if (isBroadListQuery) return null;
+
+        // Extract candidate filter string by stripping general entity indicator words
+        let filterStr = q
+            .replace(/\b(who is|who are|who handles|who coordinates|who teaches|show|give me|tell me about|list of|list|all|faculty|faculties|teachers|professors|teaching staff|students|student|members|staff|in the department|department|csd|csit|with|for)\b/gi, ' ')
+            .replace(/[^\w\s]/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        if (!filterStr || filterStr.length < 2) return null;
+
+        const stopWords = new Set(['the', 'a', 'an', 'is', 'are', 'in', 'of', 'and', 'or', 'to', 'for']);
+        const tokens = filterStr.split(' ').filter(t => t.length > 1 && !stopWords.has(t));
+        if (tokens.length === 0) return null;
+
+        const uniqueRoster = deduplicatePeople(entityRoster);
+        const matched = [];
+
+        for (const p of uniqueRoster) {
+            const fieldTexts = [];
+            if (p.role) fieldTexts.push(String(p.role).toLowerCase());
+            if (p.designation) fieldTexts.push(String(p.designation).toLowerCase());
+            if (p.qualification) fieldTexts.push(String(p.qualification).toLowerCase());
+            if (p.specialization) fieldTexts.push(String(p.specialization).toLowerCase());
+            if (p.subjects) fieldTexts.push(String(p.subjects).toLowerCase());
+            if (p.department) fieldTexts.push(String(p.department).toLowerCase());
+            if (p.house) fieldTexts.push(String(p.house).toLowerCase());
+            if (p.branch) fieldTexts.push(String(p.branch).toLowerCase());
+
+            if (Array.isArray(p.category)) {
+                fieldTexts.push(p.category.join(' ').toLowerCase());
+            } else if (p.category) {
+                fieldTexts.push(String(p.category).toLowerCase());
+            }
+
+            if (Array.isArray(p.achievements)) {
+                p.achievements.forEach(ach => {
+                    if (typeof ach === 'string') fieldTexts.push(ach.toLowerCase());
+                    else if (ach && ach.text) fieldTexts.push(ach.text.toLowerCase());
+                });
+            }
+
+            if (Array.isArray(p.education)) {
+                p.education.forEach(ed => {
+                    if (ed && ed.degree) fieldTexts.push(ed.degree.toLowerCase());
+                });
+            }
+
+            const combinedText = fieldTexts.join(' ');
+            const fullPhraseMatch = combinedText.includes(filterStr);
+            const allTokensMatch = tokens.length > 0 && tokens.every(tok => combinedText.includes(tok));
+
+            if (fullPhraseMatch || allTokensMatch) {
+                matched.push(p);
+            }
+        }
+
+        // Return result ONLY if matched count is a true non-zero subset (< uniqueRoster.length)
+        if (matched.length > 0 && matched.length < uniqueRoster.length) {
+            const filterLabel = filterStr.toUpperCase();
+            let content = `Found <strong>${matched.length} Matching Records</strong> for filter "<em>${filterStr}</em>":<br><br>`;
+            content += matched.map((p, idx) => {
+                const roleOrDesig = p.designation || p.role || 'Faculty Member';
+                const deptStr = p.department ? ` (${p.department})` : '';
+                const extraDetail = p.qualification ? ` | ${p.qualification}` : (p.specialization ? ` | ${p.specialization}` : '');
+                return `${idx + 1}. <strong>${p.fullName}</strong> — ${roleOrDesig}${deptStr}${extraDetail}<br>• Email: <code>${p.email || 'N/A'}</code>`;
+            }).join('<br><br>');
+
+            return {
+                id: 'generic_attribute_filtered_result',
+                category: 'Filtered Directory Search',
+                title: `Department Records (${matched.length} Found for "${filterLabel}")`,
+                content: content,
+                url: 'faculty.php',
+                ctaText: 'View Complete Directory →'
+            };
+        }
+
+        return null;
+    }
+
+    /**
+     * =========================================================================
      * 13. PRIMARY RAG HYBRID DISPATCHER ENFORCING RETRIEVAL SYSTEM
      * =========================================================================
      */
@@ -2447,6 +2542,13 @@ Ask "Show placement overview" or "Who got placed at Microsoft" to view details!`
                 console.log('[CHATBOT INTENT] Person Entity Match:', personResult.person.fullName, '| Intent:', personResult.intent);
                 return formatFieldLevelAnswer(personResult.person, personResult.intent, rawQuery);
             }
+        }
+
+        // 2. GENERIC ATTRIBUTE, ROLE & FILTER SEARCH BEFORE DUMPING FULL TABLES
+        const genericFilterResult = executeGenericAttributeFilter(rawQuery, MASTER_FACULTY_ROSTER);
+        if (genericFilterResult) {
+            console.log('[CHATBOT INTENT] Generic Attribute/Role Filter Match:', genericFilterResult.title);
+            return genericFilterResult;
         }
 
     function searchStudentDirectory(rawQuery) {

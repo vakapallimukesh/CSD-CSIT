@@ -249,73 +249,95 @@ if (!$response && (!empty($nameKeywords) || preg_match('/[0-9]{2}[a-z0-9]{8,10}/
 }
 
 // =========================================================
-// 2. FACULTY & HOD RETRIEVAL (Parameterised & Complete)
+// 2. FACULTY & HOD RETRIEVAL (Parameterised, Attribute-Filtered & Complete)
 // =========================================================
 if (!$response && preg_match('/(hod|head|head of department|faculty|faculties|professor|prof|teacher|teachers|staff|team|instructors|coordinators|teaching|members|guide|mentor|suresh|srinivasa|bhanu|aswini|satyam|mohan|surya|gopala|rajesh|navya|giridhar|vignya|madhuriya|trinadh|aneela|murthy)/i', $lowerQuery)) {
     
-    if (preg_match('/(hod|head|head of department|suresh|murthy)/i', $lowerQuery) && !preg_match('/all faculty|faculty list|list of faculty/i', $lowerQuery)) {
-        $sql = "SELECT faculty_id, faculty_name, email, phone_number, is_active FROM faculties WHERE LOWER(faculty_name) LIKE '%suresh%' OR LOWER(faculty_name) LIKE '%murthy%' OR faculty_id IN (1, 8) ORDER BY faculty_id ASC LIMIT 2";
-        $result = $conn->query($sql);
-        
-        if ($result && $result->num_rows > 0) {
-            $html = "<p><strong>Retrieved Heads of Department (HODs) Records:</strong></p><ul>";
-            while ($row = $result->fetch_assoc()) {
-                $name = cleanStr($row['faculty_name']);
-                $email = cleanStr($row['email']);
-                $phone = cleanStr($row['phone_number']);
-                $dept = (strpos(strtolower($name), 'suresh') !== false) ? 'CSD' : 'CSIT';
-                $html .= "<li><strong>$name</strong> — Professor & HOD ($dept)<br>• Email: $email" . (!empty($phone) ? " | Phone: $phone" : "") . "</li>";
+    // Extract candidate filter string by stripping general entity words
+    $filterStr = trim(preg_replace('/\b(who is|who are|who handles|who coordinates|who teaches|show|give me|tell me about|list of|list|all|faculty|faculties|teachers|professors|teaching staff|students|student|members|staff|in the department|department|csd|csit|with|for)\b/i', ' ', $lowerQuery));
+    $filterStr = trim(preg_replace('/[^\w\s]/', ' ', $filterStr));
+    
+    $stopWords = array('the', 'a', 'an', 'is', 'are', 'in', 'of', 'and', 'or', 'to', 'for');
+    $filterTokens = array_values(array_filter(explode(' ', $filterStr), function($t) use ($stopWords) {
+        return strlen($t) > 1 && !in_array(strtolower($t), $stopWords);
+    }));
+
+    $sql = "SELECT faculty_id, faculty_name, email, phone_number, is_active FROM faculties WHERE is_active = 1 ORDER BY faculty_id ASC";
+    $result = $conn->query($sql);
+    
+    if ($result && $result->num_rows > 0) {
+        $allFaculties = [];
+        while ($row = $result->fetch_assoc()) {
+            $fid = (int)$row['faculty_id'];
+            $map = isset($facultyIdMap[$fid]) ? $facultyIdMap[$fid] : [];
+            $row['fullName'] = !empty($map['fullName']) ? $map['fullName'] : $row['faculty_name'];
+            $row['role'] = !empty($map['role']) ? $map['role'] : 'Faculty Member';
+            $row['qualification'] = !empty($map['qualification']) ? $map['qualification'] : '';
+            $row['specialization'] = !empty($map['specialization']) ? $map['specialization'] : '';
+            $row['subjects'] = !empty($map['subjects']) ? $map['subjects'] : '';
+            $row['department'] = !empty($map['department']) ? $map['department'] : 'CSD/CSIT';
+            $allFaculties[] = $row;
+        }
+
+        $filteredFaculties = [];
+        if (!empty($filterTokens)) {
+            foreach ($allFaculties as $fac) {
+                $searchableText = strtolower($fac['fullName'] . ' ' . $fac['role'] . ' ' . $fac['qualification'] . ' ' . $fac['specialization'] . ' ' . $fac['subjects'] . ' ' . $fac['department']);
+                $matchesAll = true;
+                foreach ($filterTokens as $tok) {
+                    if (strpos($searchableText, $tok) === false) {
+                        $matchesAll = false;
+                        break;
+                    }
+                }
+                if ($matchesAll) {
+                    $filteredFaculties[] = $fac;
+                }
+            }
+        }
+
+        // If a specific role/attribute filter matched a subset (< total faculty), return ONLY that subset
+        if (!empty($filteredFaculties) && count($filteredFaculties) < count($allFaculties)) {
+            $html = "<p><strong>Retrieved Matching Faculty Records (" . count($filteredFaculties) . " Found):</strong></p><ul>";
+            foreach ($filteredFaculties as $fac) {
+                $name = cleanStr($fac['fullName']);
+                $role = cleanStr($fac['role']);
+                $dept = cleanStr($fac['department']);
+                $qual = !empty($fac['qualification']) ? " | " . cleanStr($fac['qualification']) : "";
+                $email = cleanStr($fac['email']);
+                $html .= "<li><strong>$name</strong> — $role ($dept)$qual<br>• Email: $email</li>";
             }
             $html .= "</ul>";
 
             $response = [
                 'success' => true,
                 'source' => 'live_db',
-                'title' => '👨‍🏫 Heads of Department (HODs)',
+                'title' => '👨‍🏫 Filtered Faculty Database Records',
                 'stats' => [
-                    ['val' => 'CSD & CSIT', 'lbl' => 'Department HODs'],
-                    ['val' => 'Active', 'lbl' => 'Faculty Status']
+                    ['val' => (string)count($filteredFaculties), 'lbl' => 'Matching Records'],
+                    ['val' => strtoupper($filterStr), 'lbl' => 'Active Filter']
                 ],
                 'content' => $html,
                 'links' => [
                     ['text' => 'Faculty Directory', 'url' => 'faculty.php']
                 ]
             ];
-        }
-    } else {
-        $searchTerm = '%' . $conn->real_escape_string($lowerQuery) . '%';
-        $sql = "SELECT faculty_id, faculty_name, email, phone_number, is_active FROM faculties WHERE is_active = 1 ORDER BY faculty_id ASC";
-        $result = $conn->query($sql);
-        
-        if ($result && $result->num_rows > 0) {
-            $facultyList = [];
-            while ($row = $result->fetch_assoc()) {
-                $facultyList[] = $row;
-            }
-
-            $totalFac = count($facultyList);
-            $isCompleteList = preg_match('/(all|list|entire|every|directory)/i', $lowerQuery);
-            $displayCount = ($isCompleteList || $totalFac <= 25) ? $totalFac : min(25, $totalFac);
-            $shownList = array_slice($facultyList, 0, $displayCount);
-
-            $html = "<p><strong>Retrieved Faculty Records (" . ($displayCount === $totalFac ? "All $totalFac" : "Showing $displayCount of $totalFac") . " active faculty members):</strong></p><ul>";
-            foreach ($shownList as $fac) {
-                $html .= "<li><strong>" . cleanStr($fac['faculty_name']) . "</strong> — Email: " . cleanStr($fac['email']);
-                if (!empty($fac['phone_number'])) $html .= " | Phone: " . cleanStr($fac['phone_number']);
-                $html .= "</li>";
+        } else {
+            // Unfiltered general faculty list request
+            $totalFac = count($allFaculties);
+            $html = "<p><strong>Retrieved Faculty Records (All $totalFac active faculty members):</strong></p><ul>";
+            foreach ($allFaculties as $fac) {
+                $html .= "<li><strong>" . cleanStr($fac['fullName']) . "</strong> — " . cleanStr($fac['role']) . " (" . cleanStr($fac['department']) . ") | Email: " . cleanStr($fac['email']) . "</li>";
             }
             $html .= "</ul>";
-            if ($displayCount < $totalFac) {
-                $html .= "<p style='font-size:12px; color:#64748b;'>Showing top $displayCount of $totalFac faculty members. Visit the Faculty Directory for the complete listing.</p>";
-            }
 
             $response = [
                 'success' => true,
                 'source' => 'live_db',
-                'title' => '👨‍🏫 Faculty Database Records',
+                'title' => '👨‍🏫 Complete Faculty Directory Records',
                 'stats' => [
                     ['val' => (string)$totalFac, 'lbl' => 'Total Active Faculty'],
-                    ['val' => (string)$displayCount, 'lbl' => 'Displayed Records']
+                    ['val' => 'All Departments', 'lbl' => 'Faculty Status']
                 ],
                 'content' => $html,
                 'links' => [
