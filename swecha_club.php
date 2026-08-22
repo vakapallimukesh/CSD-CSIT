@@ -136,6 +136,36 @@ body {
     margin: 12px auto 0;
     border-radius: 2px;
 }
+
+.hero-logo-container {
+    width: 190px;
+    height: 190px;
+    border-radius: 50%;
+    background: #ffffff;
+    padding: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid rgba(255, 255, 255, 0.35);
+    animation: floatBranch 6s ease-in-out infinite;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4), 0 0 35px rgba(52, 211, 153, 0.6);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+}
+
+.hero-logo-container:hover {
+    transform: scale(1.08) rotate(3deg);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 50px rgba(52, 211, 153, 0.85);
+    border-color: #34d399;
+}
+
+.hero-logo-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
 </style>
 
 <body>
@@ -152,9 +182,9 @@ body {
                     <h1 style="font-family: 'Outfit', sans-serif; font-size: 3.4rem; font-weight: 900; margin-bottom: 15px; color: #ffffff; line-height: 1.15;">Swecha Club</h1>
                     <p style="font-size: 1.25rem; opacity: 0.92; color: #a7f3d0; max-width: 650px; line-height: 1.6;">Promoting Free & Open Source Software, collaborative learning, Linux systems, and community tech contributions.</p>
                 </div>
-                <div class="col-md-4 text-center d-none d-md-block">
-                    <div class="hero-icon-container">
-                        <i class="fas fa-code-branch" style="font-size: 60px; color: #34d399; filter: drop-shadow(0 0 15px rgba(52, 211, 153, 0.6));"></i>
+                <div class="col-md-4 text-center mt-4 mt-md-0">
+                    <div class="hero-logo-container" title="Swecha Club Official Logo">
+                        <img src="images/swecha_logo.jpg" alt="Swecha Club Logo" class="hero-logo-img">
                     </div>
                 </div>
             </div>
