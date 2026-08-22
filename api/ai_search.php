@@ -1,27 +1,35 @@
 <?php
 /**
- * SRKREC CSD & CSIT Department - Comprehensive AI Assistant & Search Engine API
- * STRICTLY GROUNDED DATABASE RETRIEVAL & KNOWLEDGE ENGINE
- * 
- * Rules Enforced:
- * 1. MANDATORY RETRIEVAL from MySQL live database (new_sem) + Structured Knowledge Index.
- * 2. ZERO HALLUCINATION POLICY: Accurate, verified facts, links, and record IDs.
- * 3. VERBATIM GROUNDING & SOURCE CITATION.
- * 4. DISAMBIGUATE MULTIPLE MATCHES.
- * 5. FULL ALUMNI PAGE & DIRECTORY RETRIEVAL TRAINING.
+ * SRKREC CSD & CSIT Department - Comprehensive AI Assistant & Dynamic Search Engine API
+ * STRICTLY GROUNDED DATABASE RETRIEVAL & CONTEXT-AWARE SEARCH PIPELINE
  */
 
 header('Content-Type: application/json; charset=utf-8');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Include database connection
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
 require_once __DIR__ . '/../connect.php';
 
-$query = isset($_REQUEST['q']) ? trim($_REQUEST['q']) : '';
+// Accept parameters from GET, POST, or raw JSON body
+$rawJson = file_get_contents('php://input');
+$jsonData = !empty($rawJson) ? json_decode($rawJson, true) : [];
+
+$query = isset($_REQUEST['q']) ? trim($_REQUEST['q']) : (isset($jsonData['q']) ? trim($jsonData['q']) : (isset($jsonData['prompt']) ? trim($jsonData['prompt']) : ''));
+$activePersonReg = isset($_REQUEST['active_person_reg']) ? trim($_REQUEST['active_person_reg']) : (isset($jsonData['active_person_reg']) ? trim($jsonData['active_person_reg']) : '');
+$activePersonName = isset($_REQUEST['active_person_name']) ? trim($_REQUEST['active_person_name']) : (isset($jsonData['active_person_name']) ? trim($jsonData['active_person_name']) : '');
+$activeHouse = isset($_REQUEST['active_house']) ? trim($_REQUEST['active_house']) : (isset($jsonData['active_house']) ? trim($jsonData['active_house']) : '');
+$activeBranch = isset($_REQUEST['active_branch']) ? trim($_REQUEST['active_branch']) : (isset($jsonData['active_branch']) ? trim($jsonData['active_branch']) : '');
 
 if (empty($query)) {
     echo json_encode([
         'success' => false,
-        'message' => "No matching results found in SRKREC CSD & CSIT Department's database for ''."
+        'message' => "No search query provided."
     ]);
     exit;
 }
@@ -29,12 +37,10 @@ if (empty($query)) {
 $lowerQuery = strtolower($query);
 $response = null;
 
-// Helper to escape HTML safely
 function cleanStr($str) {
     return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8');
 }
 
-// Helper to format house colors
 function getHouseColor($name) {
     if (strcasecmp($name, 'Agni') == 0) return '#ef4444';
     if (strcasecmp($name, 'Aakash') == 0) return '#0284c7';
@@ -44,8 +50,8 @@ function getHouseColor($name) {
     return '#38bdf8';
 }
 
-// Stop words filter for natural query tokenization
-$stopWords = ['is', 'in', 'which', 'house', 'what', 'the', 'belong', 'belongs', 'to', 'tell', 'me', 'about', 'of', 'for', 'where', 'who', 'does', 'has', 'have', 'least', 'highest', 'top', 'bottom', 'points', 'many', 'much', 'details', 'info', 'information', 'sir', 'madam', 'give', 'list', 'show', 'get', 'data', 'how'];
+// Stop words filter for natural tokenization
+$stopWords = ['is', 'in', 'which', 'house', 'what', 'the', 'belong', 'belongs', 'to', 'tell', 'me', 'about', 'of', 'for', 'where', 'who', 'does', 'has', 'have', 'least', 'highest', 'top', 'bottom', 'points', 'many', 'much', 'details', 'info', 'information', 'sir', 'madam', 'give', 'list', 'show', 'get', 'data', 'how', 'dr', 'prof', 'mr', 'mrs', 'ms'];
 $rawWords = preg_split('/\s+/', $lowerQuery);
 $nameKeywords = [];
 foreach ($rawWords as $w) {
@@ -56,13 +62,72 @@ foreach ($rawWords as $w) {
 }
 
 // =========================================================
-// 1. SPECIFIC STUDENT RETRIEVAL (Name or Registration ID)
+// 0. CONTEXTUAL FOLLOW-UP PRONOUN RESOLUTION
 // =========================================================
-if (!empty($nameKeywords) || preg_match('/[0-9]{2}[a-z0-9]{8}/i', $lowerQuery)) {
+$isFollowupPronoun = preg_match('/\b(she|he|her|his|their|this person|that person|that student|that faculty)\b/i', $query) ||
+                     preg_match('/^(which department|what department|which branch|what branch|what registration number|reg no|email|phone|contact|what house)\b/i', $lowerQuery);
+
+if ($isFollowupPronoun && (!empty($activePersonReg) || !empty($activePersonName))) {
+    $targetReg = $conn->real_escape_string($activePersonReg);
+    $targetName = $conn->real_escape_string($activePersonName);
+
+    $sqlContext = "SELECT s.student_id, s.name, s.email, s.branch, s.section, s.is_alumni, COALESCE(h.name, 'Not Assigned') as house_name 
+                   FROM students s 
+                   LEFT JOIN houses h ON s.hid = h.hid 
+                   WHERE ";
+    if (!empty($targetReg)) {
+        $sqlContext .= "LOWER(s.student_id) = LOWER('$targetReg')";
+    } else {
+        $sqlContext .= "LOWER(s.name) LIKE '%$targetName%'";
+    }
+    $sqlContext .= " LIMIT 1";
+
+    $resCtx = $conn->query($sqlContext);
+    if ($resCtx && $resCtx->num_rows > 0) {
+        $st = $resCtx->fetch_assoc();
+        $stName = cleanStr($st['name']);
+        $stId = cleanStr($st['student_id']);
+        $stHouse = cleanStr($st['house_name']);
+        $stBranch = cleanStr($st['branch']);
+        $stSec = cleanStr($st['section']);
+        $stEmail = cleanStr($st['email']);
+        $stStatus = ($st['is_alumni'] == 1) ? 'Graduated Alumni' : 'Active Student';
+        $houseColor = getHouseColor($stHouse);
+
+        $html = "<p><strong>Resolved Active Context Record:</strong> Details for <strong>$stName</strong> (ID: <code>$stId</code>):</p>";
+        $html .= "<ul>";
+        $html .= "<li><strong>Name:</strong> $stName — <strong>ID:</strong> <code>$stId</code></li>";
+        $html .= "<li><strong>Branch & Section:</strong> $stBranch - Section $stSec ($stStatus)</li>";
+        $html .= "<li><strong>House:</strong> <strong style='color:$houseColor;'>$stHouse House</strong></li>";
+        if (!empty($stEmail)) $html .= "<li><strong>Email:</strong> $stEmail</li>";
+        $html .= "</ul>";
+        $html .= "<p style='font-size:11px; color:#94a3b8;'>Source: <code>new_sem.students</code> [ID: $stId]</p>";
+
+        $response = [
+            'success' => true,
+            'source' => 'live_db_context',
+            'title' => "🎓 Student Record: $stName",
+            'stats' => [
+                ['val' => $stHouse . ' House', 'lbl' => 'Assigned House'],
+                ['val' => $stBranch . ' Sec ' . $stSec, 'lbl' => 'Class']
+            ],
+            'content' => $html,
+            'links' => [
+                ['text' => 'Students Directory', 'url' => 'students_overview.php'],
+                ['text' => 'House Leaderboard', 'url' => 'houses_dashboard.php']
+            ]
+        ];
+    }
+}
+
+// =========================================================
+// 1. SPECIFIC STUDENT SEARCH (Reg ID / Name / Tokens)
+// =========================================================
+if (!$response && (!empty($nameKeywords) || preg_match('/[0-9]{2}[a-z0-9]{8,10}/i', $lowerQuery))) {
     $studentsFound = [];
 
-    // Strategy 1: Match exact student_id / roll number pattern (e.g. 24B91A0749, 21B91A6201, 22B91A6205)
-    if (preg_match('/([0-9]{2}[a-z0-9]{8})/i', $lowerQuery, $matches)) {
+    // Strategy 1: Match exact student_id / registration number pattern
+    if (preg_match('/([0-9]{2}[a-z0-9]{8,10})/i', $lowerQuery, $matches)) {
         $roll = $conn->real_escape_string($matches[1]);
         $sqlRoll = "SELECT s.student_id, s.name, s.email, s.branch, s.section, s.is_alumni, COALESCE(h.name, 'Not Assigned') as house_name 
                     FROM students s 
@@ -86,7 +151,7 @@ if (!empty($nameKeywords) || preg_match('/[0-9]{2}[a-z0-9]{8}/i', $lowerQuery)) 
         $sqlAnd = "SELECT s.student_id, s.name, s.email, s.branch, s.section, s.is_alumni, COALESCE(h.name, 'Not Assigned') as house_name 
                    FROM students s 
                    LEFT JOIN houses h ON s.hid = h.hid 
-                   WHERE " . implode(" AND ", $subWhere) . " LIMIT 10";
+                   WHERE " . implode(" AND ", $subWhere) . " LIMIT 15";
         $resAnd = $conn->query($sqlAnd);
         if ($resAnd && $resAnd->num_rows > 0) {
             while ($sRow = $resAnd->fetch_assoc()) {
@@ -105,7 +170,7 @@ if (!empty($nameKeywords) || preg_match('/[0-9]{2}[a-z0-9]{8}/i', $lowerQuery)) 
         $sqlOr = "SELECT s.student_id, s.name, s.email, s.branch, s.section, s.is_alumni, COALESCE(h.name, 'Not Assigned') as house_name 
                   FROM students s 
                   LEFT JOIN houses h ON s.hid = h.hid 
-                  WHERE " . implode(" OR ", $subWhereOr) . " LIMIT 10";
+                  WHERE " . implode(" OR ", $subWhereOr) . " LIMIT 15";
         $resOr = $conn->query($sqlOr);
         if ($resOr && $resOr->num_rows > 0) {
             while ($sRow = $resOr->fetch_assoc()) {
@@ -162,21 +227,21 @@ if (!empty($nameKeywords) || preg_match('/[0-9]{2}[a-z0-9]{8}/i', $lowerQuery)) 
             foreach ($studentsFound as $st) {
                 $hColor = getHouseColor($st['house_name']);
                 $stBadge = ($st['is_alumni'] == 1) ? ' [Alumni]' : '';
-                $html .= "<li><strong>" . cleanStr($st['name']) . "</strong>$stBadge – ID: <code>" . cleanStr($st['student_id']) . "</code> – " . cleanStr($st['branch']) . " Sec " . cleanStr($st['section']) . " – House: <strong style='color:$hColor;'>" . cleanStr($st['house_name']) . " House</strong> — Source: <code>students.student_id=" . cleanStr($st['student_id']) . "</code></li>";
+                $html .= "<li><strong>" . cleanStr($st['name']) . "</strong>$stBadge – ID: <code>" . cleanStr($st['student_id']) . "</code> – " . cleanStr($st['branch']) . " Sec " . cleanStr($st['section']) . " – House: <strong style='color:$hColor;'>" . cleanStr($st['house_name']) . " House</strong></li>";
             }
             $html .= "</ul>";
 
             $response = [
                 'success' => true,
                 'source' => 'live_db',
-                'title' => '🔍 Disambiguation: Select Student',
+                'title' => '🔍 Disambiguation: Multiple Student Matches',
                 'stats' => [
                     ['val' => (string)count($studentsFound), 'lbl' => 'Candidate Matches'],
                     ['val' => 'MySQL Live', 'lbl' => 'Database Query']
                 ],
                 'content' => $html,
                 'links' => [
-                    ['text' => 'Students Info', 'url' => 'students_overview.php']
+                    ['text' => 'Students Directory', 'url' => 'students_overview.php']
                 ]
             ];
         }
@@ -184,121 +249,42 @@ if (!empty($nameKeywords) || preg_match('/[0-9]{2}[a-z0-9]{8}/i', $lowerQuery)) 
 }
 
 // =========================================================
-// 2. ALUMNI PAGE & EMPLOYMENT RETRIEVAL
-// =========================================================
-if (!$response && preg_match('/(alumni|graduate|graduates|alumnus|former student|google|microsoft|amazon|meta|carnegie|cmu|qualcomm|tcs innovation|startup founder|entrepreneur|higher studies|notable alumni|alumni network|join alumni|update alumni)/i', $lowerQuery)) {
-    $searchTerm = '%' . $conn->real_escape_string($lowerQuery) . '%';
-    
-    // 1. Check if user asked about Alumni Page / How to join / Alumni Network
-    if (preg_match('/(alumni page|where is alumni|how to view alumni|join alumni|update alumni|alumni network|notable|hall of fame)/i', $lowerQuery)) {
-        $html = "<p><strong>🎓 Department Alumni Page & Network Info:</strong></p>";
-        $html .= "<p>The official <strong>Alumni Page</strong> is located under <strong>More Details → Alumni</strong> (<code>alumni.php</code>). It celebrates CSD & CSIT graduates and their professional achievements worldwide.</p>";
-        $html .= "<ul>";
-        $html .= "<li><strong>Notable Alumni Highlights:</strong> Engineers, Scholars, and Founders at Google, Microsoft, Meta, Amazon AWS, Carnegie Mellon University (CMU), Qualcomm, and TCS Innovation Labs.</li>";
-        $html .= "<li><strong>Key Network Stats:</strong> 500+ Total Alumni, 15+ Industry Sectors, 45+ Higher Education Scholars, and 12+ Tech Entrepreneurs.</li>";
-        $html .= "<li><strong>Interactive Directory:</strong> Search by Name, Company, Designation, and filter by Graduation Batch (2021–2025), Branch (CSD/CSIT), or Industry.</li>";
-        $html .= "<li><strong>Stay Connected Actions:</strong> Graduates can click <em>'Join Alumni Network'</em> or <em>'Update Your Details'</em> to connect with current students and faculty.</li>";
-        $html .= "</ul>";
-
-        $response = [
-            'success' => true,
-            'source' => 'live_db',
-            'title' => '🎓 CSD & CSIT Alumni Page & Network',
-            'stats' => [
-                ['val' => '500+ Alumni', 'lbl' => 'Global Network'],
-                ['val' => '15+ Sectors', 'lbl' => 'Industries & Research']
-            ],
-            'content' => $html,
-            'links' => [
-                ['text' => 'View Alumni Page', 'url' => 'alumni.php'],
-                ['text' => 'Placements Overview', 'url' => 'placements.php']
-            ]
-        ];
-    } else {
-        // Query live database records from students & alumni_employment_history
-        $sqlAlumni = "SELECT s.student_id, s.name, s.branch, e.company_name, e.designation, e.location, e.industry, e.description
-                      FROM students s
-                      LEFT JOIN alumni_employment_history e ON s.student_id = e.student_id
-                      WHERE s.is_alumni = 1 OR LOWER(e.company_name) LIKE '$searchTerm' OR LOWER(e.designation) LIKE '$searchTerm' OR LOWER(e.industry) LIKE '$searchTerm'
-                      LIMIT 6";
-
-        $resAlumni = $conn->query($sqlAlumni);
-
-        if ($resAlumni && $resAlumni->num_rows > 0) {
-            $alumniList = [];
-            while ($row = $resAlumni->fetch_assoc()) {
-                $alumniList[] = $row;
-            }
-
-            $html = "<p><strong>Retrieved Department Alumni Records (" . count($alumniList) . " matches):</strong></p><ul>";
-            foreach ($alumniList as $alm) {
-                $comp = !empty($alm['company_name']) ? cleanStr($alm['company_name']) : 'Leading Tech Firm';
-                $desg = !empty($alm['designation']) ? cleanStr($alm['designation']) : 'Engineer';
-                $loc = !empty($alm['location']) ? cleanStr($alm['location']) : 'Global';
-                $ind = !empty($alm['industry']) ? cleanStr($alm['industry']) : 'Technology';
-                $html .= "<li><strong>" . cleanStr($alm['name']) . "</strong> (Dept: " . cleanStr($alm['branch']) . ") – <strong>$desg</strong> @ <strong>$comp</strong> ($loc, $ind) — Source: <code>alumni_employment_history</code></li>";
-            }
-            $html .= "</ul>";
-
-            $response = [
-                'success' => true,
-                'source' => 'live_db',
-                'title' => '🎓 Department Alumni Directory Records',
-                'stats' => [
-                    ['val' => (string)count($alumniList) . '+ Matches', 'lbl' => 'Retrieved Alumni'],
-                    ['val' => '500+ Alumni', 'lbl' => 'Total Network']
-                ],
-                'content' => $html,
-                'links' => [
-                    ['text' => 'Explore Alumni Page', 'url' => 'alumni.php'],
-                    ['text' => 'Placements Overview', 'url' => 'placements.php']
-                ]
-            ];
-        }
-    }
-}
-
-// =========================================================
-// 3. FACULTY / HOD RETRIEVAL
+// 2. FACULTY & HOD RETRIEVAL (Parameterised & Complete)
 // =========================================================
 if (!$response && preg_match('/(hod|head|head of department|faculty|professor|prof|teacher|staff|guide|mentor|suresh|srinivasa|bhanu|aswini|satyam|mohan|surya|gopala|rajesh|navya|giridhar|vignya|madhuriya|trinadh|aneela|murthy)/i', $lowerQuery)) {
     
-    if (preg_match('/(hod|head|head of department|suresh)/i', $lowerQuery)) {
-        $sql = "SELECT faculty_name, email, phone_number, is_active FROM faculties WHERE LOWER(faculty_name) LIKE '%suresh%' OR faculty_id = 1 LIMIT 1";
+    if (preg_match('/(hod|head|head of department|suresh|murthy)/i', $lowerQuery) && !preg_match('/all faculty|faculty list|list of faculty/i', $lowerQuery)) {
+        $sql = "SELECT faculty_id, faculty_name, email, phone_number, is_active FROM faculties WHERE LOWER(faculty_name) LIKE '%suresh%' OR LOWER(faculty_name) LIKE '%murthy%' OR faculty_id IN (1, 8) ORDER BY faculty_id ASC LIMIT 2";
         $result = $conn->query($sql);
         
-        if ($result && $row = $result->fetch_assoc()) {
-            $name = cleanStr($row['faculty_name']);
-            $email = cleanStr($row['email']);
-            $phone = cleanStr($row['phone_number']);
-
-            $html = "<p><strong>Retrieved Record:</strong> $name is Head of Department (HOD) for CSD & CSIT at SRKR Engineering College.</p>";
-            $html .= "<ul>";
-            $html .= "<li><strong>Name:</strong> $name – <strong>Designation:</strong> Professor & HOD</li>";
-            $html .= "<li><strong>Email:</strong> $email</li>";
-            if (!empty($phone)) $html .= "<li><strong>Phone:</strong> $phone</li>";
-            $html .= "<li><strong>Departments:</strong> Computer Science & Design (CSD) and Computer Science & Information Technology (CSIT)</li>";
+        if ($result && $result->num_rows > 0) {
+            $html = "<p><strong>Retrieved Heads of Department (HODs) Records:</strong></p><ul>";
+            while ($row = $result->fetch_assoc()) {
+                $name = cleanStr($row['faculty_name']);
+                $email = cleanStr($row['email']);
+                $phone = cleanStr($row['phone_number']);
+                $dept = (strpos(strtolower($name), 'suresh') !== false) ? 'CSD' : 'CSIT';
+                $html .= "<li><strong>$name</strong> — Professor & HOD ($dept)<br>• Email: $email" . (!empty($phone) ? " | Phone: $phone" : "") . "</li>";
+            }
             $html .= "</ul>";
-            $html .= "<p style='font-size:11px; color:#94a3b8;'>Source: <code>new_sem.faculties</code> [faculty_id=1]</p>";
 
             $response = [
                 'success' => true,
                 'source' => 'live_db',
-                'title' => '👨‍🏫 Record: HOD Dr. M. Suresh Babu',
+                'title' => '👨‍🏫 Heads of Department (HODs)',
                 'stats' => [
-                    ['val' => 'Dr. M. Suresh Babu', 'lbl' => 'HOD CSD & CSIT'],
+                    ['val' => 'CSD & CSIT', 'lbl' => 'Department HODs'],
                     ['val' => 'Active', 'lbl' => 'Faculty Status']
                 ],
                 'content' => $html,
                 'links' => [
-                    ['text' => 'HOD Dashboard', 'url' => 'hod_dashboard.php'],
                     ['text' => 'Faculty Directory', 'url' => 'faculty.php']
                 ]
             ];
         }
     } else {
         $searchTerm = '%' . $conn->real_escape_string($lowerQuery) . '%';
-        $sql = "SELECT faculty_id, faculty_name, email, phone_number, is_active FROM faculties WHERE LOWER(faculty_name) LIKE LOWER('$searchTerm') OR LOWER(email) LIKE LOWER('$searchTerm') LIMIT 10";
+        $sql = "SELECT faculty_id, faculty_name, email, phone_number, is_active FROM faculties WHERE is_active = 1 ORDER BY faculty_id ASC";
         $result = $conn->query($sql);
         
         if ($result && $result->num_rows > 0) {
@@ -307,25 +293,29 @@ if (!$response && preg_match('/(hod|head|head of department|faculty|professor|pr
                 $facultyList[] = $row;
             }
 
-            $countRes = $conn->query("SELECT COUNT(*) as total FROM faculties WHERE is_active = 1");
-            $totalFac = ($countRes && $countRow = $countRes->fetch_assoc()) ? $countRow['total'] : count($facultyList);
+            $totalFac = count($facultyList);
+            $isCompleteList = preg_match('/(all|list|entire|every|directory)/i', $lowerQuery);
+            $displayCount = ($isCompleteList || $totalFac <= 25) ? $totalFac : min(25, $totalFac);
+            $shownList = array_slice($facultyList, 0, $displayCount);
 
-            $html = "<p><strong>Retrieved Faculty Records (" . count($facultyList) . " matches):</strong></p><ul>";
-            foreach ($facultyList as $fac) {
-                $statusBadge = ($fac['is_active'] == 1) ? "(Active)" : "(Inactive)";
-                $html .= "<li><strong>" . cleanStr($fac['faculty_name']) . "</strong> $statusBadge – Email: " . cleanStr($fac['email']);
-                if (!empty($fac['phone_number'])) $html .= " – Phone: " . cleanStr($fac['phone_number']);
-                $html .= " — Source: <code>faculties.faculty_id=" . $fac['faculty_id'] . "</code></li>";
+            $html = "<p><strong>Retrieved Faculty Records (" . ($displayCount === $totalFac ? "All $totalFac" : "Showing $displayCount of $totalFac") . " active faculty members):</strong></p><ul>";
+            foreach ($shownList as $fac) {
+                $html .= "<li><strong>" . cleanStr($fac['faculty_name']) . "</strong> — Email: " . cleanStr($fac['email']);
+                if (!empty($fac['phone_number'])) $html .= " | Phone: " . cleanStr($fac['phone_number']);
+                $html .= "</li>";
             }
             $html .= "</ul>";
+            if ($displayCount < $totalFac) {
+                $html .= "<p style='font-size:12px; color:#64748b;'>Showing top $displayCount of $totalFac faculty members. Visit the Faculty Directory for the complete listing.</p>";
+            }
 
             $response = [
                 'success' => true,
                 'source' => 'live_db',
                 'title' => '👨‍🏫 Faculty Database Records',
                 'stats' => [
-                    ['val' => (string)$totalFac, 'lbl' => 'Active Faculty'],
-                    ['val' => (string)count($facultyList), 'lbl' => 'Records']
+                    ['val' => (string)$totalFac, 'lbl' => 'Total Active Faculty'],
+                    ['val' => (string)$displayCount, 'lbl' => 'Displayed Records']
                 ],
                 'content' => $html,
                 'links' => [
@@ -337,7 +327,7 @@ if (!$response && preg_match('/(hod|head|head of department|faculty|professor|pr
 }
 
 // =========================================================
-// 4. HOUSES & STANDINGS RETRIEVAL
+// 3. HOUSES & STANDINGS RETRIEVAL
 // =========================================================
 if (!$response && preg_match('/(house|houses|aakash|agni|jal|vayu|prithvi|prudhvi|shield|leaderboard|points|score|standing|standings)/i', $lowerQuery)) {
     $sql = "SELECT h.hid, h.name, 
@@ -411,158 +401,54 @@ if (!$response && preg_match('/(house|houses|aakash|agni|jal|vayu|prithvi|prudhv
 }
 
 // =========================================================
-// 5. EVENTS & COMPETITIONS RETRIEVAL
+// 4. ALUMNI PAGE & EMPLOYMENT RETRIEVAL
 // =========================================================
-if (!$response && preg_match('/(event|events|workshop|jaitra|contest|competition|symposium|hackathon)/i', $lowerQuery)) {
-    $sql = "SELECT event_id, title, description, venue, event_date, winner_points FROM events ORDER BY event_date DESC LIMIT 6";
-    $result = $conn->query($sql);
+if (!$response && preg_match('/(alumni|graduate|graduates|alumnus|former student|google|microsoft|amazon|meta|carnegie|cmu|qualcomm|tcs innovation|startup founder|entrepreneur|higher studies|notable alumni|alumni network|join alumni|update alumni)/i', $lowerQuery)) {
+    $searchTerm = '%' . $conn->real_escape_string($lowerQuery) . '%';
     
-    if ($result && $result->num_rows > 0) {
-        $eventList = [];
-        while ($row = $result->fetch_assoc()) {
-            $eventList[] = $row;
+    $sqlAlumni = "SELECT s.student_id, s.name, s.branch, e.company_name, e.designation, e.location, e.industry, e.description
+                  FROM students s
+                  LEFT JOIN alumni_employment_history e ON s.student_id = e.student_id
+                  WHERE s.is_alumni = 1 OR LOWER(e.company_name) LIKE '$searchTerm' OR LOWER(e.designation) LIKE '$searchTerm' OR LOWER(e.industry) LIKE '$searchTerm'
+                  LIMIT 15";
+
+    $resAlumni = $conn->query($sqlAlumni);
+
+    if ($resAlumni && $resAlumni->num_rows > 0) {
+        $alumniList = [];
+        while ($row = $resAlumni->fetch_assoc()) {
+            $alumniList[] = $row;
         }
 
-        $countRes = $conn->query("SELECT COUNT(*) as total FROM events");
-        $totalEvents = ($countRes && $cRow = $countRes->fetch_assoc()) ? $cRow['total'] : count($eventList);
-
-        $html = "<p><strong>Retrieved Events Records ($totalEvents total):</strong></p><ul>";
-        foreach ($eventList as $evt) {
-            $dateFormatted = date('M d, Y', strtotime($evt['event_date']));
-            $html .= "<li><strong>" . cleanStr($evt['title']) . "</strong> – Date: <em>$dateFormatted</em>";
-            if (!empty($evt['venue']) && $evt['venue'] !== 'null') $html .= " – Venue: " . cleanStr($evt['venue']);
-            $html .= " — Source: <code>events.event_id=" . $evt['event_id'] . "</code></li>";
+        $html = "<p><strong>Retrieved Department Alumni Records (" . count($alumniList) . " matches):</strong></p><ul>";
+        foreach ($alumniList as $alm) {
+            $comp = !empty($alm['company_name']) ? cleanStr($alm['company_name']) : 'Leading Tech Firm';
+            $desg = !empty($alm['designation']) ? cleanStr($alm['designation']) : 'Engineer';
+            $loc = !empty($alm['location']) ? cleanStr($alm['location']) : 'Global';
+            $ind = !empty($alm['industry']) ? cleanStr($alm['industry']) : 'Technology';
+            $html .= "<li><strong>" . cleanStr($alm['name']) . "</strong> (Dept: " . cleanStr($alm['branch']) . ") – <strong>$desg</strong> @ <strong>$comp</strong> ($loc, $ind)</li>";
         }
         $html .= "</ul>";
 
         $response = [
             'success' => true,
             'source' => 'live_db',
-            'title' => '📅 Department Events Records',
+            'title' => '🎓 Department Alumni Directory Records',
             'stats' => [
-                ['val' => (string)$totalEvents, 'lbl' => 'Total Events'],
-                ['val' => cleanStr($eventList[0]['title']), 'lbl' => 'Latest Event']
+                ['val' => (string)count($alumniList) . '+ Matches', 'lbl' => 'Retrieved Alumni'],
+                ['val' => '500+ Alumni', 'lbl' => 'Total Network']
             ],
             'content' => $html,
             'links' => [
-                ['text' => 'Events Overview', 'url' => 'events_overview.php']
+                ['text' => 'Explore Alumni Page', 'url' => 'alumni.php'],
+                ['text' => 'Placements Overview', 'url' => 'placements.php']
             ]
         ];
     }
 }
 
 // =========================================================
-// 6. PLACEMENTS & INTERNSHIPS RETRIEVAL
-// =========================================================
-if (!$response && preg_match('/(placement|placements|package|salary|lpa|highest package|average package|recruiter|recruiters|internship|internships|stipend|tcs|amazon|infosys|wipro|cognizant|hexaware|virtusa)/i', $lowerQuery)) {
-    $html = "<p><strong>Retrieved Placements & Internships Data:</strong></p>";
-    $html .= "<ul>";
-    $html .= "<li><strong>Highest Package:</strong> <strong style='color:#10b981;'>44+ LPA</strong> (Global Tech Tier-1)</li>";
-    $html .= "<li><strong>Average Package:</strong> <strong>6.5 LPA</strong> across CSD & CSIT graduating batches</li>";
-    $html .= "<li><strong>Top Recruiters:</strong> Amazon AWS, TCS Digital, Microsoft, Cognizant, Wipro, Infosys, Virtusa, Hexaware, and Tech Mahindra.</li>";
-    $html .= "<li><strong>Internship Statistics:</strong> 120+ paid internships secured in software engineering, AI/ML research, and full-stack cloud development.</li>";
-    $html .= "</ul>";
-
-    $response = [
-        'success' => true,
-        'source' => 'live_db',
-        'title' => '🏆 Placements & Internships Statistics',
-        'stats' => [
-            ['val' => '44+ LPA', 'lbl' => 'Highest Package'],
-            ['val' => '90%+', 'lbl' => 'Placement Rate']
-        ],
-        'content' => $html,
-        'links' => [
-            ['text' => 'Placements Overview', 'url' => 'placements.php'],
-            ['text' => 'Internships Details', 'url' => 'internships.php']
-        ]
-    ];
-}
-
-// =========================================================
-// 7. ACADEMIC CALENDAR & SYLLABUS RETRIEVAL
-// =========================================================
-if (!$response && preg_match('/(academic calendar|calendar|syllabus|mid exam|mid-term|internal exam|end exam|semester|r20|r23|holidays|dasara|pongal|working days|model paper|model papers)/i', $lowerQuery)) {
-    $html = "<p><strong>Retrieved Academic & Exam Schedule:</strong></p>";
-    $html .= "<ul>";
-    $html .= "<li><strong>Academic Calendar (2026–2027):</strong> II B.Tech (CSD & CSIT) semester schedules, mid-term dates, and holiday lists are officially published.</li>";
-    $html .= "<li><strong>Semester I Commencement:</strong> 20.07.2026 | <strong>I Mid Exams:</strong> 15.09.2026 – 17.09.2026 | <strong>Dasara Holidays:</strong> 19.10.2026 – 24.10.2026</li>";
-    $html .= "<li><strong>Semester II Commencement:</strong> 14.12.2026 | <strong>Pongal Holidays:</strong> 11.01.2027 – 16.01.2027</li>";
-    $html .= "<li><strong>Syllabus Frameworks:</strong> R20 & R23 Autonomous regulations with downloadable unit-wise syllabus and previous model papers.</li>";
-    $html .= "</ul>";
-
-    $response = [
-        'success' => true,
-        'source' => 'live_db',
-        'title' => '📅 Academic Calendar & Syllabus Info',
-        'stats' => [
-            ['val' => '2026–2027', 'lbl' => 'Academic Year'],
-            ['val' => 'R20 & R23', 'lbl' => 'Curriculum']
-        ],
-        'content' => $html,
-        'links' => [
-            ['text' => 'Academic Calendar', 'url' => 'academic-calendar.php'],
-            ['text' => 'Syllabus & Model Papers', 'url' => 'syllabus.php']
-        ]
-    ];
-}
-
-// =========================================================
-// 8. STUDENT CLUBS & INNOVATION RETRIEVAL
-// =========================================================
-if (!$response && preg_match('/(club|clubs|sdc|software development club|startup|startup club|swecha|foss|linux|open source|coding club)/i', $lowerQuery)) {
-    $html = "<p><strong>Retrieved Student Technical Clubs Data:</strong></p>";
-    $html .= "<ul>";
-    $html .= "<li><strong>SDC (Software Development Club):</strong> Student developers building real-world web/mobile portals and campus automation systems.</li>";
-    $html .= "<li><strong>Startup & Innovation Club:</strong> Fostering venture ideation, hackathons, and incubation; 3 startups owned by alumni.</li>";
-    $html .= "<li><strong>Swecha Club:</strong> Promoting Free & Open Source Software (FOSS), Linux kernel workshops, and open technology.</li>";
-    $html .= "</ul>";
-
-    $response = [
-        'success' => true,
-        'source' => 'live_db',
-        'title' => '🚀 Student Technical & Innovation Clubs',
-        'stats' => [
-            ['val' => '3 Active Clubs', 'lbl' => 'Student-Led'],
-            ['val' => '30+ Events', 'lbl' => 'Annual Activities']
-        ],
-        'content' => $html,
-        'links' => [
-            ['text' => 'SDC Club', 'url' => 'sdc_club.php'],
-            ['text' => 'Startup Club', 'url' => 'startup_club.php'],
-            ['text' => 'Swecha Club', 'url' => 'swecha_club.php']
-        ]
-    ];
-}
-
-// =========================================================
-// 9. AI & ML LAB RETRIEVAL
-// =========================================================
-if (!$response && preg_match('/(ai lab|ml lab|ai-ml|ai & ml|gpu|nvidia|rtx|workstation|workstations|cuda|pytorch|tensorflow|opencv|lab|labs|infrastructure)/i', $lowerQuery)) {
-    $html = "<p><strong>Retrieved AI & ML Research Lab Data:</strong></p>";
-    $html .= "<ul>";
-    $html .= "<li><strong>Hardware Infrastructure:</strong> High-end NVIDIA RTX GPU Workstations, 64GB+ RAM, high-speed fiber internet.</li>";
-    $html .= "<li><strong>Software Stack:</strong> PyTorch, TensorFlow, CUDA toolkit, Anaconda, Jupyter Hub, OpenCV, and ROS.</li>";
-    $html .= "<li><strong>Research Focus:</strong> Deep learning model training, computer vision pipelines, natural language processing, and IoT edge inference.</li>";
-    $html .= "</ul>";
-
-    $response = [
-        'success' => true,
-        'source' => 'live_db',
-        'title' => '🔬 Advanced AI & Machine Learning Lab',
-        'stats' => [
-            ['val' => 'NVIDIA GPUs', 'lbl' => 'High Performance'],
-            ['val' => '100+ Workstations', 'lbl' => 'Lab Capacity']
-        ],
-        'content' => $html,
-        'links' => [
-            ['text' => 'AI & ML Lab Details', 'url' => 'ai-ml-lab.php']
-        ]
-    ];
-}
-
-// =========================================================
-// 10. STUDENTS & SECTIONS DIRECTORY RETRIEVAL (GENERAL QUERY)
+// 5. STUDENTS & SECTIONS DIRECTORY RETRIEVAL
 // =========================================================
 if (!$response && preg_match('/(student|students|section|sections|branch|enrolled|class|classes|attendance|leave|csit-a|csit-b|csd-a|csd-b)/i', $lowerQuery)) {
     $whereConds = [];
@@ -582,19 +468,20 @@ if (!$response && preg_match('/(student|students|section|sections|branch|enrolle
 
     $whereClause = !empty($whereConds) ? "WHERE " . implode(" AND ", $whereConds) : "";
 
+    $stRes = $conn->query("SELECT COUNT(*) as total, 
+                           SUM(CASE WHEN LOWER(branch) LIKE '%csd%' THEN 1 ELSE 0 END) as csd_count,
+                           SUM(CASE WHEN LOWER(branch) LIKE '%csit%' OR LOWER(branch) LIKE '%it%' THEN 1 ELSE 0 END) as csit_count
+                           FROM students $whereClause");
+    $stRow = ($stRes) ? $stRes->fetch_assoc() : ['total' => 0, 'csd_count' => 0, 'csit_count' => 0];
+    $totalMatching = (int)($stRow['total'] ?? 0);
+
     $sqlList = "SELECT s.student_id, s.name, s.email, s.branch, s.section, s.is_alumni, COALESCE(h.name, 'Not Assigned') as house_name 
                 FROM students s 
                 LEFT JOIN houses h ON s.hid = h.hid 
                 $whereClause 
-                ORDER BY s.student_id ASC LIMIT 12";
+                ORDER BY s.student_id ASC LIMIT 25";
 
     $resList = $conn->query($sqlList);
-
-    $stRes = $conn->query("SELECT COUNT(*) as total, 
-                           SUM(CASE WHEN LOWER(branch) LIKE '%csd%' THEN 1 ELSE 0 END) as csd_count,
-                           SUM(CASE WHEN LOWER(branch) LIKE '%csit%' OR LOWER(branch) LIKE '%it%' THEN 1 ELSE 0 END) as csit_count
-                           FROM students");
-    $stRow = ($stRes) ? $stRes->fetch_assoc() : ['total' => 0, 'csd_count' => 0, 'csit_count' => 0];
 
     if ($resList && $resList->num_rows > 0) {
         $studentsList = [];
@@ -602,21 +489,24 @@ if (!$response && preg_match('/(student|students|section|sections|branch|enrolle
             $studentsList[] = $row;
         }
 
-        $html = "<p><strong>Retrieved Student Database Records (" . count($studentsList) . " shown of " . number_format($stRow['total']) . " enrolled):</strong></p><ul>";
+        $displayCount = count($studentsList);
+        $html = "<p><strong>Retrieved Student Records (" . ($displayCount === $totalMatching ? "All $totalMatching" : "Showing $displayCount of $totalMatching") . " enrolled students):</strong></p><ul>";
         foreach ($studentsList as $st) {
             $hColor = getHouseColor($st['house_name']);
             $stBadge = ($st['is_alumni'] == 1) ? ' <span style="font-size:10px; color:#d97706;">[Alumni]</span>' : '';
             $html .= "<li><strong>" . cleanStr($st['name']) . "</strong>$stBadge – ID: <code>" . cleanStr($st['student_id']) . "</code> – " . cleanStr($st['branch']) . " Sec " . cleanStr($st['section']) . " – House: <strong style='color:$hColor;'>" . cleanStr($st['house_name']) . " House</strong></li>";
         }
         $html .= "</ul>";
-        $html .= "<p style='font-size:11px; color:#94a3b8;'>Source: <code>new_sem.students</code></p>";
+        if ($displayCount < $totalMatching) {
+            $html .= "<p style='font-size:12px; color:#64748b;'>Showing top $displayCount of $totalMatching enrolled students. Visit the Students Directory for complete filterable rosters.</p>";
+        }
 
         $response = [
             'success' => true,
             'source' => 'live_db',
             'title' => '👥 Student Records Directory',
             'stats' => [
-                ['val' => number_format($stRow['total']), 'lbl' => 'Total Enrolled'],
+                ['val' => number_format($totalMatching), 'lbl' => 'Total Enrolled'],
                 ['val' => number_format($stRow['csd_count']) . ' CSD / ' . number_format($stRow['csit_count']) . ' CSIT', 'lbl' => 'Branch Breakdown']
             ],
             'content' => $html,
@@ -629,14 +519,13 @@ if (!$response && preg_match('/(student|students|section|sections|branch|enrolle
 }
 
 // =========================================================
-// 11. FULL-TEXT SEARCH ACROSS ALL TABLES
+// 6. FULL-TEXT DATABASE FALLBACK SEARCH
 // =========================================================
 if (!$response && strlen($lowerQuery) >= 2) {
     $escaped = $conn->real_escape_string($lowerQuery);
     
-    $stdRes = $conn->query("SELECT s.student_id, s.name, s.branch, s.section, COALESCE(h.name, 'Not Assigned') as house_name FROM students s LEFT JOIN houses h ON s.hid = h.hid WHERE LOWER(s.name) LIKE '%$escaped%' OR LOWER(s.student_id) LIKE '%$escaped%' LIMIT 8");
-    $facRes = $conn->query("SELECT faculty_id, faculty_name, email FROM faculties WHERE LOWER(faculty_name) LIKE '%$escaped%' OR LOWER(email) LIKE '%$escaped%' LIMIT 5");
-    $evtRes = $conn->query("SELECT event_id, title, venue, event_date FROM events WHERE LOWER(title) LIKE '%$escaped%' OR LOWER(description) LIKE '%$escaped%' LIMIT 5");
+    $stdRes = $conn->query("SELECT s.student_id, s.name, s.branch, s.section, COALESCE(h.name, 'Not Assigned') as house_name FROM students s LEFT JOIN houses h ON s.hid = h.hid WHERE LOWER(s.name) LIKE '%$escaped%' OR LOWER(s.student_id) LIKE '%$escaped%' LIMIT 10");
+    $facRes = $conn->query("SELECT faculty_id, faculty_name, email FROM faculties WHERE LOWER(faculty_name) LIKE '%$escaped%' OR LOWER(email) LIKE '%$escaped%' LIMIT 10");
 
     $foundCount = 0;
     $html = "<p><strong>Retrieved Database Matches for \"$query\":</strong></p>";
@@ -644,7 +533,7 @@ if (!$response && strlen($lowerQuery) >= 2) {
     if ($stdRes && $stdRes->num_rows > 0) {
         $html .= "<ul>";
         while ($s = $stdRes->fetch_assoc()) {
-            $html .= "<li><strong>" . cleanStr($s['name']) . "</strong> (ID: <code>" . cleanStr($s['student_id']) . "</code>) – " . cleanStr($s['branch']) . " Sec " . cleanStr($s['section']) . " – House: " . cleanStr($s['house_name']) . " — Source: <code>students.student_id=" . cleanStr($s['student_id']) . "</code></li>";
+            $html .= "<li><strong>" . cleanStr($s['name']) . "</strong> (ID: <code>" . cleanStr($s['student_id']) . "</code>) – " . cleanStr($s['branch']) . " Sec " . cleanStr($s['section']) . " – House: " . cleanStr($s['house_name']) . "</li>";
             $foundCount++;
         }
         $html .= "</ul>";
@@ -653,16 +542,7 @@ if (!$response && strlen($lowerQuery) >= 2) {
     if ($facRes && $facRes->num_rows > 0) {
         $html .= "<ul>";
         while ($f = $facRes->fetch_assoc()) {
-            $html .= "<li><strong>" . cleanStr($f['faculty_name']) . "</strong> (" . cleanStr($f['email']) . ") — Source: <code>faculties.faculty_id=" . $f['faculty_id'] . "</code></li>";
-            $foundCount++;
-        }
-        $html .= "</ul>";
-    }
-
-    if ($evtRes && $evtRes->num_rows > 0) {
-        $html .= "<ul>";
-        while ($e = $evtRes->fetch_assoc()) {
-            $html .= "<li><strong>" . cleanStr($e['title']) . "</strong> – " . date('M d, Y', strtotime($e['event_date'])) . " — Source: <code>events.event_id=" . $e['event_id'] . "</code></li>";
+            $html .= "<li><strong>" . cleanStr($f['faculty_name']) . "</strong> (" . cleanStr($f['email']) . ")</li>";
             $foundCount++;
         }
         $html .= "</ul>";
@@ -685,13 +565,11 @@ if (!$response && strlen($lowerQuery) >= 2) {
     }
 }
 
-// Output final response if found
 if ($response) {
     echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     exit;
 }
 
-// Fallback message when no records match query
 echo json_encode([
     'success' => false,
     'message' => "No matching results found for '" . cleanStr($query) . "' in SRKREC CSD & CSIT Department database."

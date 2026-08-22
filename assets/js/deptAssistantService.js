@@ -2577,25 +2577,7 @@ Ask "Show placement overview" or "Who got placed at Microsoft" to view details!`
         }
 
         // 8. WEBSITE SECTION MATRIX SEARCH
-        for (const chunk of KNOWLEDGE_MATRIX) {
-            if (chunk.keywords.some(k => lower.includes(k))) {
-                return chunk;
-            }
-        }
-
-        // 9. UNKNOWN / CLARIFICATION FOR EXPLICIT PERSON QUERY
-        if (/^\b(who is|tell me about|profile of|info on|details of|which department does|which branch is|what is the role of|department of)\b/i.test(lower)) {
-            return {
-                id: 'person_not_found',
-                category: 'People Search',
-                title: 'Person Not Found',
-                isNotFound: true,
-                content: `I couldn't find that information in the department website. Could you provide their full name, role, or department?`,
-                url: 'heroes_of_department.php',
-                ctaText: 'View Department Directory →'
-            };
-        }
-
+        // Return null to allow fall-through to live MySQL database search and Gemini LLM fallback
         return null;
     }
 
@@ -2720,7 +2702,14 @@ Ask "Show placement overview" or "Who got placed at Microsoft" to view details!`
 
             // Live MySQL Database Query for Student Records, Registration Numbers & Unmatched Queries
             try {
-                const dbRes = await fetch(getRootApiUrl('api/ai_search.php?q=' + encodeURIComponent(userInput)));
+                const searchParams = new URLSearchParams({
+                    q: userInput,
+                    active_person_reg: conversationContext.activePerson ? (conversationContext.activePerson.regNo || '') : '',
+                    active_person_name: conversationContext.activePerson ? (conversationContext.activePerson.fullName || '') : '',
+                    active_house: conversationContext.activeHouse || '',
+                    active_branch: conversationContext.activeProgram || ''
+                });
+                const dbRes = await fetch(getRootApiUrl('api/ai_search.php?' + searchParams.toString()));
                 if (dbRes.ok) {
                     const dbData = await dbRes.json();
                     if (dbData.success && dbData.content) {
@@ -2747,7 +2736,7 @@ Ask "Show placement overview" or "Who got placed at Microsoft" to view details!`
                     body: JSON.stringify({
                         prompt: userInput,
                         context: matchedChunk,
-                        history: conversationContext.history.slice(-4),
+                        history: conversationContext.history.slice(-6),
                         apiKey: userApiKey || config.apiKey
                     })
                 });

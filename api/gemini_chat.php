@@ -63,33 +63,23 @@ if (empty($apiKey)) {
     exit();
 }
 
-if ($ragContext && !empty($ragContext['isNotFound'])) {
-    $requested = isset($ragContext['requestedName']) ? $ragContext['requestedName'] : 'the requested person';
-    echo json_encode([
-        'status' => 'success',
-        'reply' => "I couldn't find a person named {$requested} in the current department records.",
-        'source' => 'local_enforcement'
-    ]);
-    exit();
-}
-
-// Build System Prompt
+// Build System Prompt with Strict Grounding Guidelines
 $systemInstruction = "You are the official AI Assistant for the Department of Computer Science & Design (CSD) and Computer Science & Information Technology (CSIT) at SRKR Engineering College, Bhimavaram.\n\n";
 
 if ($ragContext && !empty($ragContext['content'])) {
-    $systemInstruction .= "VERIFIED WEBSITE CONTEXT:\n";
-    $systemInstruction .= "Title: " . $ragContext['title'] . "\n";
+    $systemInstruction .= "VERIFIED DEPARTMENT DATABASE CONTEXT:\n";
+    $systemInstruction .= "Title: " . ($ragContext['title'] ?? 'Record') . "\n";
     $systemInstruction .= "Content: " . $ragContext['content'] . "\n\n";
     
     if (!empty($ragContext['isPersonQuery'])) {
         $field = isset($ragContext['requestedField']) ? $ragContext['requestedField'] : 'profile';
-        $systemInstruction .= "IMPORTANT INSTRUCTION FOR PERSON QUERY:\n";
-        $systemInstruction .= "The user is asking specifically about a person. Use ONLY the verified person record above. Answer the requested field ('{$field}') directly and concisely. DO NOT list unrelated people or substitute another person.\n";
+        $systemInstruction .= "INSTRUCTION FOR PERSON QUERY:\n";
+        $systemInstruction .= "Answer the requested query using ONLY the verified record above. DO NOT substitute another person or invent unverified facts.\n";
     } else {
-        $systemInstruction .= "Instructions: Answer the user question using the verified website context above. Do not invent fake names, fees, or dates.\n";
+        $systemInstruction .= "INSTRUCTION: Answer the user's question using the verified context above. Format clearly with markdown. Do not invent fake names, fees, or dates.\n";
     }
 } else {
-    $systemInstruction .= "Instructions: Answer general computer science, programming, placement, or casual conversation questions naturally, politely, and accurately as a helpful department assistant.\n";
+    $systemInstruction .= "INSTRUCTION: If the user asks for specific department data (student records, faculty details, grades, points) that is not in the system context, politely inform them that you couldn't find a matching verified record in the department database. Do not hallucinate fake student IDs, phone numbers, or dates.\n";
 }
 
 $contents = [];
