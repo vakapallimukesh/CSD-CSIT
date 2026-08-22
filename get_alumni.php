@@ -193,7 +193,39 @@ foreach ($batch_2025_raw as $item) {
     ];
 }
 
-// 18 Student Placements & Internships from Posters
+// Full-Time Student Placement Records from Posters
+$fallback_placements = [
+    ['id' => 1, 'student_id' => '2291A6243', 'student_name' => 'P Rama Ganesh', 'company' => 'AUNIX AI', 'job_role' => 'Software Engineer', 'package' => '12 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/2291A6243.jpg'],
+    ['id' => 2, 'student_id' => '21B91A6218', 'student_name' => 'Javvadi Bhargavi', 'company' => 'Akrivia HCM', 'job_role' => 'Software Development Engineer', 'package' => '10-12 LPA', 'placement_year' => '2025', 'batch' => '2025', 'photo' => 'images/placements/21B91A6218.jpg'],
+    ['id' => 3, 'student_id' => '22B91A6259', 'student_name' => 'V M M Lakshmi Manasa', 'company' => 'Bluconnect Ai India Pvt Ltd', 'job_role' => 'Software Development Engineer', 'package' => '7.8 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/22B91A6259.jpg'],
+    ['id' => 4, 'student_id' => '22B91A6206', 'student_name' => 'B V Satya Tejesh', 'company' => 'Bluconnect Ai India Pvt Ltd', 'job_role' => 'Software Development Engineer', 'package' => '7.8 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/22B91A6206.jpg'],
+    ['id' => 5, 'student_id' => '22B91A6203', 'student_name' => 'B Lakshman Kumar Reddy', 'company' => 'Bluconnect Ai India Pvt Ltd', 'job_role' => 'Software Development Engineer', 'package' => '7.8 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/22B91A6203.jpg'],
+    ['id' => 6, 'student_id' => '22B91A6255', 'student_name' => 'V H V S Surya Swapanth', 'company' => 'Bluconnect Ai India Pvt Ltd', 'job_role' => 'Software Development Engineer', 'package' => '7.8 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/22B91A6255.jpg'],
+    ['id' => 7, 'student_id' => '22B91A6237', 'student_name' => 'P Nikhil', 'company' => 'Bluconnect Ai India Pvt Ltd', 'job_role' => 'Software Development Engineer', 'package' => '7.8 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/22B91A6237.jpg'],
+    ['id' => 8, 'student_id' => '22B91A6212', 'student_name' => 'G Sai Abhinay', 'company' => 'Bluconnect Ai India Pvt Ltd', 'job_role' => 'Software Development Engineer', 'package' => '7.8 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/22B91A6212.jpg'],
+    ['id' => 9, 'student_id' => '22B91A6234', 'student_name' => 'M Sandilya', 'company' => 'Bluconnect Ai India Pvt Ltd', 'job_role' => 'Software Development Engineer', 'package' => '7.8 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/22B91A6234.jpg'],
+    ['id' => 10, 'student_id' => '21B91A6257', 'student_name' => 'V Rohit', 'company' => 'Bluconnect Ai India Pvt Ltd', 'job_role' => 'Software Developer Intern', 'package' => '7.8 LPA', 'placement_year' => '2025', 'batch' => '2025', 'photo' => 'images/placements/21B91A6257.jpg'],
+    ['id' => 11, 'student_id' => '21B91A6234', 'student_name' => 'N Siva Sai', 'company' => 'Bluconnect Ai India Pvt Ltd', 'job_role' => 'Software Developer Intern', 'package' => '7.8 LPA', 'placement_year' => '2025', 'batch' => '2025', 'photo' => 'images/placements/21B91A6234.jpg'],
+    ['id' => 12, 'student_id' => '21B91A6258', 'student_name' => 'V Harsha Sai', 'company' => 'Bluconnect Ai India Pvt Ltd', 'job_role' => 'Software Developer Intern', 'package' => '7.8 LPA', 'placement_year' => '2025', 'batch' => '2025', 'photo' => 'images/placements/21B91A6258.jpg'],
+    ['id' => 13, 'student_id' => '22B91A6219', 'student_name' => 'K Rishitha Varma', 'company' => 'Zemoso Technologies', 'job_role' => 'Dev Engineer', 'package' => '6.89 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/22B91A6219.jpg'],
+    ['id' => 14, 'student_id' => '23B95A6207', 'student_name' => 'Tanguturi Pavansai', 'company' => 'Zemoso Technologies', 'job_role' => 'Dev Engineer', 'package' => '6.89 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/23B95A6207.jpg'],
+    ['id' => 15, 'student_id' => '21B91A6249', 'student_name' => 'Vinay Prasad', 'company' => 'Infosys', 'job_role' => 'Digital Specialist Engineer', 'package' => '6.2 LPA', 'placement_year' => '2025', 'batch' => '2025', 'photo' => 'images/placements/21B91A6249.jpg'],
+    ['id' => 16, 'student_id' => '21B91A6242', 'student_name' => 'R Subhashini', 'company' => 'Meeami Technologies', 'job_role' => 'Jr AI Audio Engineer', 'package' => '6 LPA', 'placement_year' => '2025', 'batch' => '2025', 'photo' => 'images/placements/21B91A6242.jpg'],
+    ['id' => 17, 'student_id' => '21B91A6222', 'student_name' => 'K Lakshmi Purna Sri', 'company' => 'Quanteon Solutions', 'job_role' => 'Business Development Associate', 'package' => '5 LPA', 'placement_year' => '2025', 'batch' => '2025', 'photo' => 'images/placements/21B91A6222.jpg'],
+    ['id' => 18, 'student_id' => '21B91A6262', 'student_name' => 'Y Ganesh', 'company' => 'SmartED', 'job_role' => 'Business Growth Specialist', 'package' => '5 LPA', 'placement_year' => '2025', 'batch' => '2025', 'photo' => 'images/placements/21B91A6262.jpg'],
+    ['id' => 19, 'student_id' => '22B91A6223', 'student_name' => 'Kola Yeswanth', 'company' => 'Deloitte US-India', 'job_role' => 'Analyst Trainee', 'package' => '4.5 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/22B91A6223.jpg'],
+    ['id' => 20, 'student_id' => '21B91A6235', 'student_name' => 'N. Srujana Sri', 'company' => 'HCLTech', 'job_role' => 'Associate Software Engineer', 'package' => '4.5 LPA', 'placement_year' => '2025', 'batch' => '2025', 'photo' => 'images/placements/21B91A6235.jpg'],
+    ['id' => 21, 'student_id' => '22B91A6221', 'student_name' => 'K Teja Siddardha', 'company' => 'Saptarishi Solutions', 'job_role' => 'Junior Full Stack Developer', 'package' => '4.2 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/22B91A6221.jpg'],
+    ['id' => 22, 'student_id' => '21B91A6244', 'student_name' => 'Reddi Sahithi', 'company' => 'Atelia Software India Pvt Ltd', 'job_role' => 'Full Stack Developer', 'package' => '4 LPA', 'placement_year' => '2025', 'batch' => '2025', 'photo' => 'images/placements/21B91A6244.jpg'],
+    ['id' => 23, 'student_id' => '21B91A6238', 'student_name' => 'Revathi Pathiwada', 'company' => 'Atelia Software India Pvt Ltd', 'job_role' => 'Full Stack Developer', 'package' => '4 LPA', 'placement_year' => '2025', 'batch' => '2025', 'photo' => 'images/placements/21B91A6238.jpg'],
+    ['id' => 24, 'student_id' => '21B91A6205', 'student_name' => 'Byri Rohit', 'company' => 'Atelia Software India Pvt Ltd', 'job_role' => 'Full Stack Developer', 'package' => '4 LPA', 'placement_year' => '2025', 'batch' => '2025', 'photo' => 'images/placements/21B91A6205.jpg'],
+    ['id' => 25, 'student_id' => '22B91A6216', 'student_name' => 'J. Sanjani', 'company' => 'Achala IT Solutions', 'job_role' => 'Associate Designer', 'package' => '3.5 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/22B91A6216.jpg'],
+    ['id' => 26, 'student_id' => '22B91A6236', 'student_name' => 'Nallam Hema Sai Sri', 'company' => 'Syren Cloud', 'job_role' => 'Data Engineer', 'package' => '3.5 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/22B91A6236.jpg'],
+    ['id' => 27, 'student_id' => '21B91A6217', 'student_name' => 'J. R. S. Sathwik', 'company' => 'HCLTech', 'job_role' => 'Graduate Engineer Trainee', 'package' => '3.25 LPA', 'placement_year' => '2025', 'batch' => '2025', 'photo' => 'images/placements/21B91A6217.jpg'],
+    ['id' => 28, 'student_id' => '22B91A6256', 'student_name' => 'V. Gnana Sekhar', 'company' => 'Achala IT Solutions', 'job_role' => 'Product Development Associate', 'package' => '3 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/22B91A6256.jpg'],
+    ['id' => 29, 'student_id' => '22B91A6239', 'student_name' => 'Pepeti Ganesh', 'company' => 'Achala IT Solutions', 'job_role' => 'Associate Engineer', 'package' => '3 LPA', 'placement_year' => '2026', 'batch' => '2026', 'photo' => 'images/placements/22B91A6239.jpg']
+];
+
 $placements = [];
 if ($conn) {
     $res_p = @mysqli_query($conn, "SELECT * FROM alumni_placements ORDER BY id ASC");
@@ -212,6 +244,10 @@ if ($conn) {
             ];
         }
     }
+}
+
+if (empty($placements)) {
+    $placements = $fallback_placements;
 }
 
 // Query parameters
