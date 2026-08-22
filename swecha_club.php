@@ -136,35 +136,266 @@ body {
     margin: 12px auto 0;
     border-radius: 2px;
 }
-
-.hero-logo-container {
-    width: 190px;
-    height: 190px;
-    border-radius: 50%;
+/* ── Swecha Events & Gallery Slideshow ── */
+.swecha-gallery-section {
+    padding: 70px 0;
     background: #ffffff;
-    padding: 6px;
-    display: inline-flex;
+    border-top: 1px solid #e2e8f0;
+}
+
+.swecha-slideshow-card {
+    background: #0f172a;
+    border-radius: 24px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.swecha-main-slide-viewport {
+    width: 100%;
+    height: 540px;
+    position: relative;
+    display: flex;
     align-items: center;
     justify-content: center;
-    border: 4px solid rgba(255, 255, 255, 0.35);
-    animation: floatBranch 6s ease-in-out infinite;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4), 0 0 35px rgba(52, 211, 153, 0.6);
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    background: #020617;
+    overflow: hidden;
     cursor: pointer;
 }
 
-.hero-logo-container:hover {
-    transform: scale(1.08) rotate(3deg);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 50px rgba(52, 211, 153, 0.85);
-    border-color: #34d399;
+.swecha-slide-img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    opacity: 1;
 }
 
-.hero-logo-img {
+.swecha-slide-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.5) 60%, transparent 100%);
+    padding: 30px 30px 20px;
+    color: #ffffff;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    pointer-events: none;
+}
+
+.swecha-slide-caption {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0;
+}
+
+.swecha-slide-subcaption {
+    font-size: 0.92rem;
+    color: #34d399;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.swecha-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.swecha-nav-btn:hover {
+    background: #10b981;
+    color: #ffffff;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+}
+
+.swecha-nav-prev { left: 20px; }
+.swecha-nav-next { right: 20px; }
+
+.swecha-counter-pill {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    z-index: 10;
+    letter-spacing: 0.5px;
+}
+
+.swecha-controls-top {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+}
+
+.swecha-ctrl-icon-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.swecha-ctrl-icon-btn:hover {
+    background: #10b981;
+    color: #ffffff;
+}
+
+/* Scrollable Thumbnails Strip */
+.swecha-thumbs-wrapper {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    padding: 10px 4px 15px;
+    scroll-behavior: smooth;
+}
+
+.swecha-thumbs-wrapper::-webkit-scrollbar {
+    height: 6px;
+}
+
+.swecha-thumbs-wrapper::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+.swecha-thumbs-wrapper::-webkit-scrollbar-thumb {
+    background: #10b981;
+    border-radius: 10px;
+}
+
+.swecha-thumb-item {
+    width: 110px;
+    height: 80px;
+    flex-shrink: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 2px solid #e2e8f0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.swecha-thumb-item img {
     width: 100%;
     height: 100%;
-    border-radius: 50%;
     object-fit: cover;
-    display: block;
+}
+
+.swecha-thumb-item:hover {
+    transform: translateY(-3px);
+    border-color: #10b981;
+}
+
+.swecha-thumb-item.active {
+    border-color: #10b981;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+    transform: scale(1.05);
+}
+
+.swecha-thumb-item.active::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 2px solid #10b981;
+    border-radius: 12px;
+    pointer-events: none;
+}
+
+/* Lightbox Modal */
+.swecha-lightbox-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.95);
+    backdrop-filter: blur(15px);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.swecha-lightbox-modal.active {
+    display: flex;
+}
+
+.swecha-lightbox-img {
+    max-width: 92vw;
+    max-height: 88vh;
+    border-radius: 16px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+    object-fit: contain;
+}
+
+.swecha-lightbox-close {
+    position: absolute;
+    top: 25px;
+    right: 30px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+    font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.3);
+    transition: all 0.25s ease;
+}
+
+.swecha-lightbox-close:hover {
+    background: #ef4444;
+    color: #ffffff;
+}
+
+@media (max-width: 768px) {
+    .swecha-main-slide-viewport {
+        height: 320px;
+    }
+    .swecha-slide-caption {
+        font-size: 1rem;
+    }
 }
 </style>
 
@@ -398,6 +629,222 @@ body {
         </div>
     </section>
 
+    <!-- Events & Gallery Slideshow -->
+    <section class="swecha-gallery-section" id="events">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span style="color: #10b981; background: rgba(16, 185, 129, 0.12); font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; font-size: 0.82rem; display: inline-block; padding: 6px 18px; border-radius: 99px; margin-bottom: 12px; border: 1px solid rgba(16, 185, 129, 0.25);">
+                    <i class="fas fa-camera-retro me-2"></i>EVENTS & PHOTO GALLERY
+                </span>
+                <h2 class="section-header-title" style="margin-bottom: 15px;">Swecha Club Events Showcase</h2>
+                <p style="color: #64748b; font-size: 1.1rem; max-width: 680px; margin: 0 auto;">
+                    Explore moments, workshops, freedom fests, and community hackathons at Swecha Learning Center SRKREC.
+                </p>
+            </div>
+
+            <!-- Main Slideshow Card -->
+            <div class="swecha-slideshow-card">
+                <!-- Counter Badge -->
+                <div class="swecha-counter-pill" id="swechaCounter">Photo 1 of 31</div>
+
+                <!-- Top Control Buttons -->
+                <div class="swecha-controls-top">
+                    <button class="swecha-ctrl-icon-btn" id="swechaPlayPauseBtn" onclick="toggleSwechaAutoplay()" title="Play / Pause Slideshow">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                    <button class="swecha-ctrl-icon-btn" onclick="openSwechaLightbox()" title="View Fullscreen">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </div>
+
+                <!-- Navigation Arrows -->
+                <button class="swecha-nav-btn swecha-nav-prev" onclick="prevSwechaSlide()" title="Previous Image">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="swecha-nav-btn swecha-nav-next" onclick="nextSwechaSlide()" title="Next Image">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <!-- Main Viewport -->
+                <div class="swecha-main-slide-viewport" onclick="openSwechaLightbox()">
+                    <img src="images/swecha/swecha_event_01.jpg" alt="Swecha Event Photo 1" class="swecha-slide-img" id="swechaMainSlideImg">
+                    
+                    <div class="swecha-slide-overlay">
+                        <div>
+                            <h4 class="swecha-slide-caption" id="swechaSlideCaption">Swecha Freedom Fest & Community Workshops</h4>
+                            <div class="swecha-slide-subcaption" id="swechaSlideSubcaption"><i class="fas fa-tag me-1"></i> Swecha Learning Center SRKREC</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scrollable Thumbnail Strip -->
+            <div class="swecha-thumbs-wrapper" id="swechaThumbsContainer">
+                <!-- 31 Thumbnails dynamically populated -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Fullscreen Lightbox Modal -->
+    <div class="swecha-lightbox-modal" id="swechaLightboxModal" onclick="closeSwechaLightbox(event)">
+        <span class="swecha-lightbox-close" onclick="closeSwechaLightbox(event)">&times;</span>
+        <img src="" alt="Swecha Event Large View" class="swecha-lightbox-img" id="swechaLightboxImg">
+    </div>
+
+    <script>
+        const totalSwechaPhotos = 31;
+        const swechaImageFolder = "images/swecha/";
+        let currentSwechaIndex = 1;
+        let swechaAutoplayTimer = null;
+        let isSwechaPlaying = true;
+
+        const captionsList = [
+            "Swecha Freedom Fest 2025 Opening Ceremony",
+            "Open Source & Linux Workshop Hands-on Session",
+            "Student Developers Community Gathering",
+            "Technical Hackathon Team Collaboration",
+            "Free Software Freedom Advocacy Talk",
+            "Hands-on Python & Web Development BootCamp",
+            "Mission Kithab Resource Distribution",
+            "Swecha Learning Center Interactive Coding Sprint",
+            "Peer-to-Peer Mentorship & Code Review",
+            "Faculty & Guest Speakers Keynote Presentation",
+            "Open Source Exhibition & Project Showcase",
+            "Digital Freedom & Privacy Awareness Workshop",
+            "Linux Installation & System Admin Camp",
+            "Community Contribution & Pull Request Marathon",
+            "Team Building & Collaborative Learning Circle",
+            "Certificate Distribution & Achievers Honor",
+            "Hackathon Pitching & Product Demos",
+            "Industry Expert Interactive Session",
+            "Git & GitHub Masterclass Workshop",
+            "SRKREC Campus Open Source Hackathon",
+            "Swecha Andhra Pradesh Regional Meetup",
+            "Collaborative Problem Solving Session",
+            "Student Projects Exhibition & Poster Demo",
+            "Software Freedom Celebration & Cake Cutting",
+            "Web Technologies & DevOps Training Session",
+            "Community Learning Circle Discussion",
+            "Technical Quiz & Open Source Trivia Winners",
+            "Hands-on Lab Training at SRKREC CSD",
+            "Open Education & Free Knowledge Initiative",
+            "Swecha Club Members Group Photo",
+            "Closing Ceremony & Future Roadmap 2025"
+        ];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initSwechaGallery();
+        });
+
+        function initSwechaGallery() {
+            const thumbsContainer = document.getElementById("swechaThumbsContainer");
+            if (!thumbsContainer) return;
+            thumbsContainer.innerHTML = "";
+
+            for (let i = 1; i <= totalSwechaPhotos; i++) {
+                const numStr = String(i).padStart(2, '0');
+                const imgPath = `${swechaImageFolder}swecha_event_${numStr}.jpg`;
+
+                const thumbItem = document.createElement("div");
+                thumbItem.className = `swecha-thumb-item ${i === 1 ? 'active' : ''}`;
+                thumbItem.id = `swechaThumb_${i}`;
+                thumbItem.onclick = () => goToSwechaSlide(i);
+                thumbItem.innerHTML = `<img src="${imgPath}" alt="Thumbnail ${i}" loading="lazy">`;
+
+                thumbsContainer.appendChild(thumbItem);
+            }
+
+            updateSwechaSlideDisplay();
+            startSwechaAutoplay();
+        }
+
+        function goToSwechaSlide(index) {
+            currentSwechaIndex = index;
+            updateSwechaSlideDisplay();
+            resetSwechaAutoplay();
+        }
+
+        function nextSwechaSlide() {
+            currentSwechaIndex = currentSwechaIndex >= totalSwechaPhotos ? 1 : currentSwechaIndex + 1;
+            updateSwechaSlideDisplay();
+            resetSwechaAutoplay();
+        }
+
+        function prevSwechaSlide() {
+            currentSwechaIndex = currentSwechaIndex <= 1 ? totalSwechaPhotos : currentSwechaIndex - 1;
+            updateSwechaSlideDisplay();
+            resetSwechaAutoplay();
+        }
+
+        function updateSwechaSlideDisplay() {
+            const mainImg = document.getElementById("swechaMainSlideImg");
+            const counterPill = document.getElementById("swechaCounter");
+            const captionEl = document.getElementById("swechaSlideCaption");
+            if (!mainImg || !counterPill || !captionEl) return;
+
+            const numStr = String(currentSwechaIndex).padStart(2, '0');
+
+            mainImg.style.opacity = "0.2";
+            setTimeout(() => {
+                mainImg.src = `${swechaImageFolder}swecha_event_${numStr}.jpg`;
+                mainImg.style.opacity = "1";
+            }, 150);
+
+            counterPill.innerText = `Photo ${currentSwechaIndex} of ${totalSwechaPhotos}`;
+            captionEl.innerText = captionsList[currentSwechaIndex - 1] || "Swecha Freedom Fest & Community Events";
+
+            document.querySelectorAll(".swecha-thumb-item").forEach(t => t.classList.remove("active"));
+            const activeThumb = document.getElementById(`swechaThumb_${currentSwechaIndex}`);
+            if (activeThumb) {
+                activeThumb.classList.add("active");
+                activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            }
+        }
+
+        function startSwechaAutoplay() {
+            if (swechaAutoplayTimer) clearInterval(swechaAutoplayTimer);
+            swechaAutoplayTimer = setInterval(() => {
+                currentSwechaIndex = currentSwechaIndex >= totalSwechaPhotos ? 1 : currentSwechaIndex + 1;
+                updateSwechaSlideDisplay();
+            }, 3500);
+            isSwechaPlaying = true;
+            const btn = document.getElementById("swechaPlayPauseBtn");
+            if (btn) btn.innerHTML = '<i class="fas fa-pause"></i>';
+        }
+
+        function pauseSwechaAutoplay() {
+            if (swechaAutoplayTimer) clearInterval(swechaAutoplayTimer);
+            isSwechaPlaying = false;
+            const btn = document.getElementById("swechaPlayPauseBtn");
+            if (btn) btn.innerHTML = '<i class="fas fa-play"></i>';
+        }
+
+        function toggleSwechaAutoplay() {
+            if (isSwechaPlaying) pauseSwechaAutoplay();
+            else startSwechaAutoplay();
+        }
+
+        function resetSwechaAutoplay() {
+            if (isSwechaPlaying) startSwechaAutoplay();
+        }
+
+        function openSwechaLightbox() {
+            const numStr = String(currentSwechaIndex).padStart(2, '0');
+            const modal = document.getElementById("swechaLightboxModal");
+            const modalImg = document.getElementById("swechaLightboxImg");
+            if (modal && modalImg) {
+                modalImg.src = `${swechaImageFolder}swecha_event_${numStr}.jpg`;
+                modal.classList.add("active");
+            }
+        }
+
+        function closeSwechaLightbox(e) {
+            if (e.target.id === "swechaLightboxModal" || (e.target.className && e.target.className.includes && e.target.className.includes("swecha-lightbox-close"))) {
+                const modal = document.getElementById("swechaLightboxModal");
+                if (modal) modal.classList.remove("active");
+            }
+        }
+    </script>
 
     <?php include "footer.php"; ?>
 </body>
