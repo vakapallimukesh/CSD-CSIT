@@ -251,7 +251,7 @@ if (!$response && (!empty($nameKeywords) || preg_match('/[0-9]{2}[a-z0-9]{8,10}/
 // =========================================================
 // 2. FACULTY & HOD RETRIEVAL (Parameterised & Complete)
 // =========================================================
-if (!$response && preg_match('/(hod|head|head of department|faculty|professor|prof|teacher|staff|guide|mentor|suresh|srinivasa|bhanu|aswini|satyam|mohan|surya|gopala|rajesh|navya|giridhar|vignya|madhuriya|trinadh|aneela|murthy)/i', $lowerQuery)) {
+if (!$response && preg_match('/(hod|head|head of department|faculty|faculties|professor|prof|teacher|teachers|staff|team|instructors|coordinators|teaching|members|guide|mentor|suresh|srinivasa|bhanu|aswini|satyam|mohan|surya|gopala|rajesh|navya|giridhar|vignya|madhuriya|trinadh|aneela|murthy)/i', $lowerQuery)) {
     
     if (preg_match('/(hod|head|head of department|suresh|murthy)/i', $lowerQuery) && !preg_match('/all faculty|faculty list|list of faculty/i', $lowerQuery)) {
         $sql = "SELECT faculty_id, faculty_name, email, phone_number, is_active FROM faculties WHERE LOWER(faculty_name) LIKE '%suresh%' OR LOWER(faculty_name) LIKE '%murthy%' OR faculty_id IN (1, 8) ORDER BY faculty_id ASC LIMIT 2";

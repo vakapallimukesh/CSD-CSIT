@@ -2547,14 +2547,58 @@ Ask "Show placement overview" or "Who got placed at Microsoft" to view details!`
             };
         }
 
-        // 6. FACULTY CATEGORY OVERVIEW
-        if (/\b(who are the (faculty|faculties|teachers|professors)|faculty members|faculty directory|list of faculty|all faculty)\b/i.test(lower)) {
+        // 6. GENERIC FACULTY & TEAM RETRIEVAL (List, Team, Qualifications, Specializations, Subjects)
+        if (/\b(faculty|faculties|teachers|professors|teaching staff|faculty team|department team|our team|team members|staff members|who teaches|faculty list|faculty members|faculty details|teaching faculty)\b/i.test(lower)) {
             const uniqueFaculty = deduplicatePeople(MASTER_FACULTY_ROSTER);
+
+            // Attribute 1: Qualifications query
+            if (/\b(qualification|qualifications|degree|degrees|phd|education)\b/i.test(lower)) {
+                let content = `<strong>Faculty Qualifications Directory (${uniqueFaculty.length} Members):</strong><br><br>`;
+                content += uniqueFaculty.map((f, i) => `${i + 1}. <strong>${f.fullName}</strong> (${f.department}) — <em>${f.qualification || 'M.Tech in CSE'}</em>`).join('<br>');
+                return {
+                    id: 'faculty_qualifications_overview',
+                    category: 'Faculty Directory',
+                    title: 'CSD & CSIT Faculty Qualifications',
+                    content: content,
+                    url: 'faculty.php',
+                    ctaText: 'View Complete Faculty Profiles →'
+                };
+            }
+
+            // Attribute 2: Specialization / Research query
+            if (/\b(specialization|specializations|research|expertise|area of interest|research area)\b/i.test(lower)) {
+                let content = `<strong>Faculty Research & Specializations (${uniqueFaculty.length} Members):</strong><br><br>`;
+                content += uniqueFaculty.map((f, i) => `${i + 1}. <strong>${f.fullName}</strong> (${f.department}) — ${f.specialization || 'Computer Science & Engineering'}`).join('<br>');
+                return {
+                    id: 'faculty_specializations_overview',
+                    category: 'Faculty Directory',
+                    title: 'CSD & CSIT Faculty Specializations',
+                    content: content,
+                    url: 'faculty.php',
+                    ctaText: 'View Research & Specializations →'
+                };
+            }
+
+            // Attribute 3: Subjects / Courses Taught query
+            if (/\b(subjects|subject|teaches|teaching|courses taught)\b/i.test(lower)) {
+                let content = `<strong>Faculty Teaching & Subjects Directory (${uniqueFaculty.length} Members):</strong><br><br>`;
+                content += uniqueFaculty.map((f, i) => `${i + 1}. <strong>${f.fullName}</strong> (${f.department}) — ${f.subjects || 'Computer Science & Software Systems'}`).join('<br>');
+                return {
+                    id: 'faculty_subjects_overview',
+                    category: 'Faculty Directory',
+                    title: 'CSD & CSIT Faculty Teaching & Subjects',
+                    content: content,
+                    url: 'faculty.php',
+                    ctaText: 'View Faculty Teaching Profiles →'
+                };
+            }
+
+            // General Team / Roster Overview
             return {
                 id: 'faculty_overview',
                 category: 'Faculty Directory',
-                title: 'CSD & CSIT Department Faculty Members',
-                content: `Here are all <strong>${uniqueFaculty.length} Faculty Members</strong> of CSD & CSIT Departments:<br><br>` +
+                title: 'CSD & CSIT Department Faculty & Team Members',
+                content: `Here are all <strong>${uniqueFaculty.length} Faculty & Team Members</strong> of CSD & CSIT Departments:<br><br>` +
                          uniqueFaculty.map((f, i) => `${i + 1}. <strong>${f.fullName}</strong> — ${f.designation || f.role} (${f.department})`).join('<br>'),
                 url: 'faculty.php',
                 ctaText: 'View Complete Faculty Directory →'
