@@ -584,7 +584,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 
                 <!-- More Details (3-Dot Menu) Dropdown - Aligned next to Login/Dashboard -->
                 <li class="nav-item dropdown ms-lg-2">
-                    <a class="nav-link dropdown-toggle nav-more-dots <?= in_array($current_page, ['student_achievements.php', 'news_events.php', 'heroes_of_department.php', 'alumni.php']) ? 'active' : '' ?>" href="#" id="moreDetailsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="More Details">
+                    <a class="nav-link dropdown-toggle nav-more-dots <?= in_array($current_page, ['student_achievements.php', 'news_events.php', 'heroes_of_department.php', 'alumni.php', 'outreach.php']) ? 'active' : '' ?>" href="#" id="moreDetailsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="More Details">
                         <i class="fas fa-ellipsis-v"></i>
                         <span class="d-lg-none ms-2">More Details</span>
                     </a>
@@ -595,7 +595,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
                         <li><a class="dropdown-item <?= $current_page == 'news_events.php' ? 'active' : '' ?>" href="news_events.php"><i class="fas fa-newspaper me-2" style="color: #10b981;"></i> News & Events</a></li>
                         <li><a class="dropdown-item <?= $current_page == 'heroes_of_department.php' ? 'active' : '' ?>" href="heroes_of_department.php"><i class="fas fa-medal me-2" style="color: #8b5cf6;"></i> Heroes of Department</a></li>
                         <li><a class="dropdown-item <?= $current_page == 'alumni.php' ? 'active' : '' ?>" href="alumni.php"><i class="fas fa-user-tie me-2" style="color: #f59e0b;"></i> Alumni</a></li>
-
+                        <li><a class="dropdown-item <?= $current_page == 'outreach.php' ? 'active' : '' ?>" href="outreach.php"><i class="fas fa-hands-helping me-2" style="color: #ef4444;"></i> Outreach & Community</a></li>
                     </ul>
                 </li>
             </ul>

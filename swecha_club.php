@@ -136,6 +136,43 @@ body {
     margin: 12px auto 0;
     border-radius: 2px;
 }
+
+.hero-logo-container {
+    width: 170px;
+    height: 170px;
+    max-width: 170px;
+    max-height: 170px;
+    border-radius: 50%;
+    background: #ffffff;
+    padding: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 4px solid rgba(255, 255, 255, 0.35);
+    animation: floatBranch 6s ease-in-out infinite;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.4), 0 0 35px rgba(52, 211, 153, 0.6);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.hero-logo-container:hover {
+    transform: scale(1.08) rotate(3deg);
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 50px rgba(52, 211, 153, 0.85);
+    border-color: #34d399;
+}
+
+.hero-logo-img {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+}
+
 /* ── Swecha Events & Gallery Slideshow ── */
 .swecha-gallery-section {
     padding: 70px 0;
@@ -154,24 +191,43 @@ body {
 
 .swecha-main-slide-viewport {
     width: 100%;
-    height: 540px;
+    height: 560px;
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #020617;
+    background: #0f172a;
     overflow: hidden;
     cursor: pointer;
 }
 
+.swecha-slide-bg-blur {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(30px) brightness(0.45);
+    transform: scale(1.2);
+    opacity: 0.9;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
 .swecha-slide-img {
-    max-width: 100%;
-    max-height: 100%;
+    position: relative;
+    z-index: 2;
+    max-width: 96%;
+    max-height: 94%;
     width: auto;
     height: auto;
     object-fit: contain;
     transition: opacity 0.4s ease, transform 0.4s ease;
     opacity: 1;
+    border-radius: 12px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .swecha-slide-overlay {
@@ -426,7 +482,7 @@ body {
     <section style="padding: 60px 0;">
         <div class="container">
             <div class="row g-4 align-items-stretch">
-                <div class="col-md-8">
+                <div class="col-md-12">
                     <div class="swecha-card h-100">
                         <h2 style="font-family: 'Outfit', sans-serif; color: #0f172a; font-weight: 800; font-size: 2rem; margin-bottom: 20px;">About Swecha Club</h2>
                         <p style="color: #475569; line-height: 1.85; margin-bottom: 20px; font-size: 1.05rem;">
@@ -437,79 +493,6 @@ body {
                             Our mission is to create awareness about free software alternatives, encourage students to contribute to 
                             open source projects, and build a community of tech enthusiasts who believe in digital freedom.
                         </p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="impact-card h-100 d-flex flex-column justify-content-between">
-                        <h4 style="font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 1.5rem; margin-bottom: 25px; color: #ffffff;">Club Statistics</h4>
-                        <div style="margin: 10px 0;">
-                            <div class="impact-num">200+</div>
-                            <div class="impact-label">Active Members</div>
-                        </div>
-                        <div style="margin: 10px 0;">
-                            <div class="impact-num">30+</div>
-                            <div class="impact-label">Open Source Projects</div>
-                        </div>
-                        <div style="margin: 10px 0;">
-                            <div class="impact-num">40+</div>
-                            <div class="impact-label">Workshops Conducted</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Key Focus Areas -->
-    <section style="padding: 60px 0; background: #f8fafc;">
-        <div class="container">
-            <h2 class="section-header-title">Our Focus Areas</h2>
-            <div class="row g-4">
-                <div class="col-md-4 mb-4">
-                    <div class="swecha-card h-100" style="border-left: 5px solid #10b981;">
-                        <div style="width: 60px; height: 60px; border-radius: 18px; background: rgba(16, 185, 129, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-                            <i class="fas fa-laptop-code" style="font-size: 26px; color: #10b981;"></i>
-                        </div>
-                        <h4 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #0f172a; font-size: 1.35rem; margin-bottom: 8px;">Free Software</h4>
-                        <p style="color: #64748b; margin-bottom: 15px; font-size: 0.95rem;">Promoting free and open source software alternatives across campus</p>
-                        <ul style="color: #475569; font-size: 0.9rem; padding-left: 0; list-style: none;">
-                            <li style="margin-bottom: 8px;"><i class="fas fa-check-circle" style="color: #10b981; margin-right: 8px;"></i>Linux Operating Systems</li>
-                            <li style="margin-bottom: 8px;"><i class="fas fa-check-circle" style="color: #10b981; margin-right: 8px;"></i>Open Source Software Tools</li>
-                            <li style="margin-bottom: 8px;"><i class="fas fa-check-circle" style="color: #10b981; margin-right: 8px;"></i>Free Software Philosophy</li>
-                            <li style="margin-bottom: 8px;"><i class="fas fa-check-circle" style="color: #10b981; margin-right: 8px;"></i>Software Freedom Advocacy</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="col-md-4 mb-4">
-                    <div class="swecha-card h-100" style="border-left: 5px solid #3b82f6;">
-                        <div style="width: 60px; height: 60px; border-radius: 18px; background: rgba(59, 130, 246, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-                            <i class="fas fa-users" style="font-size: 26px; color: #3b82f6;"></i>
-                        </div>
-                        <h4 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #0f172a; font-size: 1.35rem; margin-bottom: 8px;">Community Building</h4>
-                        <p style="color: #64748b; margin-bottom: 15px; font-size: 0.95rem;">Creating a collaborative peer learning environment for developers</p>
-                        <ul style="color: #475569; font-size: 0.9rem; padding-left: 0; list-style: none;">
-                            <li style="margin-bottom: 8px;"><i class="fas fa-check-circle" style="color: #3b82f6; margin-right: 8px;"></i>Knowledge Sharing Sessions</li>
-                            <li style="margin-bottom: 8px;"><i class="fas fa-check-circle" style="color: #3b82f6; margin-right: 8px;"></i>Peer-to-Peer Learning</li>
-                            <li style="margin-bottom: 8px;"><i class="fas fa-check-circle" style="color: #3b82f6; margin-right: 8px;"></i>Mentorship Programs</li>
-                            <li style="margin-bottom: 8px;"><i class="fas fa-check-circle" style="color: #3b82f6; margin-right: 8px;"></i>Community Tech Events</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="col-md-4 mb-4">
-                    <div class="swecha-card h-100" style="border-left: 5px solid #ef4444;">
-                        <div style="width: 60px; height: 60px; border-radius: 18px; background: rgba(239, 68, 68, 0.1); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
-                            <i class="fas fa-code" style="font-size: 26px; color: #ef4444;"></i>
-                        </div>
-                        <h4 style="font-family: 'Outfit', sans-serif; font-weight: 800; color: #0f172a; font-size: 1.35rem; margin-bottom: 8px;">Open Source Dev</h4>
-                        <p style="color: #64748b; margin-bottom: 15px; font-size: 0.95rem;">Contributing directly to global open source software projects</p>
-                        <ul style="color: #475569; font-size: 0.9rem; padding-left: 0; list-style: none;">
-                            <li style="margin-bottom: 8px;"><i class="fas fa-check-circle" style="color: #ef4444; margin-right: 8px;"></i>Version Control (Git & GitHub)</li>
-                            <li style="margin-bottom: 8px;"><i class="fas fa-check-circle" style="color: #ef4444; margin-right: 8px;"></i>Project Contributions & PRs</li>
-                            <li style="margin-bottom: 8px;"><i class="fas fa-check-circle" style="color: #ef4444; margin-right: 8px;"></i>Code Reviews & Testing</li>
-                            <li style="margin-bottom: 8px;"><i class="fas fa-check-circle" style="color: #ef4444; margin-right: 8px;"></i>Open Technical Documentation</li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -667,6 +650,7 @@ body {
 
                 <!-- Main Viewport -->
                 <div class="swecha-main-slide-viewport" onclick="openSwechaLightbox()">
+                    <img src="images/swecha/swecha_event_01.jpg" alt="Background Blur" class="swecha-slide-bg-blur" id="swechaSlideBgBlur">
                     <img src="images/swecha/swecha_event_01.jpg" alt="Swecha Event Photo 1" class="swecha-slide-img" id="swechaMainSlideImg">
                     
                     <div class="swecha-slide-overlay">
@@ -778,16 +762,21 @@ body {
 
         function updateSwechaSlideDisplay() {
             const mainImg = document.getElementById("swechaMainSlideImg");
+            const bgBlur = document.getElementById("swechaSlideBgBlur");
             const counterPill = document.getElementById("swechaCounter");
             const captionEl = document.getElementById("swechaSlideCaption");
             if (!mainImg || !counterPill || !captionEl) return;
 
             const numStr = String(currentSwechaIndex).padStart(2, '0');
+            const imgPath = `${swechaImageFolder}swecha_event_${numStr}.jpg`;
 
             mainImg.style.opacity = "0.2";
+            if (bgBlur) bgBlur.style.opacity = "0.2";
             setTimeout(() => {
-                mainImg.src = `${swechaImageFolder}swecha_event_${numStr}.jpg`;
+                mainImg.src = imgPath;
+                if (bgBlur) bgBlur.src = imgPath;
                 mainImg.style.opacity = "1";
+                if (bgBlur) bgBlur.style.opacity = "0.9";
             }, 150);
 
             counterPill.innerText = `Photo ${currentSwechaIndex} of ${totalSwechaPhotos}`;
@@ -795,9 +784,11 @@ body {
 
             document.querySelectorAll(".swecha-thumb-item").forEach(t => t.classList.remove("active"));
             const activeThumb = document.getElementById(`swechaThumb_${currentSwechaIndex}`);
-            if (activeThumb) {
+            const thumbsWrapper = document.getElementById("swechaThumbsContainer");
+            if (activeThumb && thumbsWrapper) {
                 activeThumb.classList.add("active");
-                activeThumb.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                const scrollPos = activeThumb.offsetLeft - (thumbsWrapper.clientWidth / 2) + (activeThumb.clientWidth / 2);
+                thumbsWrapper.scrollTo({ left: scrollPos, behavior: 'smooth' });
             }
         }
 
