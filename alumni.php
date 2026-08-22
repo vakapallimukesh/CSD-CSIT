@@ -13,943 +13,847 @@ include 'head.php';
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
+    <!-- Premium Google Fonts (Matching Faculty & Main Website) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <!-- Scoped Light Theme Styles strictly for Alumni Page -->
+    <!-- Unified Website UI/UX Design System -->
     <style>
-        .alumni-page-scope {
-            --alumni-bg-main: #F8F7F3;
-            --alumni-bg-soft: #F3F7FC;
-            --alumni-card-bg: #FFFFFF;
-            --alumni-primary: #315C8C;
-            --alumni-navy: #172B4D;
-            --alumni-gold: #C9A45C;
-            --alumni-body: #5F6B7A;
-            --alumni-border: #E5EAF0;
+        :root {
+            /* Fonts matching index.php & faculty.php */
+            --font-display: 'Outfit', sans-serif;
+            --font-heading: 'Plus Jakarta Sans', sans-serif;
+            --font-body: 'Inter', sans-serif;
 
-            font-family: 'Inter', sans-serif;
-            background-color: var(--alumni-bg-main);
-            color: var(--alumni-body);
+            /* Yellowish Amber & Golden Palette (Website Standard) */
+            --amber-gold: #d97706;
+            --bright-yellow: #f59e0b;
+            --golden-champagne: #e6c280;
+            --amber-badge: #b45309;
+            --warm-brown: #78350f;
+            --rich-espresso: #1a0d06;
+            --cream-white: #fdfbf7;
+
+            --card-bg: #ffffff;
+            --text-dark: #1a0d06;
+            --text-muted: #6f5f54;
+            --border-light: #f3eae1;
+
+            --shadow-subtle: 0 12px 35px rgba(180, 83, 9, 0.07);
+            --shadow-hover: 0 24px 55px rgba(180, 83, 9, 0.18);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--cream-white);
+            color: var(--text-dark);
+            line-height: 1.65;
             overflow-x: hidden;
         }
 
-        .alumni-page-scope h1, 
-        .alumni-page-scope h2, 
-        .alumni-page-scope h3, 
-        .alumni-page-scope h4, 
-        .alumni-page-scope h5 {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: var(--alumni-navy);
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-display);
+            color: var(--text-dark);
         }
 
         /* ── Standardized Section Header ── */
-        .alumni-section-header {
+        .site-section-header {
             text-align: center;
             margin-bottom: 50px;
             position: relative;
         }
 
-        .alumni-section-header .sub-tag {
-            font-size: 0.82rem;
-            font-weight: 700;
-            letter-spacing: 1.5px;
+        .site-section-header .sub-tag {
+            font-size: 0.85rem;
+            font-weight: 800;
             text-transform: uppercase;
-            color: var(--alumni-primary);
-            margin-bottom: 8px;
-            display: block;
+            letter-spacing: 2px;
+            color: var(--amber-badge);
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            padding: 6px 20px;
+            border-radius: 999px;
+            display: inline-block;
+            margin-bottom: 12px;
         }
 
-        .alumni-section-header h2 {
-            font-size: 2.3rem;
-            font-weight: 800;
-            color: var(--alumni-navy);
+        .site-section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--text-dark);
             margin-bottom: 12px;
             letter-spacing: -0.5px;
         }
 
-        .gold-accent-line {
+        .gold-divider-line {
             width: 60px;
-            height: 3.5px;
-            background: var(--alumni-gold);
+            height: 4px;
+            background: linear-gradient(135deg, var(--bright-yellow) 0%, var(--amber-gold) 100%);
             margin: 0 auto 16px auto;
             border-radius: 4px;
         }
 
-        .alumni-section-header p {
-            color: var(--alumni-body);
+        .site-section-header p {
+            color: var(--text-muted);
             font-size: 1.05rem;
-            max-width: 620px;
+            max-width: 640px;
             margin: 0 auto;
-            line-height: 1.6;
+            line-height: 1.65;
         }
 
-        /* ── 2. Hero Section ── */
-        .alumni-hero-section {
-            background: linear-gradient(135deg, #F8F7F3 0%, #EEF5FC 100%);
-            padding: 90px 0 70px 0;
-            border-bottom: 1px solid var(--alumni-border);
+        /* ── 1. Hero Banner (Warm Espresso & Amber Gold) ── */
+        .alumni-hero-banner {
+            background: linear-gradient(135deg, #1a0d06 0%, #361a0c 50%, #522710 100%);
+            color: #ffffff;
+            padding: 95px 20px 85px;
             position: relative;
+            overflow: hidden;
         }
 
-        .hero-tag-badge {
+        .alumni-hero-banner::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: radial-gradient(rgba(230, 194, 128, 0.15) 1px, transparent 1px);
+            background-size: 24px 24px;
+            opacity: 0.45;
+        }
+
+        .hero-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(49, 92, 140, 0.08);
-            border: 1px solid rgba(49, 92, 140, 0.18);
-            color: var(--alumni-primary);
-            padding: 6px 18px;
+            background: rgba(212, 155, 89, 0.18);
+            border: 1px solid rgba(230, 194, 128, 0.4);
+            color: var(--golden-champagne);
+            padding: 8px 22px;
             border-radius: 50px;
-            font-size: 0.82rem;
+            font-family: var(--font-display);
+            font-size: 0.88rem;
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
-            margin-bottom: 18px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
         }
 
-        .hero-heading {
-            font-size: 3.2rem;
-            font-weight: 800;
-            color: var(--alumni-navy);
-            line-height: 1.2;
-            margin-bottom: 18px;
-            letter-spacing: -1px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: lightFadeUp 0.8s ease forwards 0.1s;
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.6rem, 5.5vw, 3.8rem);
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, #f5ebe6 35%, #e6c280 70%, #d49b59 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .hero-heading span {
-            color: var(--alumni-gold);
-        }
-
-        .hero-desc {
-            font-size: 1.15rem;
-            color: var(--alumni-body);
-            line-height: 1.75;
-            margin-bottom: 30px;
-            max-width: 640px;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: lightFadeUp 0.8s ease forwards 0.3s;
+        .hero-subtitle {
+            font-size: 1.12rem;
+            color: #e5d5c5;
+            max-width: 560px;
+            margin-bottom: 35px;
+            line-height: 1.7;
         }
 
         .hero-action-btn {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            background: var(--alumni-primary);
-            color: #FFFFFF;
-            padding: 13px 32px;
-            border-radius: 50px;
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: #ffffff !important;
+            font-family: var(--font-display);
             font-weight: 700;
-            font-size: 0.96rem;
+            font-size: 0.95rem;
+            padding: 14px 34px;
+            border-radius: 50px;
             text-decoration: none;
-            box-shadow: 0 10px 25px rgba(49, 92, 140, 0.25);
+            box-shadow: 0 10px 25px rgba(217, 119, 6, 0.4);
             transition: all 0.3s ease;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: lightFadeUp 0.8s ease forwards 0.5s;
         }
 
         .hero-action-btn:hover {
-            background: var(--alumni-navy);
-            color: #FFFFFF;
-            box-shadow: 0 15px 35px rgba(23, 43, 77, 0.3);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(217, 119, 6, 0.5);
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
         }
 
-        .hero-img-box {
-            position: relative;
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(23, 43, 77, 0.12);
-            border: 4px solid #FFFFFF;
-            opacity: 0;
-            transform: scale(0.96);
-            animation: lightScaleIn 0.9s ease forwards 0.4s;
+        .hero-photo-frame {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(230, 194, 128, 0.3);
+            border-radius: 28px;
+            padding: 12px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4);
         }
 
-        .hero-img-box img {
+        .hero-photo-frame img {
             width: 100%;
             height: 380px;
             object-fit: cover;
-            display: block;
-        }
-
-        @keyframes lightFadeUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes lightScaleIn {
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        /* ── 3. Alumni Statistics Cards ── */
-        .stats-cards-wrapper {
-            margin-top: 50px;
-        }
-
-        .stat-card-white {
-            background: #FFFFFF;
-            border: 1px solid var(--alumni-border);
             border-radius: 20px;
-            padding: 26px;
-            text-align: center;
-            box-shadow: 0 8px 25px rgba(23, 43, 77, 0.04);
-            transition: transform 0.3s ease;
         }
 
-        .stat-card-white:hover {
-            transform: translateY(-4px);
+        /* ── 2. Statistics Bar ── */
+        .stats-wrapper {
+            max-width: 1240px;
+            margin: -40px auto 70px;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
         }
 
-        .stat-num-navy {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            font-size: 2.3rem;
-            font-weight: 800;
-            color: var(--alumni-navy);
+        .stat-card-box {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 24px 28px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card-box:hover {
+            transform: translateY(-5px);
+            border-color: var(--amber-gold);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-icon-circle {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: #fffbeb;
+            color: var(--amber-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            border: 1px solid #fde68a;
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 1.9rem;
+            font-weight: 900;
+            color: var(--text-dark);
             line-height: 1.1;
         }
 
-        .stat-num-navy span {
-            color: var(--alumni-gold);
-        }
-
-        .stat-lbl-gray {
-            font-size: 0.88rem;
-            font-weight: 600;
-            color: var(--alumni-body);
-            margin-top: 6px;
+        .stat-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.5px;
         }
 
-        /* ── 4. Our Batches Section & Group Photo Cards ── */
-        .batches-light-section {
-            background-color: var(--alumni-bg-main);
-            padding: 90px 0;
+        /* ── 3. Our Batches Section ── */
+        .batches-section {
+            padding: 20px 0 80px 0;
         }
 
-        .batch-photo-card {
-            background: #FFFFFF;
-            border: 1px solid var(--alumni-border);
+        .batch-card {
+            background: #ffffff;
             border-radius: 24px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-subtle);
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(23, 43, 77, 0.06);
-            transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
-            cursor: pointer;
-            position: relative;
+            transition: all 0.35s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
-        .batch-photo-card:hover {
+        .batch-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 45px rgba(23, 43, 77, 0.12);
-            border-color: var(--alumni-gold);
+            border-color: var(--amber-gold);
+            box-shadow: var(--shadow-hover);
         }
 
-        .batch-img-wrapper {
+        .batch-img-container {
             position: relative;
-            height: 260px;
+            height: 240px;
             overflow: hidden;
+            background: var(--rich-espresso);
         }
 
-        .batch-img-wrapper img {
+        .batch-img-container img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s ease;
+            transition: transform 0.5s ease;
         }
 
-        .batch-photo-card:hover .batch-img-wrapper img {
+        .batch-card:hover .batch-img-container img {
             transform: scale(1.05);
         }
 
-        .batch-card-body {
-            padding: 28px;
-            background: #FFFFFF;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .batch-tag-name {
-            font-size: 0.78rem;
-            font-weight: 700;
-            color: var(--alumni-gold);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 4px;
-        }
-
-        .batch-card-title {
-            font-size: 1.6rem;
+        .batch-count-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: linear-gradient(135deg, var(--bright-yellow) 0%, var(--amber-gold) 100%);
+            color: #ffffff;
+            font-family: var(--font-display);
             font-weight: 800;
-            color: var(--alumni-navy);
-            margin: 0;
+            font-size: 0.82rem;
+            padding: 6px 18px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(217, 119, 6, 0.4);
         }
 
-        .batch-count-pill {
-            background: var(--alumni-bg-soft);
-            color: var(--alumni-primary);
-            font-weight: 700;
-            font-size: 0.88rem;
-            padding: 6px 14px;
-            border-radius: 30px;
-            margin-top: 6px;
-            display: inline-block;
-        }
-
-        .explore-batch-link {
-            font-weight: 700;
-            font-size: 0.94rem;
-            color: var(--alumni-primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: gap 0.3s ease, color 0.3s ease;
-        }
-
-        .batch-photo-card:hover .explore-batch-link {
-            color: var(--alumni-gold);
-            gap: 12px;
-        }
-
-        /* ── 5. Directory Modal & Profile Grid Cards ── */
-        .light-modal {
-            position: fixed;
-            inset: 0;
-            z-index: 9999;
-            background: rgba(23, 43, 77, 0.6);
-            backdrop-filter: blur(10px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .light-modal.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .light-modal-dialog {
-            background: #FFFFFF;
-            border: 1px solid var(--alumni-border);
-            border-radius: 24px;
-            width: 100%;
-            max-width: 1100px;
-            max-height: 90vh;
+        .batch-body {
+            padding: 28px 24px;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 25px 60px rgba(23, 43, 77, 0.2);
-            transform: scale(0.95);
-            transition: transform 0.3s ease;
-            overflow: hidden;
+            flex-grow: 1;
         }
 
-        .light-modal.active .light-modal-dialog {
-            transform: scale(1);
-        }
-
-        .light-modal-header {
-            padding: 24px 32px;
-            background: var(--alumni-bg-soft);
-            border-bottom: 1px solid var(--alumni-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .light-modal-title {
-            font-size: 1.5rem;
+        .batch-year-title {
+            font-family: var(--font-display);
+            font-size: 1.6rem;
             font-weight: 800;
-            color: var(--alumni-navy);
-            margin: 0;
+            color: var(--text-dark);
+            margin-bottom: 6px;
         }
 
-        .light-modal-close {
-            background: #FFFFFF;
-            border: 1px solid var(--alumni-border);
-            color: var(--alumni-body);
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            display: flex;
+        .batch-subtitle {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--amber-badge);
+            margin-bottom: 14px;
+        }
+
+        .batch-desc {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
+
+        .batch-btn {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background: #fffbeb;
+            color: var(--warm-brown);
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 0.92rem;
+            padding: 12px;
+            border-radius: 50px;
+            border: 1px solid #fde68a;
+            text-decoration: none;
+            transition: all 0.3s ease;
             cursor: pointer;
-            transition: all 0.2s ease;
         }
 
-        .light-modal-close:hover {
-            background: #Fee2e2;
-            color: #ef4444;
-            border-color: #fca5a5;
+        .batch-btn:hover {
+            background: linear-gradient(135deg, var(--bright-yellow) 0%, var(--amber-gold) 100%);
+            color: #ffffff;
+            border-color: var(--amber-gold);
+            box-shadow: 0 8px 20px rgba(217, 119, 6, 0.3);
         }
 
-        .light-search-container {
-            padding: 18px 32px;
-            background: #FFFFFF;
-            border-bottom: 1px solid var(--alumni-border);
+        /* ── 4. Separate Placements Section ── */
+        .placements-section {
+            background: #ffffff;
+            padding: 85px 0;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
         }
 
-        .light-search-box {
+        .placement-card {
+            background: var(--cream-white);
+            border-radius: 24px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 8px 25px rgba(180, 83, 9, 0.05);
+            padding: 24px 20px;
+            text-align: center;
+            transition: all 0.35s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             position: relative;
         }
 
-        .light-search-box i {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #94a3b8;
-            font-size: 1rem;
+        .placement-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--amber-gold);
+            box-shadow: var(--shadow-hover);
+            background: #ffffff;
         }
 
-        .light-search-input {
+        .placement-avatar-box {
+            position: relative;
+            width: 96px;
+            height: 96px;
+            margin-bottom: 16px;
+        }
+
+        .placement-avatar {
             width: 100%;
-            background: var(--alumni-bg-main);
-            border: 1px solid var(--alumni-border);
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ffffff;
+            box-shadow: 0 6px 20px rgba(180, 83, 9, 0.15);
+        }
+
+        .placement-package-badge {
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--bright-yellow) 0%, var(--amber-gold) 100%);
+            color: #ffffff;
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 0.72rem;
+            padding: 3px 12px;
+            border-radius: 50px;
+            box-shadow: 0 3px 10px rgba(217, 119, 6, 0.3);
+            white-space: nowrap;
+        }
+
+        .placement-student-name {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-top: 6px;
+            margin-bottom: 4px;
+        }
+
+        .placement-role {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--amber-badge);
+            margin-bottom: 8px;
+        }
+
+        .placement-company-tag {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            background: #fffbeb;
+            padding: 4px 14px;
+            border-radius: 50px;
+            border: 1px solid #fde68a;
+        }
+
+        /* ── 5. Achievements Section ── */
+        .achievements-section {
+            padding: 85px 0;
+        }
+
+        .achievement-card {
+            background: #ffffff;
+            border-radius: 24px;
+            border: 1px solid var(--border-light);
+            border-left: 5px solid var(--amber-gold);
+            box-shadow: var(--shadow-subtle);
+            padding: 28px 24px;
+            transition: all 0.35s ease;
+            height: 100%;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .achievement-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: #fffbeb;
+            color: var(--amber-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 16px;
+            border: 1px solid #fde68a;
+        }
+
+        .achievement-title {
+            font-family: var(--font-display);
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+        }
+
+        .achievement-desc {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        /* ── 6. Fullscreen Batch Directory Modal ── */
+        .site-modal-content {
+            background: #ffffff;
+            border-radius: 28px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .site-modal-header {
+            background: linear-gradient(135deg, #1a0d06 0%, #361a0c 100%);
+            color: #ffffff;
+            padding: 24px 30px;
+            border-bottom: 1px solid rgba(230, 194, 128, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .site-modal-header h4 {
+            font-family: var(--font-display);
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .site-modal-header p {
+            color: #e5d5c5;
+            font-size: 0.88rem;
+            margin: 0;
+        }
+
+        .site-search-bar-wrapper {
+            background: var(--cream-white);
+            padding: 18px 30px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .site-search-input {
+            width: 100%;
+            background: #ffffff;
+            border: 2px solid var(--border-light);
+            border-radius: 50px;
             padding: 12px 20px 12px 48px;
-            border-radius: 12px;
-            color: var(--alumni-navy);
             font-size: 0.95rem;
+            color: var(--text-dark);
             outline: none;
             transition: all 0.3s ease;
         }
 
-        .light-search-input:focus {
-            border-color: var(--alumni-primary);
-            background: #FFFFFF;
-            box-shadow: 0 0 0 3px rgba(49, 92, 140, 0.12);
+        .site-search-input:focus {
+            border-color: var(--amber-gold);
+            box-shadow: 0 0 0 4px rgba(217, 119, 6, 0.12);
         }
 
-        .light-modal-body {
-            padding: 30px 32px;
+        .site-search-icon {
+            position: absolute;
+            left: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--amber-gold);
+            font-size: 1.1rem;
+        }
+
+        .site-modal-body {
+            padding: 30px;
+            max-height: 70vh;
             overflow-y: auto;
-            flex: 1;
-            background: var(--alumni-bg-main);
         }
 
-        /* Profile Cards Grid */
-        .profile-card-item {
-            background: #FFFFFF;
-            border: 1px solid var(--alumni-border);
-            border-radius: 18px;
-            padding: 22px;
-            text-align: center;
-            box-shadow: 0 6px 20px rgba(23, 43, 77, 0.04);
-            transition: all 0.3s ease;
-            height: 100%;
+        .directory-student-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            padding: 16px;
             display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .profile-card-item:hover {
-            transform: translateY(-4px);
-            border-color: var(--alumni-gold);
-            box-shadow: 0 12px 30px rgba(23, 43, 77, 0.09);
-        }
-
-        .profile-card-avatar {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 14px auto;
-            border: 2px solid var(--alumni-gold);
-        }
-
-        .profile-card-name {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--alumni-navy);
-            margin-bottom: 4px;
-        }
-
-        .profile-card-reg {
-            font-family: monospace;
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--alumni-primary);
-            background: var(--alumni-bg-soft);
-            padding: 2px 10px;
-            border-radius: 6px;
-            display: inline-block;
-            margin-bottom: 12px;
-        }
-
-        .profile-card-view-btn {
-            background: transparent;
-            border: 1px solid var(--alumni-border);
-            color: var(--alumni-primary);
-            font-weight: 600;
-            font-size: 0.85rem;
-            padding: 8px 18px;
-            border-radius: 30px;
-            transition: all 0.25s ease;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .profile-card-item:hover .profile-card-view-btn {
-            background: var(--alumni-primary);
-            color: #FFFFFF;
-            border-color: var(--alumni-primary);
-        }
-
-        /* ── 6. Separate Placements Section ── */
-        .placements-light-section {
-            background-color: var(--alumni-bg-soft);
-            padding: 90px 0;
-            border-top: 1px solid var(--alumni-border);
-            border-bottom: 1px solid var(--alumni-border);
-        }
-
-        .placement-pill-filters {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-        }
-
-        .light-pill {
-            background: #FFFFFF;
-            border: 1px solid var(--alumni-border);
-            color: var(--alumni-body);
-            padding: 8px 24px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
+            align-items: center;
+            gap: 16px;
             transition: all 0.3s ease;
         }
 
-        .light-pill.active, .light-pill:hover {
-            background: var(--alumni-primary);
-            color: #FFFFFF;
-            border-color: var(--alumni-primary);
-            box-shadow: 0 4px 15px rgba(49, 92, 140, 0.2);
+        .directory-student-card:hover {
+            border-color: var(--amber-gold);
+            box-shadow: 0 8px 20px rgba(180, 83, 9, 0.1);
         }
 
-        .placement-white-card {
-            background: #FFFFFF;
-            border: 1px solid var(--alumni-border);
-            border-radius: 20px;
-            padding: 26px;
-            box-shadow: 0 8px 25px rgba(23, 43, 77, 0.04);
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: all 0.3s ease;
-        }
-
-        .placement-white-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--alumni-gold);
-            box-shadow: 0 15px 35px rgba(23, 43, 77, 0.09);
-        }
-
-        .placement-card-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-
-        .comp-tag {
-            background: var(--alumni-bg-soft);
-            border: 1px solid var(--alumni-border);
-            color: var(--alumni-navy);
-            font-weight: 700;
-            font-size: 0.85rem;
-            padding: 5px 12px;
-            border-radius: 8px;
-        }
-
-        .pkg-tag {
-            background: rgba(201, 164, 92, 0.15);
-            color: #927027;
-            border: 1px solid rgba(201, 164, 92, 0.4);
-            font-weight: 800;
-            font-size: 0.85rem;
-            padding: 4px 10px;
-            border-radius: 6px;
-        }
-
-        .placement-student-row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-top: 15px;
-        }
-
-        .placement-student-img {
-            width: 54px;
-            height: 54px;
+        .directory-avatar {
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2px solid var(--alumni-gold);
+            flex-shrink: 0;
+            border: 2px solid #fde68a;
         }
 
-        .placement-student-name {
-            font-size: 1.05rem;
+        .directory-name {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
             font-weight: 700;
-            color: var(--alumni-navy);
-            margin: 0;
-        }
-
-        .placement-student-roll {
-            font-size: 0.82rem;
-            color: var(--alumni-body);
-            margin: 0;
-        }
-
-        /* ── 7. Where Are They Now Section ── */
-        .where-light-section {
-            background-color: var(--alumni-bg-main);
-            padding: 90px 0;
-        }
-
-        .where-white-card {
-            background: #FFFFFF;
-            border: 1px solid var(--alumni-border);
-            border-radius: 20px;
-            padding: 26px;
-            box-shadow: 0 6px 20px rgba(23, 43, 77, 0.04);
-            height: 100%;
-            transition: transform 0.3s ease;
-        }
-
-        .where-white-card:hover {
-            transform: translateY(-4px);
-            border-color: var(--alumni-primary);
-        }
-
-        .where-icon-box {
-            width: 48px;
-            height: 48px;
-            background: var(--alumni-bg-soft);
-            color: var(--alumni-primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3rem;
-            margin-bottom: 16px;
-        }
-
-        .where-white-card h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--alumni-navy);
-            margin-bottom: 8px;
-        }
-
-        .where-white-card p {
-            font-size: 0.9rem;
-            color: var(--alumni-body);
-            line-height: 1.55;
-            margin: 0;
-        }
-
-        /* ── 8. Alumni Achievements ── */
-        .achievements-light-section {
-            background-color: var(--alumni-bg-soft);
-            padding: 90px 0;
-            border-top: 1px solid var(--alumni-border);
-        }
-
-        /* ── 9. Final CTA Section ── */
-        .cta-light-section {
-            background: linear-gradient(135deg, #EEF5FC 0%, #F8F7F3 100%);
-            padding: 80px 0;
-            text-align: center;
-            border-top: 1px solid var(--alumni-border);
-        }
-
-        .cta-title {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: var(--alumni-navy);
-            margin-bottom: 12px;
-        }
-
-        .cta-subtitle {
-            font-size: 1.05rem;
-            color: var(--alumni-body);
-            margin-bottom: 28px;
-        }
-
-        /* ── Individual Profile Modal ── */
-        .profile-light-body {
-            padding: 35px;
-            text-align: center;
-        }
-
-        .profile-light-avatar {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--alumni-gold);
-            margin: 0 auto 16px auto;
-            box-shadow: 0 8px 25px rgba(23, 43, 77, 0.12);
-        }
-
-        .profile-info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 14px;
-            text-align: left;
-            margin-top: 22px;
-            background: var(--alumni-bg-soft);
-            padding: 18px;
-            border-radius: 14px;
-            border: 1px solid var(--alumni-border);
-        }
-
-        .profile-info-box label {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            color: #94a3b8;
-            display: block;
+            color: var(--text-dark);
             margin-bottom: 2px;
         }
 
-        .profile-info-box span {
-            font-size: 0.92rem;
-            font-weight: 600;
-            color: var(--alumni-navy);
+        .directory-reg {
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-family: monospace;
+            color: var(--warm-brown);
+            background: #fffbeb;
+            padding: 2px 8px;
+            border-radius: 6px;
+            border: 1px solid #fde68a;
+            display: inline-block;
         }
 
-        @media (max-width: 768px) {
-            .hero-heading { font-size: 2.3rem; }
-            .batch-img-wrapper { height: 200px; }
-            .light-modal-dialog { max-height: 95vh; }
-            .light-modal-header, .light-search-container, .light-modal-body { padding: 18px; }
+        /* ── 7. Final CTA Section ── */
+        .site-cta-banner {
+            background: linear-gradient(135deg, #1a0d06 0%, #361a0c 50%, #522710 100%);
+            color: #ffffff;
+            padding: 85px 20px;
+            text-align: center;
+            position: relative;
         }
 
-        @media (prefers-reduced-motion: reduce) {
-            *, ::before, ::after {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
-            }
+        .cta-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 4.5vw, 3rem);
+            font-weight: 900;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffffff 0%, #f5ebe6 35%, #e6c280 70%, #d49b59 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cta-desc {
+            color: #e5d5c5;
+            font-size: 1.08rem;
+            max-width: 600px;
+            margin: 0 auto 32px auto;
+            line-height: 1.65;
         }
     </style>
 </head>
-<body class="alumni-page-scope">
+<body>
 
     <?php include 'nav.php'; ?>
 
-    <!-- 2. Alumni Hero Section -->
-    <section class="alumni-hero-section">
-        <div class="container">
+    <!-- 1. Warm Espresso & Amber Gold Hero Banner -->
+    <section class="alumni-hero-banner">
+        <div class="hero-container">
             <div class="row align-items-center g-5">
-                <div class="col-lg-6">
-                    <div class="hero-tag-badge"><i class="fa-solid fa-graduation-cap"></i> SRKR CSD & CSIT</div>
-                    <h1 class="hero-heading">OUR <span>ALUMNI</span></h1>
-                    <p class="hero-desc">Celebrating the journey, achievements, and success of our graduates. Explore our alumni community, their careers, achievements, and the journeys they continue to build beyond graduation.</p>
-                    <a href="#batches" class="hero-action-btn">Explore Alumni <i class="fa-solid fa-arrow-right"></i></a>
+                <div class="col-lg-6 text-lg-start text-center">
+                    <div class="hero-badge">
+                        <i class="fa-solid fa-graduation-cap me-1"></i> SRKR CSD & CSIT ALUMNI PORTAL
+                    </div>
+                    <h1 class="hero-title">OUR ALUMNI</h1>
+                    <p class="hero-subtitle">Celebrating the journey, achievements, and success of our graduates. Explore our alumni community, their placement achievements, and the inspiring careers they continue to build beyond graduation.</p>
+                    <a href="#batches" class="hero-action-btn">
+                        Explore Alumni Batches <i class="fa-solid fa-arrow-right"></i>
+                    </a>
                 </div>
                 <div class="col-lg-6">
-                    <div class="hero-img-box">
+                    <div class="hero-photo-frame">
                         <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=900&auto=format&fit=crop&q=80" alt="Batch 2025 Group Photo">
                     </div>
                 </div>
             </div>
-
-            <!-- 3. Alumni Statistics -->
-            <div class="row g-4 stats-cards-wrapper">
-                <div class="col-md-4">
-                    <div class="stat-card-white">
-                        <div class="stat-num-navy">136<span>+</span></div>
-                        <div class="stat-lbl-gray">Official Alumni</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="stat-card-white">
-                        <div class="stat-num-navy">2</div>
-                        <div class="stat-lbl-gray">Graduating Batches</div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="stat-card-white">
-                        <div class="stat-num-navy">2024–2025</div>
-                        <div class="stat-lbl-gray">Batches</div>
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 
-    <!-- 4. Our Batches Section -->
-    <section class="batches-light-section" id="batches">
-        <div class="container">
-            <div class="alumni-section-header">
-                <span class="sub-tag">COMMUNITY</span>
-                <h2>OUR BATCHES</h2>
-                <div class="gold-accent-line"></div>
-                <p>Two batches, one shared legacy.</p>
-            </div>
-
-            <!-- 5. Two Separate Group Photo Cards -->
-            <div class="row g-4 justify-content-center">
-                <!-- BATCH 2024 CARD -->
-                <div class="col-md-6 col-lg-5">
-                    <div class="batch-photo-card" onclick="openBatchModal('2024')">
-                        <div class="batch-img-wrapper">
-                            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80" alt="Batch 2024 Group Photo">
-                        </div>
-                        <div class="batch-card-body">
-                            <div>
-                                <div class="batch-tag-name">CLASS OF 2024</div>
-                                <h3 class="batch-card-title">BATCH 2024</h3>
-                                <div class="batch-count-pill"><i class="fa-solid fa-users me-1"></i> 69 Alumni</div>
-                            </div>
-                            <span class="explore-batch-link">Explore Batch <i class="fa-solid fa-arrow-right"></i></span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- BATCH 2025 CARD -->
-                <div class="col-md-6 col-lg-5">
-                    <div class="batch-photo-card" onclick="openBatchModal('2025')">
-                        <div class="batch-img-wrapper">
-                            <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&auto=format&fit=crop&q=80" alt="Batch 2025 Group Photo">
-                        </div>
-                        <div class="batch-card-body">
-                            <div>
-                                <div class="batch-tag-name">CLASS OF 2025</div>
-                                <h3 class="batch-card-title">BATCH 2025</h3>
-                                <div class="batch-count-pill"><i class="fa-solid fa-users me-1"></i> 67 Alumni</div>
-                            </div>
-                            <span class="explore-batch-link">Explore Batch <i class="fa-solid fa-arrow-right"></i></span>
-                        </div>
+    <!-- 2. Statistics Bar -->
+    <div class="stats-wrapper">
+        <div class="row g-4">
+            <div class="col-md-3 col-6">
+                <div class="stat-card-box">
+                    <div class="stat-icon-circle"><i class="fa-solid fa-users"></i></div>
+                    <div>
+                        <div class="stat-number">136+</div>
+                        <div class="stat-label">Official Alumni</div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- 7 & 8. Batch Directory Modal & Alumni Cards Grid -->
-    <div class="light-modal" id="batchModal">
-        <div class="light-modal-dialog">
-            <div class="light-modal-header">
-                <div>
-                    <h3 class="light-modal-title" id="modalBatchTitle">BATCH 2024</h3>
-                    <div style="font-size: 0.88rem; color: var(--alumni-body); margin-top: 2px;" id="modalBatchSubtitle">Meet the alumni of the 2024 graduating batch.</div>
-                </div>
-                <button class="light-modal-close" onclick="closeBatchModal()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-
-            <!-- 10. Search Box -->
-            <div class="light-search-container">
-                <div class="light-search-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="directorySearchInput" class="light-search-input" placeholder="Search by Name or Registration Number..." onkeyup="filterDirectoryCards()">
+            <div class="col-md-3 col-6">
+                <div class="stat-card-box">
+                    <div class="stat-icon-circle"><i class="fa-solid fa-layer-group"></i></div>
+                    <div>
+                        <div class="stat-number">2</div>
+                        <div class="stat-label">Batches (2024–2025)</div>
+                    </div>
                 </div>
             </div>
-
-            <!-- 9. Alumni Directory UI (Grid Cards) -->
-            <div class="light-modal-body">
-                <div class="row g-3" id="profileCardsGrid">
-                    <!-- Profile cards rendered via JavaScript -->
+            <div class="col-md-3 col-6">
+                <div class="stat-card-box">
+                    <div class="stat-icon-circle"><i class="fa-solid fa-briefcase"></i></div>
+                    <div>
+                        <div class="stat-number">29</div>
+                        <div class="stat-label">Placements</div>
+                    </div>
                 </div>
-                <div class="text-center py-5" id="emptyStateMsg" style="display: none;">
-                    <i class="fa-solid fa-user-slash text-muted mb-3" style="font-size: 2.5rem;"></i>
-                    <h5 style="color: var(--alumni-navy); font-weight: 700;">No alumni found</h5>
-                    <p style="color: var(--alumni-body);">Try another name or registration number.</p>
+            </div>
+            <div class="col-md-3 col-6">
+                <div class="stat-card-box">
+                    <div class="stat-icon-circle"><i class="fa-solid fa-award"></i></div>
+                    <div>
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Placement Record</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 12. Separate Placements Section -->
-    <section class="placements-light-section" id="placements">
+    <!-- 3. Our Batches Section -->
+    <section class="batches-section" id="batches">
         <div class="container">
-            <div class="alumni-section-header">
-                <span class="sub-tag">CAREER OFFERS</span>
-                <h2>ALUMNI PLACEMENTS</h2>
-                <div class="gold-accent-line"></div>
-                <p>Our alumni are building successful careers across diverse organizations and industries.</p>
-            </div>
-
-
-            <div class="row g-4" id="placementsGrid">
-                <!-- Placements rendered via JS -->
-            </div>
-        </div>
-    </section>
-
-    <!-- 14. Alumni Achievements -->
-    <section class="achievements-light-section">
-        <div class="container">
-            <div class="alumni-section-header">
-                <span class="sub-tag">HONORS</span>
-                <h2>ALUMNI ACHIEVEMENTS</h2>
-                <div class="gold-accent-line"></div>
-                <p>Celebrating awards, publications, and entrepreneurship milestones achieved by our graduates.</p>
+            <div class="site-section-header">
+                <span class="sub-tag">GRADUATING CLASSES</span>
+                <h2>OUR BATCHES</h2>
+                <div class="gold-divider-line"></div>
+                <p>Browse through our graduating classes. Click on any batch card to search and view complete student class rosters.</p>
             </div>
 
             <div class="row g-4 justify-content-center">
-                <div class="col-md-6 col-lg-4">
-                    <div class="where-white-card" style="border-top: 3px solid var(--alumni-gold);">
-                        <div class="where-icon-box" style="color: var(--alumni-gold);"><i class="fa-solid fa-trophy"></i></div>
-                        <h3>Industry Excellence Awards</h3>
-                        <p>Recognized for outstanding technical contributions and fast-track engineering promotions.</p>
+                <!-- Batch 2024 Card -->
+                <div class="col-lg-5 col-md-6">
+                    <div class="batch-card">
+                        <div class="batch-img-container">
+                            <img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=900&auto=format&fit=crop&q=80" alt="Batch 2024 Class">
+                            <span class="batch-count-badge">69 Alumni Members</span>
+                        </div>
+                        <div class="batch-body">
+                            <div class="batch-year-title">Batch 2024 (III/IV B.Tech CSG)</div>
+                            <div class="batch-subtitle">Computer Science & Design</div>
+                            <p class="batch-desc">The pioneer graduating class of Computer Science & Design. Roll numbers ranging from 21B91A6201 to 22B95A6207.</p>
+                            <button class="batch-btn" onclick="openBatchModal('2024')">
+                                Explore Batch Directory <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-lg-4">
-                    <div class="where-white-card" style="border-top: 3px solid var(--alumni-gold);">
-                        <div class="where-icon-box" style="color: var(--alumni-gold);"><i class="fa-solid fa-file-contract"></i></div>
-                        <h3>Research & Patents</h3>
-                        <p>Co-authoring international technical whitepapers and patented algorithms in cloud co-design.</p>
+
+                <!-- Batch 2025 Card -->
+                <div class="col-lg-5 col-md-6">
+                    <div class="batch-card">
+                        <div class="batch-img-container">
+                            <img src="https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=900&auto=format&fit=crop&q=80" alt="Batch 2025 Class">
+                            <span class="batch-count-badge">67 Alumni Members</span>
+                        </div>
+                        <div class="batch-body">
+                            <div class="batch-year-title">Batch 2025 (IV/IV B.Tech CSD)</div>
+                            <div class="batch-subtitle">Computer Science & Design</div>
+                            <p class="batch-desc">The graduating class of 2025. Roll numbers ranging from 22B91A6201 to 23B95A6208, driving technological innovation.</p>
+                            <button class="batch-btn" onclick="openBatchModal('2025')">
+                                Explore Batch Directory <i class="fa-solid fa-arrow-right"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 15. Final Alumni CTA -->
-    <section class="cta-light-section">
+    <!-- 4. Separate Placements Section -->
+    <section class="placements-section" id="placements">
+        <div class="container">
+            <div class="site-section-header">
+                <span class="sub-tag">CAREER SUCCESS</span>
+                <h2>ALUMNI PLACEMENTS</h2>
+                <div class="gold-divider-line"></div>
+                <p>Celebrating the official placement selections of our students across top global companies and tech innovators.</p>
+            </div>
+
+            <div class="row g-4" id="placementsGrid">
+                <!-- Loaded dynamically via JavaScript API -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Achievements Section -->
+    <section class="achievements-section">
+        <div class="container">
+            <div class="site-section-header">
+                <span class="sub-tag">DISTINCTIONS</span>
+                <h2>ALUMNI ACHIEVEMENTS</h2>
+                <div class="gold-divider-line"></div>
+                <p>Recognizing outstanding accomplishments, industry honors, and research contributions made by our alumni.</p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-6">
+                    <div class="achievement-card">
+                        <div class="achievement-icon"><i class="fa-solid fa-trophy"></i></div>
+                        <h3 class="achievement-title">Industry Excellence Awards</h3>
+                        <p class="achievement-desc">Our alumni have been recognized with top performer and leadership awards across leading MNCs, tech startups, and research labs worldwide.</p>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="achievement-card">
+                        <div class="achievement-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                        <h3 class="achievement-title">Research & Innovation Patents</h3>
+                        <p class="achievement-desc">Multiple graduates have published research papers in IEEE & Springer conferences and authored innovation patents in AI and Human-Computer Interaction.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Final CTA Section -->
+    <section class="site-cta-banner">
         <div class="container">
             <h2 class="cta-title">THE JOURNEY CONTINUES</h2>
-            <p class="cta-subtitle">Once a student, always a part of our community.</p>
-            <a href="#batches" class="hero-action-btn">Explore Our Alumni <i class="fa-solid fa-arrow-right"></i></a>
+            <p class="cta-desc">Stay connected with the SRKR CSD & CSIT Alumni Community. Explore our student directories, achievements, and career milestones.</p>
+            <a href="#batches" class="hero-action-btn">
+                Explore Our Alumni <i class="fa-solid fa-arrow-right"></i>
+            </a>
         </div>
     </section>
 
-    <!-- 11. Individual Alumni Profile Modal -->
-    <div class="light-modal" id="individualProfileModal">
-        <div class="light-modal-dialog" style="max-width: 580px;">
-            <div class="light-modal-header">
-                <h4 style="margin:0; font-weight:800; color: var(--alumni-navy);">Alumni Profile</h4>
-                <button class="light-modal-close" onclick="closeIndividualModal()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="profile-light-body">
-                <img src="" id="indivAvatar" class="profile-light-avatar" alt="Student Photo">
-                <h3 id="indivName" style="font-size: 1.4rem; font-weight: 800; color: var(--alumni-navy); margin-bottom: 2px;">Student Name</h3>
-                <div id="indivRole" style="color: var(--alumni-gold); font-weight: 700; font-size: 0.92rem; margin-bottom: 15px;">CSD Alumnus</div>
-
-                <div class="profile-info-grid">
-                    <div class="profile-info-box"><label>Registration No</label><span id="indivReg">21B91A6201</span></div>
-                    <div class="profile-info-box"><label>Batch</label><span id="indivBatch">Batch 2024</span></div>
-                    <div class="profile-info-box"><label>Department</label><span id="indivDept">CSD</span></div>
-                    <div class="profile-info-box"><label>Location</label><span id="indivLoc">Bhimavaram, India</span></div>
+    <!-- 7. Interactive Fullscreen Batch Directory Modal -->
+    <div class="modal fade" id="batchDirectoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content site-modal-content">
+                <div class="site-modal-header">
+                    <div>
+                        <h4 id="modalBatchTitle">Batch Directory</h4>
+                        <p id="modalBatchSubtitle">Computer Science & Design Class List</p>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="site-search-bar-wrapper position-relative">
+                    <i class="fa-solid fa-magnifying-glass site-search-icon"></i>
+                    <input type="text" id="modalSearchInput" class="site-search-input" placeholder="Search student by Name or Registration Number (e.g. 21B91A6201, VAKAPALLI)...">
+                </div>
+                <div class="site-modal-body">
+                    <div class="row g-3" id="modalStudentGrid">
+                        <!-- Student directory cards loaded via JS -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -957,116 +861,93 @@ include 'head.php';
 
     <?php include 'footer.php'; ?>
 
-    <!-- Scoped JS Operations -->
+    <!-- JavaScript & API Handler -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        let batchDataStore = { '2024': [], '2025': [] };
-        let placementsStore = [];
-        let activeBatchModal = '2024';
+        let allAlumniData = { 2024: [], 2025: [] };
+        let activeBatchKey = '2024';
 
-        document.addEventListener("DOMContentLoaded", () => {
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAlumniPortalData();
+
+            // Search Filter inside Modal
+            document.getElementById('modalSearchInput').addEventListener('input', function(e) {
+                filterModalStudents(e.target.value.trim().toLowerCase());
+            });
+        });
+
+        function loadAlumniPortalData() {
             fetch('get_alumni.php')
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
-                        batchDataStore['2024'] = data.batches['2024'].alumni;
-                        batchDataStore['2025'] = data.batches['2025'].alumni;
-                        placementsStore = data.placements;
-
-                        renderPlacements('all');
+                        if (data.batches) {
+                            allAlumniData['2024'] = data.batches['2024'] ? data.batches['2024'].alumni : [];
+                            allAlumniData['2025'] = data.batches['2025'] ? data.batches['2025'].alumni : [];
+                        }
+                        if (data.placements) {
+                            renderPlacements(data.placements);
+                        }
                     }
                 })
-                .catch(err => console.error("Error fetching alumni:", err));
-        });
-
-        // Open Batch Modal
-        function openBatchModal(batchYear) {
-            activeBatchModal = batchYear;
-            document.getElementById('modalBatchTitle').innerText = `BATCH ${batchYear}`;
-            document.getElementById('modalBatchSubtitle').innerText = `Meet the alumni of the ${batchYear} graduating batch.`;
-            document.getElementById('directorySearchInput').value = '';
-
-            const list = batchDataStore[batchYear] || [];
-            renderProfileCards(list);
-            document.getElementById('batchModal').classList.add('active');
+                .catch(err => console.error('Error fetching alumni data:', err));
         }
 
-        function closeBatchModal() {
-            document.getElementById('batchModal').classList.remove('active');
-        }
-
-        // Render Profile Cards Grid (3-4 columns desktop, 2 tablet, 1 mobile)
-        function renderProfileCards(list) {
-            const grid = document.getElementById('profileCardsGrid');
-            const emptyState = document.getElementById('emptyStateMsg');
-            grid.innerHTML = '';
-
-            if (list.length === 0) {
-                emptyState.style.display = 'block';
-                return;
-            }
-
-            emptyState.style.display = 'none';
-
-            list.forEach(item => {
-                const col = document.createElement('div');
-                col.className = 'col-sm-6 col-md-4 col-lg-3';
-                col.innerHTML = `
-                    <div class="profile-card-item">
-                        <div>
-                            <img src="${item.photo}" class="profile-card-avatar" alt="${item.name}">
-                            <div class="profile-card-name">${item.name}</div>
-                            <div class="profile-card-reg">${item.registration_number}</div>
-                            <div style="font-size: 0.8rem; color: var(--alumni-body); font-weight: 600;">${item.department}</div>
-                        </div>
-                        <button class="profile-card-view-btn" onclick='openIndividualModal(${JSON.stringify(item)})'>View Profile <i class="fa-solid fa-arrow-right ms-1"></i></button>
-                    </div>
-                `;
-                grid.appendChild(col);
-            });
-        }
-
-        // Live Search Filter for Active Batch Only
-        function filterDirectoryCards() {
-            const query = document.getElementById('directorySearchInput').value.toLowerCase().trim();
-            const list = batchDataStore[activeBatchModal] || [];
-
-            const filtered = list.filter(item => {
-                const searchStr = `${item.name} ${item.registration_number}`.toLowerCase();
-                return searchStr.includes(query);
-            });
-
-            renderProfileCards(filtered);
-        }
-
-        // Render Placements
-        function renderPlacements(filterBatch) {
+        function renderPlacements(placements) {
             const grid = document.getElementById('placementsGrid');
             grid.innerHTML = '';
 
-            let list = placementsStore;
-            if (filterBatch !== 'all') {
-                list = placementsStore.filter(p => p.batch === filterBatch || p.placement_year === filterBatch);
+            placements.forEach(item => {
+                const col = document.createElement('div');
+                col.className = 'col-lg-3 col-md-4 col-sm-6';
+                col.innerHTML = `
+                    <div class="placement-card">
+                        <div class="placement-avatar-box">
+                            <img src="${item.photo}" alt="${item.student_name}" class="placement-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(item.student_name)}&background=d97706&color=ffffff'">
+                            <span class="placement-package-badge">${item.package}</span>
+                        </div>
+                        <div class="placement-student-name">${item.student_name}</div>
+                        <div class="placement-role">${item.job_role}</div>
+                        <div class="placement-company-tag"><i class="fa-solid fa-building me-1 text-warning"></i> ${item.company}</div>
+                    </div>
+                `;
+                grid.appendChild(col);
+            });
+        }
+
+        function openBatchModal(batchKey) {
+            activeBatchKey = batchKey;
+            const titleEl = document.getElementById('modalBatchTitle');
+            const subTitleEl = document.getElementById('modalBatchSubtitle');
+            const searchInput = document.getElementById('modalSearchInput');
+
+            searchInput.value = '';
+            titleEl.innerText = `Batch ${batchKey} Class Directory`;
+            subTitleEl.innerText = batchKey === '2024' ? 'III/IV B.Tech CSG (69 Students)' : 'IV/IV B.Tech CSD (67 Students)';
+
+            renderModalStudents(allAlumniData[batchKey] || []);
+            const modal = new bootstrap.Modal(document.getElementById('batchDirectoryModal'));
+            modal.show();
+        }
+
+        function renderModalStudents(list) {
+            const grid = document.getElementById('modalStudentGrid');
+            grid.innerHTML = '';
+
+            if (list.length === 0) {
+                grid.innerHTML = '<div class="col-12 text-center py-5 text-muted fw-bold">No students found matching your search query.</div>';
+                return;
             }
 
-            list.forEach(p => {
+            list.forEach(student => {
                 const col = document.createElement('div');
-                col.className = 'col-md-6 col-lg-4';
+                col.className = 'col-lg-4 col-md-6';
                 col.innerHTML = `
-                    <div class="placement-white-card">
+                    <div class="directory-student-card">
+                        <img src="${student.photo}" alt="${student.name}" class="directory-avatar" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(student.name)}&background=d97706&color=ffffff'">
                         <div>
-                            <div class="placement-card-top">
-                                <span class="comp-tag"><i class="fa-solid fa-building me-1"></i> ${p.company}</span>
-                                ${p.package ? `<span class="pkg-tag">${p.package}</span>` : ''}
-                            </div>
-                            <div style="font-size: 0.95rem; font-weight: 700; color: var(--alumni-primary); margin-top: 10px;">${p.job_role}</div>
-                        </div>
-
-                        <div class="placement-student-row">
-                            <img src="${p.photo}" class="placement-student-img" alt="${p.student_name}" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(p.student_name)}&background=d97706&color=ffffff&bold=true'">
-                            <div>
-                                <h4 class="placement-student-name">${p.student_name}</h4>
-                                <p class="placement-student-roll">Roll No: ${p.student_id}</p>
-                            </div>
+                            <div class="directory-name">${student.name}</div>
+                            <span class="directory-reg">${student.registration_number}</span>
                         </div>
                     </div>
                 `;
@@ -1074,27 +955,17 @@ include 'head.php';
             });
         }
 
-        function filterPlacements(batch, btn) {
-            document.querySelectorAll('.placement-pill-filters .light-pill').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderPlacements(batch);
-        }
-
-        // Open Individual Profile Modal
-        function openIndividualModal(item) {
-            document.getElementById('indivAvatar').src = item.photo;
-            document.getElementById('indivName').innerText = item.name;
-            document.getElementById('indivRole').innerText = `${item.current_role} @ ${item.company}`;
-            document.getElementById('indivReg').innerText = item.registration_number;
-            document.getElementById('indivBatch').innerText = `Batch ${item.batch}`;
-            document.getElementById('indivDept').innerText = item.department;
-            document.getElementById('indivLoc').innerText = item.location || 'Bhimavaram, India';
-
-            document.getElementById('individualProfileModal').classList.add('active');
-        }
-
-        function closeIndividualModal() {
-            document.getElementById('individualProfileModal').classList.remove('active');
+        function filterModalStudents(query) {
+            const list = allAlumniData[activeBatchKey] || [];
+            if (!query) {
+                renderModalStudents(list);
+                return;
+            }
+            const filtered = list.filter(item => {
+                const haystack = `${item.name} ${item.registration_number}`.toLowerCase();
+                return haystack.includes(query);
+            });
+            renderModalStudents(filtered);
         }
     </script>
 </body>
